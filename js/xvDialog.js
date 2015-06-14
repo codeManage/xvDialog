@@ -63,35 +63,33 @@
             var mkBoxMain = mkBoxCon.find("." + doms.maskBoxMain);
             var mkBoxTit = mkBoxCon.find("." + doms.maskBoxTit);
 
-            _S.mkObj ={
-                body:body,
-                box:mkBox,
-                ctr:mkBoxCon,
-                brd:maskConBrd,
-                main:mkBoxMain,
-                tit:mkBoxTit,
-                clsBtn:closebtn,
-                cclBtn:cancelBtn,
-                sBtn:sureBtn
+            _S.mkObj = {
+                body: body,
+                box: mkBox,
+                ctr: mkBoxCon,
+                brd: maskConBrd,
+                main: mkBoxMain,
+                tit: mkBoxTit,
+                clsBtn: closebtn,
+                cclBtn: cancelBtn,
+                sBtn: sureBtn
             };
 
 
-
-
-          /*  mkBox.click(function(){
-                $(body).blur();
-            });*/
+            /*  mkBox.click(function(){
+             $(body).blur();
+             });*/
 
             _S.resetEvent();
 
 
             //$('body').addClass('disSelectbody');
             /*document.body.onselectstart = document.body.ondrag = function(){
-                return false;
-            }*/
+             return false;
+             }*/
             /*$(window,document).on('scroll',function(e){
-                e.preventDefault();
-            })*/
+             e.preventDefault();
+             })*/
 
 
             switch (type) {
@@ -100,8 +98,7 @@
             }
         },
 
-
-        computeSize:function(){
+        computeSize: function () {
             var _O = this.mkObj;
 
             var brd = _O.brd;
@@ -118,43 +115,58 @@
             ctr.width(mkConW);
             ctr.height(mkConH);
 
-            return {w:mkConW,h:mkConH}
+            return {w: mkConW, h: mkConH}
         },
-        computePosition: function (opts ) {
-            var type = opts.type || 'center';
-            var w = opts.w || 0;
-            var h = opts.h || 0;
-            var $win = $(window);
 
-            var position;
-            switch (type) {
-                case 'center':
-                    var pL = $win.width() - w;
-                    var pT = $win.height() - h;
-
-                    position = {
-                        left: pL > 0 ? pL / 2 : 0,
-                        top: pT > 0 ? pT / 2 : 0
-                    };
-                    break;
+        computeCenter: function (obj) {
+            var w,
+                h,
+                pL,
+                pT,
+                $win = $(window);
+            if (obj && obj.length) {
+                w = obj.outerWidth();
+                h = obj.outerHeight();
+            } else {
+                w = this.boxSize.w;
+                h = this.boxSize.h;
             }
 
-            return position;
+            pL = $win.width() - w;
+            pT = $win.height() - h;
+
+            console.log(pL);
+            console.log(pT);
+            return {
+                left: pL > 0 ? pL / 2 : 0,
+                top: pT > 0 ? pT / 2 : 0
+            };
         },
 
+        /*
+         *setPosition：计算obj的位置
+         * opt ｛object｝
+         * */
+        setPosition: function (opts) {
 
-        setPosition:function(e,opts,flag){
-            var data = e ? e.data : opts;
-            var obj = data.obj;
+            var data = opts.data ? opts.data : opts;
+            var p;
             var _S = data.that || this;
-            if(!flag){
-                var p = obj.position = _S.computePosition(data);
-            }else {
-                p = obj.position = data;
+            var obj = data.obj ? data.obj : _S.mkObj.ctr;
+
+            if (opts.data && opts.data.auto) {
+                p = _S.computeCenter();
+            } else {
+                data = opts;
+                p = data;
             }
+            obj.position = {
+                left: p.left,
+                top: p.top
+            };
             obj.css({left: p.left, top: p.top});
         },
-        resetEvent:function(){
+        resetEvent: function () {
             var _S = this;
             var _O = _S.mkObj;
 
@@ -162,45 +174,80 @@
             var tit = _O.tit;
 
             /*初始化弹出框的尺寸*/
-            var boxSize = _S.computeSize();
+            _S.boxSize = _S.computeSize();
 
             /*位置初始化*/
-            ctr.position = {left:0,top:0};
-            _S.setPosition('', {type: 'center', obj: ctr, w: boxSize.w, h: boxSize.h});
-            $(window).on('resize', {type: 'center',that:this, obj: ctr, w: boxSize.w, h: boxSize.h}, _S.setPosition);
+            ctr.position = {left: 0, top: 0};
 
-            tit.on('mousedown',function(e){
-                var p = ctr.position;
-                var left = p.left;
-                var top = p.top;
-                var startP = {left:e.clientX,top:e.clientY};
-                $(document).mousemove(function(e){
-                    var moveX = e.clientX-startP.left;
-                    var moveY = e.clientY-startP.top;
+            /*位置居中*/
+            _S.setPosition(_S.computeCenter());
 
-                    if(ctr.position.left + boxSize.w > $(window).width()) {
+            /*位置随着视口的变换自动居中*/
+            $(window).on('resize', {auto: true, that: _S}, _S.setPosition);
 
-                    }else{
-                        _S.setPosition('', {left:parseInt(left + moveX),top:parseInt(top + moveY),obj:ctr},true);
-                    }
-
-                })
-            });
-            tit.mouseup(function(){
-                $(document).off('mousemove');
-            })
-
-
-
+            /*触发拖拽*/
+            _S.drag(tit);
 
         },
+        drag: function (obj) {
+            var _S = this,
+                ctr = _S.mkObj.ctr;
+            obj.on('mousedown', function (e) {
+                var p = ctr.position,
+                    disX = e.clientX - p.left,
+                    disY = e.clientY - p.top,
+                    doc,
+                    objProt = obj.get(0);
 
+                if (objProt.setCapture) {
+                    doc = obj;
+                    objProt.setCapture();
+                } else {
+                    doc = $(document);
+                }
 
-        movePosition:function(){
+                $(document).on('mouseup',{that:_S,objProt:objProt,doc:doc},_S.clearDrag);
 
-        }
+                doc.on('mousemove',{that:_S,win:$(window),disX:disX,disY:disY},_S.moveFunc);
+            });
+        },
+        clearDrag:function (e) {
+                var opts = e.data,
+                    objProt = opts.objProt,
+                    doc = opts.doc,
+                    that = opts.that;
+                if (objProt.releaseCapture) {
+                    objProt.releaseCapture();
+                }
+                doc.off('mousemove',that.moveFunc);
+                $(document).off('mouseup',that.clearDrag);
+        },
+        moveFunc: function (e) {
+                var opts = e.data,
+                    $win = opts.win,
+                    that = opts.that,
+                    disX = opts.disX,
+                    disY = opts.disY,
+                    boxSize = that.boxSize,
+                    boxL = e.clientX - disX,
+                    boxT = e.clientY - disY,
+                    maxL = $win.width() - boxSize.w,
+                    maxT = $win.height() - boxSize.h;
 
+                if (boxL <= 0) {
+                    boxL = 0;
+                } else if (boxL >= maxL) {
+                    boxL = maxL;
+                }
 
+                if (boxT <= 0) {
+                    boxT = 0;
+                } else if (boxT >= maxT) {
+                    boxT = maxT;
+                }
+                that.setPosition({left: boxL, top: boxT});
+                e.preventDefault();
+            }
 
     };
 
@@ -234,6 +281,5 @@
         }
         return newObj;
     };
-
 
 })(window, jQuery);
