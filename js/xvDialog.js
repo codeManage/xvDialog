@@ -60,7 +60,7 @@
             var type = dType[opts.type];
             var html;
             var body = $('body');
-            var mkBox = $("<div class='" + doms.maskBox + " " + doms.maskBox + '_' + idx + "'></div>").appendTo(body);
+            var mkBox = $("<div id='"+ doms.maskBox + '_' + idx+"' class='" + doms.maskBox + " "  + "'></div>").appendTo(body);
             var mkBoxCon = $("<div class='" + doms.maskBoxCon + "'><div class='" + doms.maskConBrd + "'><div class=" + doms.maskBoxTit + "></div><p class='" + doms.maskBoxTitMsg + "'>提示框</p><div class='" + doms.maskBoxMain + "'></div><div class='" + doms.maskBoxFoot + "'></div></div></div>").appendTo(body);
             var maskConBrd = mkBoxCon.find("." + doms.maskConBrd);
             var mkBoxMain = mkBoxCon.find("." + doms.maskBoxMain);
@@ -87,7 +87,7 @@
 
             switch (type) {
                 case dType.alert :
-                    var html = "<div class="+doms.maskMsgBox+">" +
+                        html = "<div class="+doms.maskMsgBox+">" +
                         "<i class='"+doms.icon+" "+doms.waring+"'></i>" +
                         "<span> 未经权益所有人同意，不得将资源中的内容挪作商业或盈利用途</span>" +
                         "</div>";
@@ -171,6 +171,7 @@
             var tit = _O.tit;
             var clsBtn = _O.clsBtn;
             var cclBtn = _O.cclBtn;
+            var sureBtn = _O.sBtn;
 
             /*初始化弹出框的尺寸*/
             _S.boxSize = _S.computeSize();
@@ -191,22 +192,43 @@
             clsBtn.on('click',function(){_S.close();});
             cclBtn.on('click',function(){_S.close();});
 
+
             /*触发拖拽*/
             _S.drag(tit);
 
         },
-        close:function(){
-            var _S = this;
+        close:function(e){
+            var _S =e? e.data.that:this;
             _S.mkObj.box.remove();
             _S.mkObj.ctr.remove();
 
         },
         on:function(evtName,func){
+            var _S = this;
+            var mkObj = _S.mkObj;
+            var evtObj=[];
+            switch (evtName){
+                case 'close':
+                    evtObj = mkObj['clsBtn'];
+                    break;
+                case 'sure':
+                    evtObj = mkObj['sBtn'];
+                    break;
+                case 'cancel':
+                    evtObj = mkObj['cclBtn'];
+                    break;
+                case 'colseBefore':
+                    _S.listeners = _S.listeners || {};
+                    _S.listeners.colseBefore = func;
+                    break;
+                default :
+                    break;
+            }
 
-        },
-
-        callBackSet:function(){
-
+            if(evtObj.length && func && typeof func == 'function') {
+                evtObj.on('click',func);
+                evtObj.on('click',{that:_S},_S.close);
+            }
         },
 
         drag: function (obj) {
