@@ -10,10 +10,16 @@
             maskBoxCon: 'xv_Mask_Container',
             maskBoxMain: 'xv_Mask_Main',
             maskConBrd: 'xv_Mask_Border',
-            maskBoxTit: 'xv_Mask_Box_tit',
+            maskBoxTit: 'xv_Mask_Box_Tit',
+            maskBoxFoot: 'xv_Mask_Box_Foot',
+            maskBoxTitMsg: 'xv_Mask_Box_Tit_Msg',
+            maskBoxBtn: 'xv_Mask_Box_Btn',
             maskBoxCloseBtn: 'xv_Mask_Box_CloseBtn',
             maskBoxCancelBtn: 'xv_Mask_Box_CancelBtn',
-            maskBoxSureBtn: 'xv_Mask_Box_SureBtn'
+            maskBoxSureBtn: 'xv_Mask_Box_SureBtn',
+            maskMsgBox:'xv_Mask_Msg_Box',
+            icon:'xv_Mask_Icon',
+            waring:'xv_Mask_Waring'
         },
         type: {
             alert: 'alert'
@@ -55,13 +61,15 @@
             var html;
             var body = $('body');
             var mkBox = $("<div class='" + doms.maskBox + " " + doms.maskBox + '_' + idx + "'></div>").appendTo(body);
-            var mkBoxCon = $("<div class='" + doms.maskBoxCon + "'><div class='" + doms.maskConBrd + "'><div class=" + doms.maskBoxTit + "></div><div class='" + doms.maskBoxMain + "'></div></div></div>").appendTo(body);
-            var closebtn = "<div class='" + doms.maskBoxCloseBtn + "'></div>";
-            var cancelBtn = "<div class='" + doms.maskBoxCancelBtn + "'></div>";
-            var sureBtn = "<div class='" + doms.maskBoxSureBtn + "'></div>";
+            var mkBoxCon = $("<div class='" + doms.maskBoxCon + "'><div class='" + doms.maskConBrd + "'><div class=" + doms.maskBoxTit + "></div><p class='" + doms.maskBoxTitMsg + "'>提示框</p><div class='" + doms.maskBoxMain + "'></div><div class='" + doms.maskBoxFoot + "'></div></div></div>").appendTo(body);
             var maskConBrd = mkBoxCon.find("." + doms.maskConBrd);
             var mkBoxMain = mkBoxCon.find("." + doms.maskBoxMain);
             var mkBoxTit = mkBoxCon.find("." + doms.maskBoxTit);
+            var mkBoxTitMsg = mkBoxCon.find("." + doms.maskBoxTitMsg);
+            var maskBoxFoot = mkBoxCon.find("." + doms.maskBoxFoot);
+            var closebtn = $("<div class='" + doms.maskBoxCloseBtn +"'>x</div>").appendTo(maskConBrd);
+            var sureBtn = $("<span class='" + doms.maskBoxBtn +" "+doms.maskBoxSureBtn+ "'>确定</span>").appendTo(maskBoxFoot);
+            var cancelBtn = $("<span class='" + doms.maskBoxBtn +" "+doms.maskBoxCancelBtn+ "'>取消</span>").appendTo(maskBoxFoot);
 
             _S.mkObj = {
                 body: body,
@@ -75,26 +83,16 @@
                 sBtn: sureBtn
             };
 
-
-            /*  mkBox.click(function(){
-             $(body).blur();
-             });*/
-
             _S.resetEvent();
-
-
-            //$('body').addClass('disSelectbody');
-            /*document.body.onselectstart = document.body.ondrag = function(){
-             return false;
-             }*/
-            /*$(window,document).on('scroll',function(e){
-             e.preventDefault();
-             })*/
-
 
             switch (type) {
                 case dType.alert :
-                    html = "<div></div>"
+                    var html = "<div class="+doms.maskMsgBox+">" +
+                        "<i class='"+doms.icon+" "+doms.waring+"'></i>" +
+                        "<span> 未经权益所有人同意，不得将资源中的内容挪作商业或盈利用途</span>" +
+                        "</div>";
+                    mkBoxMain.append(html);
+                    break;
             }
         },
 
@@ -135,8 +133,6 @@
             pL = $win.width() - w;
             pT = $win.height() - h;
 
-            console.log(pL);
-            console.log(pT);
             return {
                 left: pL > 0 ? pL / 2 : 0,
                 top: pT > 0 ? pT / 2 : 0
@@ -144,7 +140,7 @@
         },
 
         /*
-         *setPosition：计算obj的位置
+         * setPosition：计算obj的位置
          * opt ｛object｝
          * */
         setPosition: function (opts) {
@@ -155,6 +151,7 @@
             var obj = data.obj ? data.obj : _S.mkObj.ctr;
 
             if (opts.data && opts.data.auto) {
+                /*对元素居中处理*/
                 p = _S.computeCenter();
             } else {
                 data = opts;
@@ -172,6 +169,8 @@
 
             var ctr = _O.ctr;
             var tit = _O.tit;
+            var clsBtn = _O.clsBtn;
+            var cclBtn = _O.cclBtn;
 
             /*初始化弹出框的尺寸*/
             _S.boxSize = _S.computeSize();
@@ -185,10 +184,31 @@
             /*位置随着视口的变换自动居中*/
             $(window).on('resize', {auto: true, that: _S}, _S.setPosition);
 
+            /*位置随着视口的变换自动居中*/
+            $(window).on('scroll',function(e){$(this).scrollTop(0);e.preventDefault()});
+
+            /*关闭弹窗*/
+            clsBtn.on('click',function(){_S.close();});
+            cclBtn.on('click',function(){_S.close();});
+
             /*触发拖拽*/
             _S.drag(tit);
 
         },
+        close:function(){
+            var _S = this;
+            _S.mkObj.box.remove();
+            _S.mkObj.ctr.remove();
+
+        },
+        on:function(evtName,func){
+
+        },
+
+        callBackSet:function(){
+
+        },
+
         drag: function (obj) {
             var _S = this,
                 ctr = _S.mkObj.ctr;
@@ -209,6 +229,7 @@
                 $(document).on('mouseup',{that:_S,objProt:objProt,doc:doc},_S.clearDrag);
 
                 doc.on('mousemove',{that:_S,win:$(window),disX:disX,disY:disY},_S.moveFunc);
+
             });
         },
         clearDrag:function (e) {
@@ -248,7 +269,6 @@
                 that.setPosition({left: boxL, top: boxT});
                 e.preventDefault();
             }
-
     };
 
 
@@ -262,24 +282,6 @@
 
     DialogBox.isType = function (obj, type) {
         return Object.prototype.toString.call(obj) == "[object " + type + "]";
-    };
-
-    DialogBox.clone = function (obj) {//对象的拷贝
-        var newObj = {};
-        if (typeof (obj) != 'object' || obj == null) {
-            return obj;
-        }
-        if (obj.length) {
-            newObj = [];
-            for (var j = 0; j < obj.length; j++) {
-                newObj.push(GridTable.clone(obj[j]));
-            }
-        } else {
-            for (var i in obj) {
-                newObj[i] = GridTable.clone(obj[i]);
-            }
-        }
-        return newObj;
     };
 
 })(window, jQuery);
