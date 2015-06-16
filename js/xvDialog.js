@@ -22,20 +22,29 @@
             waring:'xv_Mask_Waring'
         },
         type: {
-            alert: 'alert'
+            alert: 'alert',
+            confirm:'confirm',
+            message:'message'
+        }
+    };
+
+
+    win.xvDialog = {
+        index : 0,
+        alert : function(config){
+            var dfltOpts = {
+                area:[],
+                contentMsg:'...',
+                icon:'waring',
+                button:['yes','no','close']
+            }
         }
     };
 
 
     //入口
-    win.xvDialog = function (opts) {
+    $.xvDialog = function (opts) {
         return new DialogBox(opts);
-    };
-
-    xvDialog.index = 0;
-
-    xvDialog.alert = function (type) {
-
     };
 
     //主框架
@@ -49,19 +58,20 @@
             opts.type = opts.type || 'alert';
             opts.width = opts.width;
             opts.height = opts.height;
+            opts.zIndex = parseInt(opts.zIndex) || 19890620;
             return opts;
         },
         building: function (opts) {
             var _S = this;
-            var idx = xvDialog.index++;
+            var idx = _S.index = xvDialog.index++;
             var opts = _S.settings(opts);
             var doms = G.doms;
             var dType = G.type;
             var type = dType[opts.type];
             var html;
             var body = $('body');
-            var mkBox = $("<div id='"+ doms.maskBox + '_' + idx+"' class='" + doms.maskBox + " "  + "'></div>").appendTo(body);
-            var mkBoxCon = $("<div class='" + doms.maskBoxCon + "'><div class='" + doms.maskConBrd + "'><div class=" + doms.maskBoxTit + "></div><p class='" + doms.maskBoxTitMsg + "'>提示框</p><div class='" + doms.maskBoxMain + "'></div><div class='" + doms.maskBoxFoot + "'></div></div></div>").appendTo(body);
+            var mkBox = $("<div id='"+ doms.maskBox + '_' + idx+"' class='" + doms.maskBox + " "  + "' style='z-index:"+(opts.zIndex+idx)+";'></div>").appendTo(body);
+            var mkBoxCon = $("<div class='" + doms.maskBoxCon + "' style='z-index:"+(opts.zIndex+idx+1)+";'><div class='" + doms.maskConBrd + "'><div class=" + doms.maskBoxTit + "></div><p class='" + doms.maskBoxTitMsg + "'>提示框</p><div class='" + doms.maskBoxMain + "'></div><div class='" + doms.maskBoxFoot + "'></div></div></div>").appendTo(body);
             var maskConBrd = mkBoxCon.find("." + doms.maskConBrd);
             var mkBoxMain = mkBoxCon.find("." + doms.maskBoxMain);
             var mkBoxTit = mkBoxCon.find("." + doms.maskBoxTit);
@@ -70,6 +80,16 @@
             var closebtn = $("<div class='" + doms.maskBoxCloseBtn +"'>x</div>").appendTo(maskConBrd);
             var sureBtn = $("<span class='" + doms.maskBoxBtn +" "+doms.maskBoxSureBtn+ "'>确定</span>").appendTo(maskBoxFoot);
             var cancelBtn = $("<span class='" + doms.maskBoxBtn +" "+doms.maskBoxCancelBtn+ "'>取消</span>").appendTo(maskBoxFoot);
+
+            switch (type) {
+                case dType.alert :
+                    html = "<div class="+doms.maskMsgBox+">" +
+                    "<i class='"+doms.icon+" "+doms.waring+"'></i>" +
+                    "<span> 未经权益所有人同意，不得将资源中的内容挪作商业或盈利用途</span>" +
+                    "</div>";
+                    mkBoxMain.append(html);
+                    break;
+            }
 
             _S.mkObj = {
                 body: body,
@@ -84,16 +104,6 @@
             };
 
             _S.resetEvent();
-
-            switch (type) {
-                case dType.alert :
-                        html = "<div class="+doms.maskMsgBox+">" +
-                        "<i class='"+doms.icon+" "+doms.waring+"'></i>" +
-                        "<span> 未经权益所有人同意，不得将资源中的内容挪作商业或盈利用途</span>" +
-                        "</div>";
-                    mkBoxMain.append(html);
-                    break;
-            }
         },
 
         computeSize: function () {
@@ -188,20 +198,15 @@
             /*位置随着视口的变换自动居中*/
             $(window).on('scroll',function(e){$(this).scrollTop(0);e.preventDefault()});
 
-            /*关闭弹窗*/
-            clsBtn.on('click',function(){_S.close();});
-            cclBtn.on('click',function(){_S.close();});
-
-
             /*触发拖拽*/
             _S.drag(tit);
 
         },
         close:function(e){
+            console.log('关闭');
             var _S =e? e.data.that:this;
             _S.mkObj.box.remove();
             _S.mkObj.ctr.remove();
-
         },
         on:function(evtName,func){
             var _S = this;
@@ -209,25 +214,27 @@
             var evtObj=[];
             switch (evtName){
                 case 'close':
-                    evtObj = mkObj['clsBtn'];
+                    evtObj = [mkObj['clsBtn']];
                     break;
                 case 'sure':
-                    evtObj = mkObj['sBtn'];
+                    evtObj = [mkObj['sBtn']];
                     break;
                 case 'cancel':
-                    evtObj = mkObj['cclBtn'];
+                    evtObj = [mkObj['cclBtn']];
                     break;
                 case 'colseBefore':
-                    _S.listeners = _S.listeners || {};
-                    _S.listeners.colseBefore = func;
+                    evtObj = [mkObj['cclBtn'],mkObj['sBtn'],mkObj['clsBtn']];
                     break;
                 default :
                     break;
             }
 
-            if(evtObj.length && func && typeof func == 'function') {
-                evtObj.on('click',func);
-                evtObj.on('click',{that:_S},_S.close);
+            if(func && typeof func == 'function') {
+                for(var i = 0 ;i <evtObj.length;i++){
+                    evtObj[i].on('click',func);
+                    evtObj[i].off('click',_S.close);
+                    evtObj[i].on('click',{that:_S},_S.close);
+                }
             }
         },
 
@@ -291,19 +298,6 @@
                 that.setPosition({left: boxL, top: boxT});
                 e.preventDefault();
             }
-    };
-
-
-    //公共属性(方法)
-    DialogBox.isArray = function (arr) {//判断是否为数组，且数组不为空
-        return arr && (typeof arr == 'object') && arr.length;
-    };
-    DialogBox.isObject = function (obj) {//判断是否为object
-        return obj && typeof obj == 'object' && !obj.length;
-    };
-
-    DialogBox.isType = function (obj, type) {
-        return Object.prototype.toString.call(obj) == "[object " + type + "]";
     };
 
 })(window, jQuery);
