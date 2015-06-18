@@ -1,44 +1,18 @@
-amount: 995
-amountAfter: 0
-cancel: false
-code: null
-createDate: 1433925617000
-deliveredQty: "0.0"
-deliveringQty: "0.0"
-discount: "0.0498"
-discountFee: 0
-fromType: null
-id: "489933715"
-itemCategoryName: "95%棉5%氨纶"
-itemCode: "1442737400"
-itemDel: false
-itemId: "407219621"
-itemName: "皮草"
-itemSimpleName: ""
-itemSkuCode: null
-itemSkuId: null
-itemSkuName: null
-note: ""
-oid: null
-originAmount: 19995
-originPrice: "3999.0"
-picUrl: ""
-pid: "489933714"
-platformItemName: null
-platformSkuName: null
-postFee: 0
-price: "199.0000"
-qty: "5"
-refund: 0
-shopName: null
-skuId: "407219721"
-skuPid: null
-supplierName: null
-taxAmount: 0
-taxNo: ""
-taxRate: 0
-tenantId: "23179070"
-type: "Item"
-vipCode: "13917591664"
-vipName: "13917591664"
-wareHouseName: null
+var mkBox = $("<div id='"+ doms.maskBox + '_' + idx+"' class='" + doms.maskBox + " "  + "' style='z-index:"+(opts.zIndex+idx)+";'></div>").appendTo(body);
+var mkBoxCon = $("<div class='" + doms.maskBoxCon + "' style='z-index:"+(opts.zIndex+idx+1)+";'><div class='" + doms.maskConBrd + "'><div class=" + doms.maskBoxTit + "></div><p class='" + doms.maskBoxTitMsg + "'>提示框</p><div class='" + doms.maskBoxMain + "'></div><div class='" + doms.maskBoxFoot + "'></div></div></div>").appendTo(body);
+
+var maskConBrd = mkBoxCon.find("." + doms.maskConBrd);
+var mkBoxMain = mkBoxCon.find("." + doms.maskBoxMain);
+var mkBoxTit = mkBoxCon.find("." + doms.maskBoxTit);
+var mkBoxTitMsg = mkBoxCon.find("." + doms.maskBoxTitMsg);
+var maskBoxFoot = mkBoxCon.find("." + doms.maskBoxFoot);
+var closebtn = $("<div class='" + doms.maskBoxCloseBtn +"'>x</div>").appendTo(maskConBrd);
+var sureBtn = $("<span class='" + doms.maskBoxBtn +" "+doms.maskBoxSureBtn+ "'>确定</span>").appendTo(maskBoxFoot);
+var cancelBtn = $("<span class='" + doms.maskBoxBtn +" "+doms.maskBoxCancelBtn+ "'>取消</span>").appendTo(maskBoxFoot);
+
+
+
+html = "<div class="+doms.maskMsgBox+">" +
+"<i class='"+doms.icon+" "+doms.waring+"'></i>" +
+"<span> 未经权益所有人同意，不得将资源中的内容挪作商业或盈利用途</span>" +
+"</div>";

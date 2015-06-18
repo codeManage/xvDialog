@@ -19,7 +19,8 @@
             maskBoxSureBtn: 'xv_Mask_Box_SureBtn',
             maskMsgBox:'xv_Mask_Msg_Box',
             icon:'xv_Mask_Icon',
-            waring:'xv_Mask_Waring'
+            waring:'xv_Mask_Waring',
+            tip:'xv_Mask_Tip'
         },
         type: {
             alert: 'alert',
@@ -27,7 +28,6 @@
             message:'message'
         }
     };
-
 
     win.xvDialog = {
         index : 0,
@@ -37,6 +37,11 @@
                 contentMsg:'...',
                 icon:'waring',
                 button:['yes','no','close']
+            }
+        },tips:function(config){
+            var dfltOpts = {
+                area:[],
+                contentMsg:'...'
             }
         }
     };
@@ -70,39 +75,56 @@
             var type = dType[opts.type];
             var html;
             var body = $('body');
-            var mkBox = $("<div id='"+ doms.maskBox + '_' + idx+"' class='" + doms.maskBox + " "  + "' style='z-index:"+(opts.zIndex+idx)+";'></div>").appendTo(body);
-            var mkBoxCon = $("<div class='" + doms.maskBoxCon + "' style='z-index:"+(opts.zIndex+idx+1)+";'><div class='" + doms.maskConBrd + "'><div class=" + doms.maskBoxTit + "></div><p class='" + doms.maskBoxTitMsg + "'>提示框</p><div class='" + doms.maskBoxMain + "'></div><div class='" + doms.maskBoxFoot + "'></div></div></div>").appendTo(body);
-            var maskConBrd = mkBoxCon.find("." + doms.maskConBrd);
-            var mkBoxMain = mkBoxCon.find("." + doms.maskBoxMain);
-            var mkBoxTit = mkBoxCon.find("." + doms.maskBoxTit);
-            var mkBoxTitMsg = mkBoxCon.find("." + doms.maskBoxTitMsg);
-            var maskBoxFoot = mkBoxCon.find("." + doms.maskBoxFoot);
-            var closebtn = $("<div class='" + doms.maskBoxCloseBtn +"'>x</div>").appendTo(maskConBrd);
-            var sureBtn = $("<span class='" + doms.maskBoxBtn +" "+doms.maskBoxSureBtn+ "'>确定</span>").appendTo(maskBoxFoot);
-            var cancelBtn = $("<span class='" + doms.maskBoxBtn +" "+doms.maskBoxCancelBtn+ "'>取消</span>").appendTo(maskBoxFoot);
+
+
+            var mkBox = "<div id='"+ doms.maskBox + '_' + idx+"' class='" + doms.maskBox + " "  + "' style='z-index:"+(opts.zIndex+idx)+";'></div>";
+            var mkBoxCon = "<div class='" + doms.maskBoxCon + "' style='z-index:"+(opts.zIndex+idx+1)+";'><div class='" + doms.maskConBrd + "'><div class=" + doms.maskBoxTit + "></div><p class='" + doms.maskBoxTitMsg + "'>提示框</p><div class='" + doms.maskBoxMain + "'></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
+
+            var closebtn = "<div class='" + doms.maskBoxCloseBtn +"'>x</div>";
+            var sureBtn = "<span class='" + doms.maskBoxBtn +" "+doms.maskBoxSureBtn+ "'>确定</span>";
+            var cancelBtn ="<span class='" + doms.maskBoxBtn +" "+doms.maskBoxCancelBtn+ "'>取消</span>";
+
+            var tips = "<div id='"+ doms.tips + '_' + idx+"' class='" + doms.maskBox + " "  + "' style='z-index:"+(opts.zIndex+idx)+";'></div>";
+
 
             switch (type) {
                 case dType.alert :
-                    html = "<div class="+doms.maskMsgBox+">" +
-                    "<i class='"+doms.icon+" "+doms.waring+"'></i>" +
-                    "<span> 未经权益所有人同意，不得将资源中的内容挪作商业或盈利用途</span>" +
-                    "</div>";
-                    mkBoxMain.append(html);
+                    mkBox = $(mkBox).appendTo(body);
+                    mkBoxCon = $(mkBoxCon).appendTo(body);
+                    var maskConBrd = mkBoxCon.find("." + doms.maskConBrd),
+                        mkBoxMain = mkBoxCon.find("." + doms.maskBoxMain),
+                        mkBoxTit = mkBoxCon.find("." + doms.maskBoxTit),
+                        mkBoxTitMsg = mkBoxCon.find("." + doms.maskBoxTitMsg),
+                        maskBoxFoot = mkBoxCon.find("." + doms.maskBoxFoot);
+                        closebtn = $("<div class='" + doms.maskBoxCloseBtn +"'>x</div>").appendTo(maskConBrd);
+                        sureBtn = $("<span class='" + doms.maskBoxBtn +" "+doms.maskBoxSureBtn+ "'>确定</span>").appendTo(maskBoxFoot);
+                        cancelBtn = $("<span class='" + doms.maskBoxBtn +" "+doms.maskBoxCancelBtn+ "'>取消</span>").appendTo(maskBoxFoot);
+
+                        _S.mkObj = {
+                            body: body,
+                            box: mkBox,
+                            ctr: mkBoxCon,
+                            brd: maskConBrd,
+                            main: mkBoxMain,
+                            tit: mkBoxTit,
+                            clsBtn: closebtn,
+                            cclBtn: cancelBtn,
+                            sBtn: sureBtn
+                        };
+
+                    //mkBoxMain.append(html);
+                    break;
+                case dType.tips :
+                    tips = $(tips).appendTo(body);
+                    closebtn = $("<div class='" + doms.maskBoxCloseBtn +"'>x</div>").appendTo(tips);
+                    _S.mkObj = {
+                        body: body,
+                        box: mkBox,
+                        clsBtn: closebtn,
+                        tips: tips
+                    };
                     break;
             }
-
-            _S.mkObj = {
-                body: body,
-                box: mkBox,
-                ctr: mkBoxCon,
-                brd: maskConBrd,
-                main: mkBoxMain,
-                tit: mkBoxTit,
-                clsBtn: closebtn,
-                cclBtn: cancelBtn,
-                sBtn: sureBtn
-            };
-
             _S.resetEvent();
         },
 
