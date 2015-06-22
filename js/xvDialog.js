@@ -25,7 +25,8 @@
         type: {
             alert: 'alert',
             confirm:'confirm',
-            message:'message'
+            message:'message',
+            tips:'tips'
         }
     };
 
@@ -84,7 +85,7 @@
             var sureBtn = "<span class='" + doms.maskBoxBtn +" "+doms.maskBoxSureBtn+ "'>确定</span>";
             var cancelBtn ="<span class='" + doms.maskBoxBtn +" "+doms.maskBoxCancelBtn+ "'>取消</span>";
 
-            var tips = "<div id='"+ doms.tips + '_' + idx+"' class='" + doms.maskBox + " "  + "' style='z-index:"+(opts.zIndex+idx)+";'></div>";
+            var tips = "<div id='"+ doms.tip + '_' + idx+"' class='" + doms.tip + " "  + "' style='z-index:"+(opts.zIndex+idx)+";'><div class='" + doms.tip + "_Container'>其实我叫动感超人。。</div></div>";
 
 
             switch (type) {
@@ -117,6 +118,7 @@
                 case dType.tips :
                     tips = $(tips).appendTo(body);
                     closebtn = $("<div class='" + doms.maskBoxCloseBtn +"'>x</div>").appendTo(tips);
+
                     _S.mkObj = {
                         body: body,
                         box: mkBox,
@@ -125,7 +127,8 @@
                     };
                     break;
             }
-            _S.resetEvent();
+
+            _S.resetEvent(type);
         },
 
         computeSize: function () {
@@ -195,9 +198,13 @@
             };
             obj.css({left: p.left, top: p.top});
         },
-        resetEvent: function () {
+        resetEvent: function (type) {
             var _S = this;
             var _O = _S.mkObj;
+            if(type == 'alert'){
+
+
+
 
             var ctr = _O.ctr;
             var tit = _O.tit;
@@ -222,6 +229,14 @@
 
             /*触发拖拽*/
             _S.drag(tit);
+
+            }else if(type == 'tips'){
+                var tips = _O.tips;
+                var target = $(window.event.target);
+                var trtW = target.width();
+                var trtH = target.height();
+                tips.css(target.offset())
+            }
 
         },
         close:function(e){

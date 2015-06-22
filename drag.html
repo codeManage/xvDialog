@@ -166,7 +166,6 @@
             bottom: 0px;
         }
 
-
         .xv_Mask_Box_Btn {
             display: inline-block;
             *display:inline;
@@ -188,9 +187,6 @@
             opacity: 1;
         }
 
-
-
-
         .xv_Mask_Box_CancelBtn {
             color:#333;
             border: 1px solid #ababab;
@@ -207,6 +203,7 @@
         /*tips*/
         .xv_Mask_Tip {
             background: #ffc464;
+            position:absolute;
         }
 
         .xv_Mask_Tip .xv_Mask_Box_CloseBtn {
@@ -231,6 +228,11 @@
 
     <input class="btn1" type="button" value="弹走鱼尾纹！"/>
 
+</div>
+
+
+<div style="padding-top:100px;text-align: center">
+    <span id="tip" style="display:inline-block;padding:5px 10px;color:#fff;border-radius: 5px;background: #f34627;cursor: pointer;"><b>我就是xv-大前端</b></span>
 </div>
 
 
@@ -394,7 +396,6 @@ $(".btn1").click(
             });
 
             xv1.on('sure',function(e){
-                console.log(e);
                 console.log('谢谢你的肯定！');
             });
 
@@ -412,6 +413,24 @@ $(".btn1").click(
 
         }
 );
+
+
+$("#tip").click(
+        function(){
+            var xv1 = $.xvDialog({
+                type: 'tips',
+                width: 200,
+                height: 100,
+                tit:'提示框',
+                contentMsg:'hello，我是xv-大前端！',
+                listeners:{
+                    sure:'sure',
+                    close:'close',
+                    cancel:'cancel',
+                    colseBefore:'colseBefore'
+                }
+            });
+        });
 
 
     /*
