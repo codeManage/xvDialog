@@ -20,7 +20,9 @@
             maskMsgBox:'xv_Mask_Msg_Box',
             icon:'xv_Mask_Icon',
             waring:'xv_Mask_Waring',
-            tip:'xv_Mask_Tip'
+            tip:'xv_Mask_Tip',
+            type:'xvmktype',
+            times:'mktimes'
         },
         type: {
             alert: 'alert',
@@ -44,6 +46,27 @@
                 area:[],
                 contentMsg:'...'
             }
+        },close:function(object){
+            if(!(object || object === 0)){return false;}
+            var ctr,
+                idx = Number(object),
+                type = G.doms['type'],
+                attr = G.doms['times'];
+            if( idx >= 0 ){
+                /*如果为数值*/
+                ctr = $("["+attr+"="+idx+"]");
+            }else if(typeof object == 'string'){
+                /*r*/
+                if(object === 'all'){
+                    ctr = $("["+type+"]");
+                }else{
+                    ctr = $("["+type+"="+object+"]");
+                }
+            }else {
+                if(!object.index) {return false;}
+                ctr = $("["+attr+"="+object.index+"]");
+            }
+            ctr.remove();
         }
     };
 
@@ -61,6 +84,7 @@
 
     DialogBox.pt = DialogBox.prototype = {
         settings: function (opts) {
+            opts.index = (opts.index || opts.index === 0) ? opts.index : '';
             opts.type = opts.type || 'alert';
             opts.width = opts.width;
             opts.height = opts.height;
@@ -69,23 +93,23 @@
         },
         building: function (opts) {
             var _S = this;
-            var idx = _S.index = xvDialog.index++;
             var opts = _S.settings(opts);
+            var idx = _S.index = (opts.index || opts.index === 0) ? opts.index : xvDialog.index++;
             var doms = G.doms;
             var dType = G.type;
-            var type = dType[opts.type];
+            var type = _S.currentType = dType[opts.type];
             var html;
             var body = $('body');
 
 
-            var mkBox = "<div id='"+ doms.maskBox + '_' + idx+"' class='" + doms.maskBox + " "  + "' style='z-index:"+(opts.zIndex+idx)+";'></div>";
-            var mkBoxCon = "<div class='" + doms.maskBoxCon + "' style='z-index:"+(opts.zIndex+idx+1)+";'><div class='" + doms.maskConBrd + "'><div class=" + doms.maskBoxTit + "></div><p class='" + doms.maskBoxTitMsg + "'>提示框</p><div class='" + doms.maskBoxMain + "'></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
+            var mkBox = "<div id='"+ doms.maskBox + '_' + idx+"' class='" + doms.maskBox + "' "+ doms.type+"='"+ type +"' "+doms.times+"='"+ idx +"' style='z-index:"+(opts.zIndex+idx)+";'></div>";
+            var mkBoxCon = "<div class='" + doms.maskBoxCon + "' " + doms.type+"='"+ type +"' "+doms.times+"='"+ idx +"'  style='z-index:"+(opts.zIndex+idx+1)+";'><div class='" + doms.maskConBrd + "'><div class=" + doms.maskBoxTit + "></div><p class='" + doms.maskBoxTitMsg + "'>提示框</p><div class='" + doms.maskBoxMain + "'></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
 
             var closebtn = "<div class='" + doms.maskBoxCloseBtn +"'>x</div>";
             var sureBtn = "<span class='" + doms.maskBoxBtn +" "+doms.maskBoxSureBtn+ "'>确定</span>";
             var cancelBtn ="<span class='" + doms.maskBoxBtn +" "+doms.maskBoxCancelBtn+ "'>取消</span>";
 
-            var tips = "<div id='"+ doms.tip + '_' + idx+"' class='" + doms.tip + " "  + "' style='z-index:"+(opts.zIndex+idx)+";'><div class='" + doms.tip + "_Container'>其实我叫动感超人。。</div></div>";
+            var tips = "<div id='"+ doms.tip + '_' + idx+"' class='" + doms.tip + "' " + doms.type+"='"+ type +"' "+doms.times+"='"+ idx +"' style='z-index:"+(opts.zIndex+idx)+";'><div class='"+doms.icon+"'></div><div class='" + doms.tip + "_Container'>其实我叫动感超人。。</div></div>";
 
 
             switch (type) {
@@ -118,12 +142,11 @@
                 case dType.tips :
                     tips = $(tips).appendTo(body);
                     closebtn = $("<div class='" + doms.maskBoxCloseBtn +"'>x</div>").appendTo(tips);
-
                     _S.mkObj = {
                         body: body,
                         box: mkBox,
                         clsBtn: closebtn,
-                        tips: tips
+                        ctr: tips
                     };
                     break;
             }
@@ -202,10 +225,6 @@
             var _S = this;
             var _O = _S.mkObj;
             if(type == 'alert'){
-
-
-
-
             var ctr = _O.ctr;
             var tit = _O.tit;
             var clsBtn = _O.clsBtn;
@@ -231,20 +250,20 @@
             _S.drag(tit);
 
             }else if(type == 'tips'){
-                var tips = _O.tips;
+                var tips = _O.ctr;
                 var target = $(window.event.target);
                 var trtW = target.width();
                 var trtH = target.height();
-                tips.css(target.offset())
+                tips.css(target.offset());
+                setTimeout(function(){_S.close()},2000);
             }
+        },
 
-        },
         close:function(e){
-            console.log('关闭');
-            var _S =e? e.data.that:this;
-            _S.mkObj.box.remove();
-            _S.mkObj.ctr.remove();
+            var _S =e && e.data? e.data.that:this;
+            xvDialog.close(_S.index);
         },
+
         on:function(evtName,func){
             var _S = this;
             var mkObj = _S.mkObj;
@@ -298,6 +317,8 @@
 
             });
         },
+
+
         clearDrag:function (e) {
                 var opts = e.data,
                     objProt = opts.objProt,

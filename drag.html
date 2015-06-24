@@ -118,6 +118,7 @@
             top:65px;
             background:url("xvDialogImg/xv-md-icon.png") left top no-repeat;
         }
+
         .xv_Mask_Msg_Box span {
             display: block;
             font-size:12px;
@@ -202,7 +203,9 @@
 
         /*tips*/
         .xv_Mask_Tip {
-            background: #ffc464;
+            background: #a3e531;
+            border-radius:5px;
+            padding:5px;
             position:absolute;
         }
 
@@ -218,6 +221,12 @@
 </head>
 <body>
 
+<div style="padding-top:100px;text-align: center;position: relative;z-index:999999999;">
+    <a class="closeAlert" href="javascript:void('');" style="background: #1f8ed8;color:#fff;padding:5px;display:inline-block;padding:5px 10px;margin-left:30px;">关闭Alert</a>
+    <a class="closeTip" href="javascript:void('');" style="background: #1f8ed8;color:#fff;padding:5px;display:inline-block;padding:5px 10px;margin-left:30px;">关闭tip</a>
+</div>
+
+
 <div style="padding-top:100px;text-align: center">
 
     <input class="btn1" type="button" value="弹！"/>
@@ -230,9 +239,8 @@
 
 </div>
 
-
-<div style="padding-top:100px;text-align: center">
-    <span id="tip" style="display:inline-block;padding:5px 10px;color:#fff;border-radius: 5px;background: #f34627;cursor: pointer;"><b>我就是xv-大前端</b></span>
+<div style="padding:100px 0;text-align: center">
+    <span id="tip" style="display:inline-block;padding:5px 10px;color:#fff;border-radius: 5px;background: #f34627;cursor: pointer;">我就是xv-大前端</span>
 </div>
 
 
@@ -244,8 +252,8 @@
 
 </div>
 
-fdsafd
-fdsafdsafdsaf
+
+
 <br/>
 <br/>safdsfdsaafds
 <br/>fdsafdsa
@@ -379,9 +387,11 @@ dsafdsa
 </body>
 <script>
 
+var xv1;
 $(".btn1").click(
         function(){
-            var xv1 = $.xvDialog({
+                xv1 = $.xvDialog({
+                index:0,
                 type: 'alert',
                 width: 200,
                 height: 100,
@@ -414,24 +424,32 @@ $(".btn1").click(
         }
 );
 
+$(".closeAlert").click(function(){
+    xvDialog.close(0);
+});
 
+
+var xv2;
 $("#tip").click(
         function(){
-            var xv1 = $.xvDialog({
+            xv2 = $.xvDialog({
+                index:1,
                 type: 'tips',
                 width: 200,
                 height: 100,
+                position:[10,100],
                 tit:'提示框',
-                contentMsg:'hello，我是xv-大前端！',
-                listeners:{
-                    sure:'sure',
-                    close:'close',
-                    cancel:'cancel',
-                    colseBefore:'colseBefore'
-                }
+                contentMsg:'hello，我是xv-大前端！'
             });
         });
 
+
+$(".closeTip").click(
+        function(){
+//            xvDialog.close(xv2);
+            xvDialog.close('all');
+        }
+);
 
     /*
      xvDialog({
@@ -445,6 +463,9 @@ $("#tip").click(
      width:200,
      height:100
      });*/
+
+
+
 
 </script>
 </html>
