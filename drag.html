@@ -110,14 +110,14 @@
             padding:15px;
         }
 
-        .xv_Mask_Icon {
+        /*.xv_Mask_Icon {
             position: absolute;
             left:25px;
             width:38px;
             height:38px;
             top:65px;
             background:url("xvDialogImg/xv-md-icon.png") left top no-repeat;
-        }
+        }*/
 
         .xv_Mask_Msg_Box span {
             display: block;
@@ -203,14 +203,108 @@
 
         /*tips*/
         .xv_Mask_Tip {
-            background: #a3e531;
+            background: rgba(8, 128, 206, 1);
             border-radius:5px;
-            padding:5px;
+            padding:10px;
             position:absolute;
+            color:#f3d266;
         }
 
         .xv_Mask_Tip .xv_Mask_Box_CloseBtn {
+            position: absolute;
+            color:#a5ebfd;
+            height:5px;
+            width:5px;
+            line-height:5px;
+            cursor: pointer;
+        }
 
+        .xv_Mask_Tip .xv_Mask_Icon {
+            position: absolute;
+            width:0;
+            height:0;
+            border:5px dashed transparent;
+        }
+
+
+
+        .xv_Tip_Align_left {
+            padding-left:20px;
+        }
+
+
+
+        .xv_Tip_Align_left .xv_Mask_Box_CloseBtn {
+            left:8px;
+            top:50%;
+            margin-top:-2px;
+        }
+
+
+        .xv_Tip_Align_left .xv_Mask_Icon {
+            right:-10px;
+            top:20%;
+            border-left-color:rgba(8, 128, 206, 1);
+        }
+
+
+        .xv_Tip_Align_right {
+            padding-right:20px;
+        }
+
+        .xv_Tip_Align_right .xv_Mask_Box_CloseBtn {
+            right:8px;
+            top:50%;
+            margin-top:-2px;
+        }
+
+        .xv_Tip_Align_right .xv_Mask_Icon {
+            left:-10px;
+            top:20%;
+            border-right-color:rgba(8, 128, 206, 1);
+        }
+
+
+
+        .xv_Tip_Align_top {
+            padding-right:20px;
+        }
+
+        .xv_Tip_Align_top .xv_Mask_Box_CloseBtn {
+            right:8px;
+            top:50%;
+            margin-top:-2px;
+        }
+
+        .xv_Tip_Align_top .xv_Mask_Icon {
+            left:20%;
+            bottom:-10px;
+            border-top-color:rgba(8, 128, 206, 1);
+        }
+
+
+        .xv_Tip_Align_bottom {
+            padding-right:20px;
+        }
+
+        .xv_Tip_Align_bottom .xv_Mask_Box_CloseBtn {
+            right:8px;
+            top:50%;
+            margin-top:-2px;
+        }
+
+        .xv_Tip_Align_bottom .xv_Mask_Icon {
+            left:20%;
+            top:-10px;
+            border-bottom-color:rgba(8, 128, 206, 1);
+        }
+
+
+        .xv_Mask_Tip em {
+            position: absolute;
+            width:0;
+            height:0;
+            border:5px dashed transparent;
         }
 
 
@@ -331,48 +425,7 @@
 <br/>fdsafdsa
 <br/>
 <br/>
-safdsfdsaafds
-fdsafdsa
 
-
-
-dsafdsafdsaf
-
-
-safdsfdsaafds
-fdsafdsa
-
-
-
-dsafdsafdsaf
-
-
-safdsfdsaafds
-fdsafdsa
-
-
-
-dsafdsafdsaf
-
-
-safdsfdsaafds
-fdsafdsa
-
-
-
-dsafdsafdsaf
-
-
-safdsfdsaafds
-fdsafdsa
-
-
-
-dsafdsafdsaf
-
-
-safdsfdsaafds
-fdsafdsa
 
 
 
@@ -393,9 +446,9 @@ $(".btn1").click(
                 xv1 = $.xvDialog({
                 index:0,
                 type: 'alert',
-                width: 200,
-                height: 100,
-                tit:'提示框',
+                width:200,
+                height:100,
+                title:'提示框',
                 contentMsg:'未经权益所有人同意，不得将资源中的内容挪作商业或盈利用途！',
                 listeners:{
                     sure:'sure',
@@ -405,7 +458,7 @@ $(".btn1").click(
                 }
             });
 
-            xv1.on('sure',function(e){
+            /*xv1.on('sure',function(e){
                 console.log('谢谢你的肯定！');
             });
 
@@ -419,7 +472,7 @@ $(".btn1").click(
 
             xv1.on('colseBefore',function(){
                 console.log('close之前，我想告诉你。。。。。。我真的不想close --！');
-            });
+            });*/
 
         }
 );
@@ -435,10 +488,8 @@ $("#tip").click(
             xv2 = $.xvDialog({
                 index:1,
                 type: 'tips',
-                width: 200,
-                height: 100,
-                position:[10,100],
-                tit:'提示框',
+                align:'bottom',/*对齐位置默认为靠右*/
+                position:{left:5,top:5},
                 contentMsg:'hello，我是xv-大前端！'
             });
         });
@@ -446,25 +497,11 @@ $("#tip").click(
 
 $(".closeTip").click(
         function(){
-//            xvDialog.close(xv2);
+            /*type可以为：all、tips、alert、index*/
+//            xvDialog.close(type)
             xvDialog.close('all');
         }
 );
-
-    /*
-     xvDialog({
-     type:'alert',
-     width:200,
-     height:100
-     });
-
-     xvDialog({
-     type:'alert',
-     width:200,
-     height:100
-     });*/
-
-
 
 
 </script>
