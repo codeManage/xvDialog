@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>jQuery弹出框</title>
+    <script src="js/jquery.js"></script>
+    <script src="js/xvDialog.js"></script>
+
+    <style>
+        body {
+
+            background: url("xvDialogImg/6.jpg") center top no-repeat;
+            overflow: hidden;
+        }
+
+        html{
+            overflow:hidden;
+        }
+
+
+        body, ul, li, img,p {
+            padding: 0px;
+            margin: 0px;
+            font-size: 12px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        img {
+            display: inline;
+            border: none;
+        }
+
+        ul, li {
+            list-style-type: none;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            word-break: keep-all;
+            table-layout: fixed;
+            margin-left: -1px;
+            margin-top: -1px;
+        }
+    </style>
+</head>
+<body>
+<embed src="http://player.youku.com/player.php/sid/XMjk1ODU3MzI4/v.swf" allowFullScreen="true" quality="high" width="480" height="500" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>
+
+</body>
+<script>
+
+var xv1;
+$(".btn1").click(
+        function(){
+                xv1 = $.xvDialog({
+                index:0,
+                type: 'alert',
+                width: 200,
+                height: 100,
+                tit:'提示框',
+                contentMsg:'未经权益所有人同意，不得将资源中的内容挪作商业或盈利用途！',
+                listeners:{
+                    sure:'sure',
+                    close:'close',
+                    cancel:'cancel',
+                    colseBefore:'colseBefore'
+                }
+            });
+
+            xv1.on('sure',function(e){
+                console.log('谢谢你的肯定！');
+            });
+
+            xv1.on('close',function(){
+                console.log('你就这样无情的离开了我！');
+            });
+
+            xv1.on('cancel',function(){
+                console.log('早知今日，何必当初！');
+            });
+
+            xv1.on('colseBefore',function(){
+                console.log('close之前，我想告诉你。。。。。。我真的不想close --！');
+            });
+
+        }
+);
+
+$(".closeAlert").click(function(){
+    xvDialog.close(0);
+});
+
+
+var xv2;
+$("#tip").click(
+        function(){
+            xv2 = $.xvDialog({
+                index:1,
+                type: 'tips',
+                width: 200,
+                height: 100,
+                position:[10,100],
+                tit:'提示框',
+                contentMsg:'hello，我是xv-大前端！'
+            });
+        });
+
+
+$(".closeTip").click(
+        function(){
+//            xvDialog.close(xv2);
+            xvDialog.close('all');
+        }
+);
+
+    /*
+     xvDialog({
+     type:'alert',
+     width:200,
+     height:100
+     });
+
+     xvDialog({
+     type:'alert',
+     width:200,
+     height:100
+     });*/
+
+
+
+
+</script>
+</html>
