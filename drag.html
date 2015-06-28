@@ -17,14 +17,6 @@ html {
     overflow: hidden;
 }
 
-/*.disSelectbody{
-    -moz-user-select: none; *//*火狐*//*
-    -webkit-user-select: none; *//*webkit浏览器*//*
-    -ms-user-select: none; *//*IE10*//*
-    -khtml-user-select: none; *//*早期浏览器*//*
-    user-select: none;
-    overflow: hidden;
-}*/
 
 body, ul, li, img, p {
     padding: 0px;
@@ -107,20 +99,19 @@ table {
 }
 
 .xv_Mask_Txt_Box {
-    position: absolute;
+    position: relative;
     padding: 20px;
     height: auto;
     top: 0;
     bottom: 0;
 }
 
-.xv_Mask_Txt_Box .xv_Mask_Txt {
-    padding-left: 20px;
+.xv_Mask_Txt_Box .xv_Mask_Txt{
     line-height: 26px;
 }
 
 .xv_Mask_Border .xv_Mask_Icon {
-    float: left;
+    float:left;
     display: block;
     width: 38px;
     height: 38px;
@@ -326,7 +317,6 @@ input {
 
 
 <div style="padding-top:100px;text-align: center">
-
     <input class="btn1" type="button" value="弹！"/>
 
     <input class="btn1" type="button" value="弹！"/>
@@ -448,11 +438,16 @@ dsafdsa
                 xv1 = $.xvDialog({
                     index: 0,
                     type: 'alert',
-                    width: 300,
-                    height: 200,
-                    title: '提示框',
+//
+                    /*drag:false,
+                    title: false,
+                    icon:false,
+                    closeBtn:false,
+                    buttons:false,*/
+                    title:'提示框',
                     iconType: 'success',
-                    contentMsg: 'hello，我是xv-大前端！我是xv-大前端！我是xv-大前端！hello，我是xv-大前端！我是xv-大前端！我是xv-大前端！hello，我是xv-大前端！我是xv-大前端！我是xv-大前端！'
+                    contentMsg: 'hello'
+
                     /*button: [
                         {
                             type:'ok',
@@ -509,7 +504,8 @@ dsafdsa
                 xv2 = $.xvDialog({
                     index: 1,
                     type: 'tips',
-                    align: 'bottom', /*对齐位置默认为靠右*/
+//                    closeBtn:false,
+                    align: 'top', /*对齐位置默认为靠右*/
                     position: {left: 5, top: 5},
                     contentMsg: 'hello，我是xv-大前端！欢迎使用xvDialog。'
                 });

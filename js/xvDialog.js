@@ -100,11 +100,14 @@
             var tmpOps = {};
             _S.index = tmpOps.index = (Number(opts.index) >= 0) ? opts.index : xvDialog.index++;
             tmpOps.type = opts.type || 'alert';
-
+            tmpOps.closeBtn = opts.closeBtn;
+            tmpOps.drag = opts.drag;
             switch (tmpOps.type) {
                 case 'alert':
-                    tmpOps.title = opts.title || '';
-                    tmpOps.buttons = opts.buttons ? opts.buttons : [{
+                    tmpOps.title = (!opts.title && opts.title!==false)?'':opts.title;
+                    tmpOps.icon = opts.icon;
+
+                    tmpOps.buttons = (opts.buttons || opts.buttons === false) ? opts.buttons : [{
                         type: 'ok',
                         text: '确定',
                         cls: G.doms.maskBoxOkBtn
@@ -154,9 +157,11 @@
             var body = $('body');
 
             var mkBox = "<div id='" + doms.maskBox + '_' + idx + "' class='" + doms.maskBox + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'></div>";
-            var mkBoxCon = "<div class='" + doms.maskBoxCon + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "'  style='z-index:" + (opts.zIndex + idx + 1) + ";'><div class='" + doms.maskConBrd + "'><div class=" + doms.maskBoxTit + "></div><p class='" + doms.maskBoxTitMsg + "'>" + opts.title + "</p><div class='" + doms.maskBoxMain + "'><div class='" + doms.maskTxtBox + "'><i class='" + doms.icon + ' ' + doms.icon + '_' + opts.iconType + "'></i><p class='" + doms.maskTxt + "'>" + opts.contentMsg + "</p></div></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
+            var mkBoxCon = "<div class='" + doms.maskBoxCon + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "'  style='z-index:" + (opts.zIndex + idx + 1) + ";'><div class='" + doms.maskConBrd + "'><div class='" + doms.maskBoxMain + "'><div class='" + doms.maskTxtBox + "'>"+((opts.icon===false) ? " ": ("<i class='" + doms.icon + ' ' + doms.icon + '_' + opts.iconType + "'></i>"))+"<p class='" + doms.maskTxt + "'>" + opts.contentMsg + "</p></div></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
 
+            var mkBoxTit = "<div class=" + doms.maskBoxTit + "><p class='" + doms.maskBoxTitMsg + "'>" + opts.title + "</p></div>";
             var closeBtn = "<div class='" + doms.maskBoxCloseBtn + "'>x</div>";
+
 
             switch (type) {
                 case dType.alert :
@@ -164,34 +169,34 @@
                     mkBoxCon = $(mkBoxCon).appendTo(body);
                     var maskConBrd = mkBoxCon.find("." + doms.maskConBrd),
                         mkBoxMain = mkBoxCon.find("." + doms.maskBoxMain),
-                        mkBoxTit = mkBoxCon.find("." + doms.maskBoxTit),
                         mkBoxTitMsg = mkBoxCon.find("." + doms.maskBoxTitMsg),
-                        maskBoxFoot = mkBoxCon.find("." + doms.maskBoxFoot),
-                        closeBtn = $(closeBtn).appendTo(maskConBrd);
-
+                        maskBoxFoot = mkBoxCon.find("." + doms.maskBoxFoot);
                     _S.mkObj = {
                         body: body,
                         box: mkBox,
                         ctr: mkBoxCon,
                         brd: maskConBrd,
-                        main: mkBoxMain,
-                        tit: mkBoxTit,
-                        ft: maskBoxFoot,
-                        buttons: _S.setButtons(maskBoxFoot),
-                        clsBtn: closeBtn
+                        main: mkBoxMain
                     };
+                    opts.title !== false ? _S.mkObj.tit = $(mkBoxTit).prependTo(maskConBrd):'';
+                    opts.closeBtn !== false ? _S.mkObj.clsBtn = $(closeBtn).appendTo(maskConBrd):'';
 
+                    if(opts.buttons !== false) {
+                        _S.mkObj.ft = maskBoxFoot;
+                        _S.mkObj.buttons =  _S.setButtons(maskBoxFoot);
+                    }else{
+                        maskBoxFoot.hide();
+                    }
                     break;
                 case dType.tips :
                     var tips = "<div id='" + doms.tip + '_' + idx + "' class='" + doms.tip + " " + doms.tipAlign + opts.align + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'><i class='" + doms.icon + "'></i><em></em><div class='" + doms.tip + "_Container'>" + opts.contentMsg + "</div></div>";
                     tips = $(tips).appendTo(body);
-                    closeBtn = $(closeBtn).appendTo(tips);
                     _S.mkObj = {
                         body: body,
                         box: mkBox,
-                        clsBtn: closeBtn,
                         ctr: tips
                     };
+                    opts.closeBtn !== false ? _S.mkObj.clsBtn = $(closeBtn).appendTo(tips):'';
                     break;
             }
             _S.resetEvent(type);
@@ -235,12 +240,12 @@
                 var setW = Number(opts.wh.width),
                     setH = Number(opts.wh.height);
 
-                if (setW > 0 && setW > G.defaultSize.wh.width) {
+                if (setW > 0 && setW > brdW) {
                     brdW = setW;
                     brd.outerWidth(brdW);
                 }
 
-                if (setH > 0 && setH > G.defaultSize.wh.height) {
+                if (setH > 0 && setH > brdH) {
                     brdH = setH;
                     brd.outerHeight(brdH);
                 }
@@ -335,7 +340,7 @@
                 });
 
                 /*触发拖拽*/
-                _S.drag(tit);
+                opts.drag !== false?_S.drag(tit):'';
 
             } else if (type == 'tips') {
                 var tips = _O.ctr;
@@ -346,15 +351,16 @@
                 var tipsH = tips.outerHeight();
                 var setP = opts.position;
                 var tP = target.offset();
-                var tmpP ={};
+                var tmpP={left:0,top:0};
                 var dltGap = G.defaultSize.dltGap;
-
+                console.log(tP);
                 if (opts.align == 'left') {
                     tmpP = {
                         left: tP.left - tipsW + setP.left - dltGap,
                         top: tP.top + setP.top
                     }
                 } else if (opts.align == 'top') {
+
                     tmpP = {
                         left: tP.left + setP.left,
                         top: tP.top - tipsH + setP.top - dltGap
@@ -376,7 +382,8 @@
                  _S.close()
                  }, 2000);*/
             }
-            _O.clsBtn.on('click', {that: _S}, _S.close);
+
+            opts.closeBtn !== false ?_O.clsBtn.on('click', {that: _S}, _S.close):'';
         },
 
         close: function (e) {
