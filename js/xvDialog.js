@@ -103,6 +103,7 @@
             tmpOps.closeBtn = opts.closeBtn;
             tmpOps.drag = opts.drag;
             tmpOps.setTimes = opts.setTimes || '';
+            tmpOps.content = opts.content || '';
             switch (tmpOps.type) {
                 case 'alert':
                     tmpOps.title = (!opts.title && opts.title!==false)?'':opts.title;
@@ -157,8 +158,12 @@
             var type = _S.currentType = dType[opts.type];
             var body = $('body');
 
+            var contentMsg = opts.contentMsg ? "<pre>" + opts.contentMsg + "</pre>":'';
+
+            var contentHtml = opts.content ?  opts.content :'';
+
             var mkBox = "<div id='" + doms.maskBox + '_' + idx + "' class='" + doms.maskBox + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'></div>";
-            var mkBoxCon = "<div class='" + doms.maskBoxCon + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "'  style='z-index:" + (opts.zIndex + idx + 1) + ";'><div class='" + doms.maskConBrd + "'><div class='" + doms.maskBoxMain + "'><div class='" + doms.maskTxtBox + "'>"+((opts.icon===false) ? " ": ("<i class='" + doms.icon + ' ' + doms.icon + '_' + opts.iconType + "'></i>"))+"<p class='" + doms.maskTxt + "'>" + opts.contentMsg + "</p></div></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
+            var mkBoxCon = "<div class='" + doms.maskBoxCon + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "'  style='z-index:" + (opts.zIndex + idx + 1) + ";'><div class='" + doms.maskConBrd + "'><div class='" + doms.maskBoxMain + "'><div class='" + doms.maskTxtBox + "'>"+((opts.icon===false) ? " ": ("<i class='" + doms.icon + ' ' + doms.icon + '_' + opts.iconType + "'></i>"))+"<div class='" + doms.maskTxt + "'>" + (contentMsg || contentHtml)+ "</div></div></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
 
             var mkBoxTit = "<div class=" + doms.maskBoxTit + "><p class='" + doms.maskBoxTitMsg + "'>" + opts.title + "</p></div>";
             var closeBtn = "<div class='" + doms.maskBoxCloseBtn + "'>x</div>";
@@ -190,7 +195,7 @@
                     }
                     break;
                 case dType.tips :
-                    var tips = "<div id='" + doms.tip + '_' + idx + "' class='" + doms.tip + " " + doms.tipAlign + opts.align + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'><i class='" + doms.icon + "'></i><em></em><div class='" + doms.tip + "_Container'>" + opts.contentMsg + "</div></div>";
+                    var tips = "<div id='" + doms.tip + '_' + idx + "' class='" + doms.tip + " " + doms.tipAlign + opts.align + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'><i class='" + doms.icon + "'></i><em></em><div class='" + doms.tip + "_Container'><pre>" + opts.contentMsg + "</pre></div></div>";
                     tips = $(tips).appendTo(body);
                     _S.mkObj = {
                         body: body,
@@ -384,9 +389,9 @@
             }
 
             if(time>0) {
-                var timer = setTimeout(function () {
+                _S.timer = setTimeout(function () {
                     _S.close();
-                    clearTimeout(timer);
+
                 }, time);
             }
             opts.closeBtn !== false ?_O.clsBtn.on('click', {that: _S}, _S.close):'';
@@ -395,6 +400,9 @@
         close: function (e) {
             var _S = e && e.data ? e.data.that : this;
             xvDialog.close(_S.index);
+            if(_S.timer){
+                clearTimeout(_S.timer);
+            }
         },
 
         on: function (type, func) {
