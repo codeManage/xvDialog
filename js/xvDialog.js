@@ -102,6 +102,7 @@
             tmpOps.type = opts.type || 'alert';
             tmpOps.closeBtn = opts.closeBtn;
             tmpOps.drag = opts.drag;
+            tmpOps.setTimes = opts.setTimes || '';
             switch (tmpOps.type) {
                 case 'alert':
                     tmpOps.title = (!opts.title && opts.title!==false)?'':opts.title;
@@ -230,7 +231,8 @@
                 ctr = _O.ctr,
                 titH = _O.tit ? _O.tit.outerHeight() : 0,
                 ftH = _O.ft ? _O.ft.outerHeight() : 0,
-                brdW = brd.outerWidth(),
+                /*ie下面中文标点符号产生空白符，引起换行，所以 brdW = brd.outerWidth()+5*/
+                brdW = brd.outerWidth()+5,
                 brdH = brd.outerHeight(),
                 lineW = parseInt(_O.brd.css('borderLeftWidth'));
             lineW = lineW ? lineW : 0;
@@ -240,14 +242,17 @@
                 var setW = Number(opts.wh.width),
                     setH = Number(opts.wh.height);
 
-                if (setW > 0 && setW > brdW) {
+                if (setW > 0) {
                     brdW = setW;
                     brd.outerWidth(brdW);
                 }
 
-                if (setH > 0 && setH > brdH) {
+                if (setH > 0) {
                     brdH = setH;
                     brd.outerHeight(brdH);
+                }else{
+                    /*宽度自定义以后，需要对高度重新进行计算*/
+                    brdH = brd.outerHeight();
                 }
             }
 
@@ -315,11 +320,9 @@
             var _O = _S.mkObj;
             var opts = _S.config;
             var ctr = _O.ctr;
+            var time = Number(opts.setTimes);
             if (type == 'alert') {
                 var tit = _O.tit;
-                /*var clsBtn = _O.clsBtn;
-                 var cclBtn = _O.cclBtn;
-                 var sureBtn = _O.sBtn;*/
 
                 /*初始化弹出框的尺寸*/
                 _S.boxSize = _S.computeBoxSize();
@@ -344,7 +347,7 @@
 
             } else if (type == 'tips') {
                 var tips = _O.ctr;
-                var target = $(window.event.target);
+                var target = $(event.srcElement);
                 var trtW = target.outerWidth();
                 var trtH = target.outerHeight();
                 var tipsW = tips.outerWidth();
@@ -353,7 +356,7 @@
                 var tP = target.offset();
                 var tmpP={left:0,top:0};
                 var dltGap = G.defaultSize.dltGap;
-                console.log(tP);
+
                 if (opts.align == 'left') {
                     tmpP = {
                         left: tP.left - tipsW + setP.left - dltGap,
@@ -363,7 +366,7 @@
 
                     tmpP = {
                         left: tP.left + setP.left,
-                        top: tP.top - tipsH + setP.top - dltGap
+                        top: tP.top - tipsH - setP.top - dltGap
                     };
                 } else if (opts.align == 'bottom') {
                     tmpP = {
@@ -378,11 +381,14 @@
                 }
 
                 tips.css(tmpP);
-                /* setTimeout(function () {
-                 _S.close()
-                 }, 2000);*/
             }
 
+            if(time>0) {
+                var timer = setTimeout(function () {
+                    _S.close();
+                    clearTimeout(timer);
+                }, time);
+            }
             opts.closeBtn !== false ?_O.clsBtn.on('click', {that: _S}, _S.close):'';
         },
 

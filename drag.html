@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <title>jQuery弹出框</title>
 <script src="js/jquery.js"></script>
 <script src="js/xvDialog.js"></script>
@@ -16,7 +16,6 @@ body {
 html {
     overflow: hidden;
 }
-
 
 body, ul, li, img, p {
     padding: 0px;
@@ -100,24 +99,30 @@ table {
 
 .xv_Mask_Txt_Box {
     position: relative;
-    padding: 20px;
+    padding: 10px;
     height: auto;
     top: 0;
     bottom: 0;
 }
 
 .xv_Mask_Txt_Box .xv_Mask_Txt{
+    display: inline-block;
+    *display:inline;
+    *zoom:1;
     line-height: 26px;
+    vertical-align: middle;
 }
 
 .xv_Mask_Border .xv_Mask_Icon {
-    float:left;
-    display: block;
+    display: inline-block;
+    *display:inline;
+    *zoom:1;
     width: 38px;
     height: 38px;
-    margin-right: 20px;
+    margin-right: 15px;
     background-image: url("xvDialogImg/xv-md-icon.png");
     background-repeat: no-repeat;
+    vertical-align: middle;
 }
 
 .xv_Mask_Msg_Box span {
@@ -165,9 +170,9 @@ table {
     position: relative;
     text-align: center;
     width: 100%;
-    padding: 10px 0 15px 0;
+    padding: 5px 0 5px 0;
     z-index: 2;
-    background: #ababab;
+    background: #eee;
 }
 
 .xv_Mask_Box_Btn {
@@ -207,6 +212,7 @@ table {
 /*tips*/
 .xv_Mask_Tip {
     background: rgba(8, 128, 206, 1);
+    *background:#0880ce;
     border-radius: 5px;
     padding: 10px;
     position: absolute;
@@ -243,6 +249,7 @@ table {
     right: -10px;
     top: 20%;
     border-left-color: rgba(8, 128, 206, 1);
+    *border-left-color:#0880ce;
 }
 
 .xv_Tip_Align_right {
@@ -259,6 +266,7 @@ table {
     left: -10px;
     top: 20%;
     border-right-color: rgba(8, 128, 206, 1);
+    *border-right-color: #0880ce;
 }
 
 .xv_Tip_Align_top {
@@ -274,7 +282,8 @@ table {
 .xv_Tip_Align_top .xv_Mask_Icon {
     left: 20%;
     bottom: -10px;
-    border-top-color: rgba(8, 128, 206, 1);
+    /*border-top-color: rgba(8, 128, 206, 1);*/
+    border-top-color: #0880ce;
 }
 
 .xv_Tip_Align_bottom {
@@ -291,6 +300,7 @@ table {
     left: 20%;
     top: -10px;
     border-bottom-color: rgba(8, 128, 206, 1);
+    *border-bottom-color: #0880ce;;
 }
 
 .xv_Mask_Tip em {
@@ -317,7 +327,7 @@ input {
 
 
 <div style="padding-top:100px;text-align: center">
-    <input class="btn1" type="button" value="弹！"/>
+    <input id="btn0" class="btn1" type="button" value="弹！"/>
 
     <input class="btn1" type="button" value="弹！"/>
 
@@ -329,7 +339,7 @@ input {
 
 <div style="padding:100px 0;text-align: center">
     <span id="tip"
-          style="display:inline-block;padding:5px 10px;color:#fff;border-radius: 5px;background: #f34627;cursor: pointer;">我就是xv-大前端</span>
+          style="display:inline-block;*display:inline;*zoom:1;padding:5px 10px;color:#fff;border-radius: 5px;background: #f34627;cursor: pointer;">我就是xv-大前端</span>
 </div>
 
 
@@ -441,12 +451,12 @@ dsafdsa
 //
                     /*drag:false,
                     title: false,
-                    icon:false,
                     closeBtn:false,
-                    buttons:false,*/
-                    title:'提示框',
-                    iconType: 'success',
-                    contentMsg: 'hello'
+                    buttons:false,
+                    icon:false,*/
+                    setTimes:3000,
+                    iconType: 'waring',/*waring,error,info*/
+                    contentMsg: 'hello，我是xv-大前端！！'
 
                     /*button: [
                         {
@@ -481,7 +491,6 @@ dsafdsa
                  console.log('谢谢你的肯定！');
                  });
 
-
                  xv1.on('cancel',function(){
                  console.log('早知今日，何必当初！');
                  });
@@ -506,7 +515,8 @@ dsafdsa
                     type: 'tips',
 //                    closeBtn:false,
                     align: 'top', /*对齐位置默认为靠右*/
-                    position: {left: 5, top: 5},
+                    setTimes:5000,
+                    position: {left: 5, top: 0},
                     contentMsg: 'hello，我是xv-大前端！欢迎使用xvDialog。'
                 });
             });
