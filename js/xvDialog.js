@@ -159,7 +159,6 @@
             var body = $('body');
 
             var contentMsg = opts.contentMsg ? "<pre>" + opts.contentMsg + "</pre>":'';
-
             var contentHtml = opts.content ?  opts.content :'';
 
             var mkBox = "<div id='" + doms.maskBox + '_' + idx + "' class='" + doms.maskBox + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'></div>";
@@ -177,6 +176,7 @@
                         mkBoxMain = mkBoxCon.find("." + doms.maskBoxMain),
                         mkBoxTitMsg = mkBoxCon.find("." + doms.maskBoxTitMsg),
                         maskBoxFoot = mkBoxCon.find("." + doms.maskBoxFoot);
+                        if(opts.content){mkBoxMain.html(contentHtml)}
                     _S.mkObj = {
                         body: body,
                         box: mkBox,
@@ -237,7 +237,7 @@
                 titH = _O.tit ? _O.tit.outerHeight() : 0,
                 ftH = _O.ft ? _O.ft.outerHeight() : 0,
                 /*ie下面中文标点符号产生空白符，引起换行，所以 brdW = brd.outerWidth()+5*/
-                brdW = brd.outerWidth()+5,
+                brdW = brd.outerWidth(),
                 brdH = brd.outerHeight(),
                 lineW = parseInt(_O.brd.css('borderLeftWidth'));
             lineW = lineW ? lineW : 0;
@@ -255,20 +255,16 @@
                 if (setH > 0) {
                     brdH = setH;
                     brd.outerHeight(brdH);
-                }else{
-                    /*宽度自定义以后，需要对高度重新进行计算*/
-                    brdH = brd.outerHeight();
                 }
             }
 
             /*计算弹出box内容的高度*/
             var mainH = brdH - lineW * 2 - ftH - titH;
+            //var mainW = brdW - lineW * 2;
             main.outerHeight(mainH);
-
             /*设置弹出box尺寸*/
-            ctr.width(brdW);
             ctr.height(brdH);
-
+            ctr.width(brdW);
             return {w: brdW, h: brdH};
         },
 
@@ -330,6 +326,7 @@
                 var tit = _O.tit;
 
                 /*初始化弹出框的尺寸*/
+
                 _S.boxSize = _S.computeBoxSize();
 
                 /*位置初始化*/

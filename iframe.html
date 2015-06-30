@@ -42,13 +42,48 @@
             margin-left: -1px;
             margin-top: -1px;
         }
+        .a {
+            display: block;
+            position: relative;
+            background: #1f8ed8;
+            font-size: 0;
+            border:1px solid #1f8ed8;
+        }
+        .b {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            background: #f34627;
+            *display:inline;
+            *zoom:1;
+            vertical-align: middle;
+
+        }
     </style>
 </head>
 <body>
-<embed src="http://player.youku.com/player.php/sid/XMjk1ODU3MzI4/v.swf" allowFullScreen="true" quality="high" width="480" height="500" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>
+<!--<embed src="http://player.youku.com/player.php/sid/XMjk1ODU3MzI4/v.swf" allowFullScreen="true" quality="high" width="480" height="500" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>-->
+
+<div id="wp1" style="float:left;height:300px;overflow-y: scroll">
+    <div id="wp2" style="width:500px;height:1000px;background-color: firebrick;">fdsfdsafdsafdsafdsafdsafdsafdsafd
+        sfdsfsdafdsafdsfdsafdsafdsafdsafdsafd
+        safdsafdsfdsfsdafdsafdsfdsafdsafdsafdsafdsafdsafdsafdsfdsfsdafdsafdsfdsafdsafd
+        safdsafd
+        safdsafdsafdsfdsfsdafdsafdsfdsafdsafdsafdsafdsafdsafdsafdsfdsfsdafdsa</div>
+</div>
+
+
+
 
 </body>
 <script>
+
+
+var w1 = $("#wp1").width();
+var w2 = $("#wp2").width();
+
+console.log(w1);
+console.log(w2);
 
 var xv1;
 $(".btn1").click(

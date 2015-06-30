@@ -24,6 +24,8 @@ body, ul, li, img, p ,pre{
     font-family: Arial, Helvetica, sans-serif;
 }
 
+h1,div {margin:0;padding:0;}
+
 img {
     display: inline;
     border: none;
@@ -91,7 +93,8 @@ table {
     position: relative;
     background: #fff;
     z-index: 1;
-    overflow-y: scroll;
+    overflow-y:scroll;
+    *overflow-y:auto;
     *overflow-x:hidden;
 }
 
@@ -101,33 +104,36 @@ table {
 
 .xv_Mask_Txt_Box {
     position: relative;
+    display: inline-block;
     padding: 10px;
     height: auto;
     top: 0;
     bottom: 0;
-
-    letter-spacing:-4px; /*实际情况下 -4这个值可能还要调整*/
-    word-spacing:-4px;   /*实际情况下 -4这个值可能还要调整*/
+    font-size:0;
+    word-spacing: -5px;
 }
 
 .xv_Mask_Txt_Box .xv_Mask_Txt{
+    float:left;
+    font-size:12px;
     display: inline-block;
     *display:inline;
     *zoom:1;
     font-family: normal;
-    letter-spacing: normal;
-    word-spacing: normal;
     line-height: 26px;
     vertical-align: middle;
+    background: #f00;
 }
 
 .xv_Mask_Border .xv_Mask_Icon {
+    float:left;
     display: inline-block;
     *display:inline;
     *zoom:1;
     width: 38px;
     height: 38px;
-    margin-right: 15px;
+    margin-right:15px;
+    background-color: #1f8ed8;
     background-image: url("xvDialogImg/xv-md-icon.png");
     background-repeat: no-repeat;
     vertical-align: middle;
@@ -469,14 +475,14 @@ dsafdsa
                     index: 0,
                     type: 'alert',
 //
-                    drag:false,
+                    /*drag:false,
                     title: false,
                     closeBtn:false,
                     buttons:false,
-                    icon:false,
+                    icon:false,*/
 //                    setTimes:3000,
                     iconType: 'waring',/*waring,error,info*/
-                    contentMsg: ' hello，我是xv-大前端！！'
+                    contentMsg: 'asss111111111111111111111'
 
                     /*button: [
                         {
@@ -558,17 +564,18 @@ dsafdsa
                     index: 2,
                     type: 'alert',
 //
-                    drag: false,
-                    title: false,
+//                    drag: false,
+                    title: '我是一个页面弹出层',
                     closeBtn: false,
-                    buttons: false,
+//                    buttons: false,
                     icon: false,
 //                    setTimes:3000,
-                    height: 200,
+                    width:500,
+                    height: 400,
                     iconType: 'waring', /*waring,error,info*/
-                    content: ' <h1>hello，我是xv-大前端！！</h1><div style="width:600px;height:500px;background: #f34627;"></div>'
+                    content: ' <div style="padding:10px;"><h1>hello，我是xv-大前端！！</h1><div style="height:500px;background: #f34627;margin:0;padding:0"> fdasfds</div></div>',
 
-                    /*button: [
+                    button: [
                      {
                      type:'ok',
                      text: '确定',
@@ -594,10 +601,10 @@ dsafdsa
                      console.log('添加');
                      }
                      }
-                     ],*/
+                     ]
                 });
 
-            })
+            });
 
 
 /*content*/
