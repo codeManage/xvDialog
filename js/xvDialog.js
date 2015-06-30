@@ -160,6 +160,7 @@
 
             var contentMsg = opts.contentMsg ? "<pre>" + opts.contentMsg + "</pre>":'';
             var contentHtml = opts.content ?  opts.content :'';
+            var contentframe = opts.iframe ?  opts.iframe :'';
 
             var mkBox = "<div id='" + doms.maskBox + '_' + idx + "' class='" + doms.maskBox + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'></div>";
             var mkBoxCon = "<div class='" + doms.maskBoxCon + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "'  style='z-index:" + (opts.zIndex + idx + 1) + ";'><div class='" + doms.maskConBrd + "'><div class='" + doms.maskBoxMain + "'><div class='" + doms.maskTxtBox + "'>"+((opts.icon===false) ? " ": ("<i class='" + doms.icon + ' ' + doms.icon + '_' + opts.iconType + "'></i>"))+"<div class='" + doms.maskTxt + "'>" + (contentMsg || contentHtml)+ "</div></div></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
@@ -170,42 +171,50 @@
 
             switch (type) {
                 case dType.alert :
-                    mkBox = $(mkBox).appendTo(body);
                     mkBoxCon = $(mkBoxCon).appendTo(body);
                     var maskConBrd = mkBoxCon.find("." + doms.maskConBrd),
                         mkBoxMain = mkBoxCon.find("." + doms.maskBoxMain),
-                        mkBoxTitMsg = mkBoxCon.find("." + doms.maskBoxTitMsg),
                         maskBoxFoot = mkBoxCon.find("." + doms.maskBoxFoot);
-                        if(opts.content){mkBoxMain.html(contentHtml)}
+                        if(contentHtml){mkBoxMain.html(contentHtml)}
+                        if(contentframe){mkBoxMain.html(contentframe)}
                     _S.mkObj = {
                         body: body,
-                        box: mkBox,
                         ctr: mkBoxCon,
                         brd: maskConBrd,
                         main: mkBoxMain
                     };
-                    opts.title !== false ? _S.mkObj.tit = $(mkBoxTit).prependTo(maskConBrd):'';
-                    opts.closeBtn !== false ? _S.mkObj.clsBtn = $(closeBtn).appendTo(maskConBrd):'';
-
-                    if(opts.buttons !== false) {
-                        _S.mkObj.ft = maskBoxFoot;
-                        _S.mkObj.buttons =  _S.setButtons(maskBoxFoot);
-                    }else{
-                        maskBoxFoot.hide();
-                    }
+                    _S.publicArea(closeBtn,mkBoxTit,maskBoxFoot,maskConBrd,mkBox);
                     break;
                 case dType.tips :
                     var tips = "<div id='" + doms.tip + '_' + idx + "' class='" + doms.tip + " " + doms.tipAlign + opts.align + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'><i class='" + doms.icon + "'></i><em></em><div class='" + doms.tip + "_Container'><pre>" + opts.contentMsg + "</pre></div></div>";
                     tips = $(tips).appendTo(body);
                     _S.mkObj = {
                         body: body,
-                        box: mkBox,
                         ctr: tips
                     };
                     opts.closeBtn !== false ? _S.mkObj.clsBtn = $(closeBtn).appendTo(tips):'';
                     break;
+                case dType.frame:
+
+                    break;
+
             }
             _S.resetEvent(type);
+        },
+
+        publicArea:function(closeBtn,mkBoxTit,maskBoxFoot,maskConBrd,mkBox){
+            var _S = this;
+            var opts = _S.config;
+            _S.mkObj.mkBox = $(mkBox).appendTo(_S.mkObj.body);
+            opts.title !== false ? _S.mkObj.tit = $(mkBoxTit).prependTo(maskConBrd):'';
+            opts.closeBtn !== false ? _S.mkObj.clsBtn = $(closeBtn).appendTo(maskConBrd):'';
+
+            if(opts.buttons !== false) {
+                _S.mkObj.ft = maskBoxFoot;
+                _S.mkObj.buttons =  _S.setButtons(maskBoxFoot);
+            }else{
+                maskBoxFoot.hide();
+            }
         },
 
         setButtons: function (ft) {

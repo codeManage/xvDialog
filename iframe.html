@@ -62,107 +62,10 @@
     </style>
 </head>
 <body>
-<!--<embed src="http://player.youku.com/player.php/sid/XMjk1ODU3MzI4/v.swf" allowFullScreen="true" quality="high" width="480" height="500" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>-->
-
-<div id="wp1" style="float:left;height:300px;overflow-y: scroll">
-    <div id="wp2" style="width:500px;height:1000px;background-color: firebrick;">fdsfdsafdsafdsafdsafdsafdsafdsafd
-        sfdsfsdafdsafdsfdsafdsafdsafdsafdsafd
-        safdsafdsfdsfsdafdsafdsfdsafdsafdsafdsafdsafdsafdsafdsfdsfsdafdsafdsfdsafdsafd
-        safdsafd
-        safdsafdsafdsfdsfsdafdsafdsfdsafdsafdsafdsafdsafdsafdsafdsfdsfsdafdsa</div>
-</div>
-
-
-
+<embed src="http://player.youku.com/player.php/sid/XMjk1ODU3MzI4/v.swf" allowFullScreen="true" quality="high" width="480" height="500" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>
 
 </body>
 <script>
-
-
-var w1 = $("#wp1").width();
-var w2 = $("#wp2").width();
-
-console.log(w1);
-console.log(w2);
-
-var xv1;
-$(".btn1").click(
-        function(){
-                xv1 = $.xvDialog({
-                index:0,
-                type: 'alert',
-                width: 200,
-                height: 100,
-                tit:'提示框',
-                contentMsg:'未经权益所有人同意，不得将资源中的内容挪作商业或盈利用途！',
-                listeners:{
-                    sure:'sure',
-                    close:'close',
-                    cancel:'cancel',
-                    colseBefore:'colseBefore'
-                }
-            });
-
-            xv1.on('sure',function(e){
-                console.log('谢谢你的肯定！');
-            });
-
-            xv1.on('close',function(){
-                console.log('你就这样无情的离开了我！');
-            });
-
-            xv1.on('cancel',function(){
-                console.log('早知今日，何必当初！');
-            });
-
-            xv1.on('colseBefore',function(){
-                console.log('close之前，我想告诉你。。。。。。我真的不想close --！');
-            });
-
-        }
-);
-
-$(".closeAlert").click(function(){
-    xvDialog.close(0);
-});
-
-
-var xv2;
-$("#tip").click(
-        function(){
-            xv2 = $.xvDialog({
-                index:1,
-                type: 'tips',
-                width: 200,
-                height: 100,
-                position:[10,100],
-                tit:'提示框',
-                contentMsg:'hello，我是xv-大前端！'
-            });
-        });
-
-
-$(".closeTip").click(
-        function(){
-//            xvDialog.close(xv2);
-            xvDialog.close('all');
-        }
-);
-
-    /*
-     xvDialog({
-     type:'alert',
-     width:200,
-     height:100
-     });
-
-     xvDialog({
-     type:'alert',
-     width:200,
-     height:100
-     });*/
-
-
 
 
 </script>
