@@ -108,7 +108,9 @@
                 case 'alert':
                     tmpOps.title = (!opts.title && opts.title!==false)?'':opts.title;
                     tmpOps.icon = opts.icon;
-
+                    tmpOps.scroll = opts.scroll !== false;
+                    tmpOps.scrollX = opts.scrollX !== false;
+                    tmpOps.scrollY = opts.scrollY !== false;
                     tmpOps.buttons = (opts.buttons || opts.buttons === false) ? opts.buttons : [{
                         type: 'ok',
                         text: '确定',
@@ -121,7 +123,8 @@
                             callBack: function () {
                                 _S.close();
                             }
-                        }];
+                        }
+                    ];
 
                     tmpOps.iconType = opts.iconType || 'success';
                     break;
@@ -174,9 +177,20 @@
                     mkBoxCon = $(mkBoxCon).appendTo(body);
                     var maskConBrd = mkBoxCon.find("." + doms.maskConBrd),
                         mkBoxMain = mkBoxCon.find("." + doms.maskBoxMain),
-                        maskBoxFoot = mkBoxCon.find("." + doms.maskBoxFoot);
-                        if(contentHtml){mkBoxMain.html(contentHtml)}
-                        if(contentframe){mkBoxMain.html(contentframe)}
+                        maskBoxFoot = mkBoxCon.find("." + doms.maskBoxFoot),
+                        overF={'overflow':'auto'};
+                        if(contentHtml){
+                            if(opts.scroll === false){
+                                overF = {'overflow':'hidden'};
+                            }else if(opts.scrollX === false){
+                                overF['overflow-x'] = 'hidden';
+                            }else if(opts.scrollY === false){
+                                overF['overflow-y'] = 'hidden';
+                            }
+                            mkBoxMain.css(overF);
+                            mkBoxMain.html(contentHtml)
+                        }
+                        //if(contentframe){mkBoxMain.html(contentframe)}
                     _S.mkObj = {
                         body: body,
                         ctr: mkBoxCon,
@@ -269,8 +283,17 @@
 
             /*计算弹出box内容的高度*/
             var mainH = brdH - lineW * 2 - ftH - titH;
-            //var mainW = brdW - lineW * 2;
+            var mainW = brdW - lineW * 2;
+
+
             main.outerHeight(mainH);
+            var cliW = main[0].clientWidth;
+            var scrollW =mainW-main[0].clientWidth;
+
+            if( scrollW > 0 ) {
+                brdW = brdW + scrollW;
+            }
+
             /*设置弹出box尺寸*/
             ctr.height(brdH);
             ctr.width(brdW);
