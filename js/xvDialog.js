@@ -28,7 +28,7 @@
             times: 'mktimes'
         },
         type: {
-            alert: 'alert',
+            dialog: 'dialog',
             confirm: 'confirm',
             message: 'message',
             tips: 'tips'
@@ -99,13 +99,13 @@
             var _S = this;
             var tmpOps = {};
             _S.index = tmpOps.index = (Number(opts.index) >= 0) ? opts.index : xvDialog.index++;
-            tmpOps.type = opts.type || 'alert';
+            tmpOps.type = opts.type || 'dialog';
             tmpOps.closeBtn = opts.closeBtn;
             tmpOps.drag = opts.drag;
             tmpOps.setTimes = opts.setTimes || '';
             tmpOps.content = opts.content || '';
             switch (tmpOps.type) {
-                case 'alert':
+                case 'dialog':
                     tmpOps.title = (!opts.title && opts.title!==false)?'':opts.title;
                     tmpOps.icon = opts.icon;
                     tmpOps.scroll = opts.scroll !== false;
@@ -173,7 +173,7 @@
 
 
             switch (type) {
-                case dType.alert :
+                case dType.dialog :
                     mkBoxCon = $(mkBoxCon).appendTo(body);
                     var maskConBrd = mkBoxCon.find("." + doms.maskConBrd),
                         mkBoxMain = mkBoxCon.find("." + doms.maskBoxMain),
@@ -232,6 +232,7 @@
         },
 
         setButtons: function (ft) {
+            /*设置弹出层的按钮*/
             var _S = this;
             var opts = _S.config;
             var tmpArr = [];
@@ -252,6 +253,7 @@
         },
 
         computeBoxSize: function () {
+            /*计算整个弹出层的尺寸，进行初始化*/
             var _O = this.mkObj,
                 opts = this.config,
                 brd = _O.brd,
@@ -265,7 +267,7 @@
                 lineW = parseInt(_O.brd.css('borderLeftWidth'));
             lineW = lineW ? lineW : 0;
 
-            /*获取弹出box尺寸*/
+            /*获取弹出层尺寸*/
             if (opts.wh) {
                 var setW = Number(opts.wh.width),
                     setH = Number(opts.wh.height);
@@ -285,11 +287,11 @@
             var mainH = brdH - lineW * 2 - ftH - titH;
             var mainW = brdW - lineW * 2;
 
-
             main.outerHeight(mainH);
+            //todo:人生总会遇到这样那样的奇葩问题，ie7下面须要先进行计算一次clientWidth，
+            /*为了计算出浏览器的滚动条宽度*/
             var cliW = main[0].clientWidth;
             var scrollW =mainW-main[0].clientWidth;
-
             if( scrollW > 0 ) {
                 brdW = brdW + scrollW;
             }
@@ -301,6 +303,7 @@
         },
 
         computeCenter: function (obj) {
+            /*计算obj居中的位置并返回*/
             var w,
                 h,
                 pL,
@@ -354,7 +357,7 @@
             var opts = _S.config;
             var ctr = _O.ctr;
             var time = Number(opts.setTimes);
-            if (type == 'alert') {
+            if (type == 'dialog') {
                 var tit = _O.tit;
 
                 /*初始化弹出框的尺寸*/

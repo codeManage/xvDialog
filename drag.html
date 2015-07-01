@@ -210,15 +210,20 @@
             opacity: 1;
         }
 
-        .xv_Mask_Box_CancelBtn {
+        .xv_Mask_Box_CancelBtn,.cancel_style {
             color: #333;
             border: 1px solid #848484;
             background: #dbdddf;
         }
 
-        .xv_Mask_Box_OkBtn {
+        .xv_Mask_Box_OkBtn,.ok_style {
             border: 1px solid #1977b5;
             background: #1f8ed8;
+        }
+
+        .add_style {
+            border: 1px solid #f34627;
+            background: #fbb627;
         }
 
         /*tips*/
@@ -496,7 +501,7 @@ dsafdsa
             function () {
                 xv1 = $.xvDialog({
                     index: 0,
-                    type: 'alert',
+                    type: 'dialog',
 //
                     /*drag:false,
                      title: false,
@@ -582,7 +587,7 @@ dsafdsa
             function () {
                 xv2 = $.xvDialog({
                     index: 2,
-                    type: 'alert',
+                    type: 'dialog',
 //
 //                    drag: false,
 //                    scroll:false,
@@ -590,39 +595,13 @@ dsafdsa
 //                    scrollX:false,
                     title: '我是一个页面弹出层',
                     closeBtn: false,
-//                    buttons: false,
+                    buttons: false,
 //                    icon: false,
 //                    setTimes:3000,
-                    width:480,
+
                     iconType: 'waring', /*waring,error,info*/
-                    content: '<iframe src="iframe.html" width="480" height="500" frameborder="0"></iframe>',
-                    button: [
-                        {
-                            type: 'ok',
-                            text: '确定',
-                            cls: 'ok_style',
-                            callBack: function () {
-                                console.log('确定1');
-                            }
-                        },
-                        {
-                            type: 'cancel',
-                            text: '取消',
-                            cls: 'cancel_style',
-                            callBack: function () {
-                                console.log('取消2');
-                                xvDialog.close(0)
-                            }
-                        },
-                        {
-                            type: 'add',
-                            text: '添加',
-                            cls: 'cancel_style',
-                            callBack: function () {
-                                console.log('添加');
-                            }
-                        }
-                    ]
+                    content: '<iframe src="iframe.html" width="480" height="400" frameborder="0"></iframe>'
+
                 });
             });
     /*content*/
