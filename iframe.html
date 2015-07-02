@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>jQuery弹出框</title>
     <script src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/zClip.js"></script>
     <script src="js/xvDialog.js"></script>
 
     <style>
@@ -18,7 +19,7 @@
         }
 
 
-        body, ul, li, img,p {
+        body, ul, li, img,p,iframe,embed {
             padding: 0px;
             margin: 0px;
             font-size: 12px;
@@ -60,29 +61,371 @@
 
         }
 
+        /*message*/
+        .xv_Mask_Box {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .xv_Mask_Container {
+            position: absolute;
+            left: 50%;
+            z-index: 2;
+        }
+
+        .xv_Mask_Border {
+            position: relative;
+            border: 8px solid rgba(0, 0, 0, 0.3);
+            *border: 8px solid #1F8ED8;
+            border-radius: 4px;
+
+        }
+
+        .xv_Mask_Box_Tit {
+            position: relative;
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            background: #1F8ED8;
+            border-bottom: 1px solid #0a5383;
+            cursor: move;
+            z-index: 2;
+        }
+
+        .xv_Mask_Box_Tit_Msg {
+            position: absolute;
+            left: 15px;
+            top: 0;
+            height: 30px;
+            line-height: 30px;
+            color: #fff;
+            z-index: 3;
+            font-weight: bold;
+        }
+
+        .xv_Mask_Main {
+            position: relative;
+            background: #fff;
+            z-index: 1;
+            overflow-y: scroll;
+        }
+
+        .xv_Mask_Msg_Box {
+            padding: 15px;
+        }
+
+        .xv_Mask_Txt_Box {
+            position: relative;
+            display: inline-block;
+            padding: 10px;
+            height: auto;
+            top: 0;
+            bottom: 0;
+            font-size: 0;
+            word-spacing: -5px;
+        }
+
+        .xv_Mask_Txt_Box .xv_Mask_Txt {
+            font-size: 12px;
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+            font-family: normal;
+            line-height: 26px;
+            vertical-align: middle;
+        }
+
+        .xv_Mask_Border .xv_Mask_Icon {
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+            width: 38px;
+            height: 38px;
+            margin-right: 15px;
+            background-image: url("xvDialogImg/xv-md-icon.png");
+            background-repeat: no-repeat;
+            vertical-align: middle;
+        }
+
+        .xv_Mask_Msg_Box span {
+            display: block;
+            font-size: 12px;
+            line-height: 24px;
+            padding: 15px 20px 0 70px;
+        }
+
+        .xv_Mask_Icon_success {
+            background-position: 0 0;
+        }
+
+        .xv_Mask_Icon_waring {
+            background-position: -114px 0;
+        }
+
+        .xv_Mask_Icon_error {
+            background-position: -76px 0;
+        }
+
+        .xv_Mask_Icon_info {
+            background-position: -38px 0;
+        }
+
+        .xv_Mask_Container .xv_Mask_Box_CloseBtn {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            line-height: 8px;
+            *line-height: 9px;
+            overflow: hidden;
+            right: 10px;
+            top: 8px;
+            text-align: center;
+            border: 1px solid #1977b5;
+            background: #fff;
+            color: #1977b5;
+            font-family: "microsoft yahei";
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        .xv_Mask_Box_Foot {
+            position: relative;
+            text-align: center;
+            width: 100%;
+            padding: 5px 0 5px 0;
+            z-index: 2;
+            background: #eee;
+        }
+
+        .xv_Mask_Box_Btn {
+            display: inline-block;
+            *display: inline;
+            height: 24px;
+            line-height: 24px;
+            color: #fff;
+            border: 1px solid #fff;
+            padding: 0 20px;
+            margin: 0 10px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            *zoom: 1;
+        }
+
+        .xv_Mask_Box_Btn:hover {
+            opacity: 0.8;
+        }
+
+        .xv_Mask_Box_Btn:active {
+            opacity: 1;
+        }
+
+        .xv_Mask_Box_CancelBtn,.cancel_style {
+            color: #333;
+            border: 1px solid #848484;
+            background: #dbdddf;
+        }
+
+        .xv_Mask_Box_OkBtn,.ok_style {
+            border: 1px solid #1977b5;
+            background: #1f8ed8;
+        }
+
+        .add_style {
+            border: 1px solid #f34627;
+            background: #fbb627;
+        }
+
+        /*tips*/
+        .xv_Mask_Tip {
+            background: rgba(8, 128, 206, 1);
+            *background: #0880ce;
+            border-radius: 5px;
+            padding: 10px;
+            position: absolute;
+            color: #f3d266;
+        }
+
+        .xv_Mask_Tip .xv_Mask_Box_CloseBtn {
+            position: absolute;
+            color: #a5ebfd;
+            height: 5px;
+            width: 5px;
+            line-height: 5px;
+            cursor: pointer;
+        }
+
+        .xv_Mask_Tip .xv_Mask_Icon {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 5px dashed transparent;
+        }
+
+        .xv_Tip_Align_left {
+            padding-left: 20px;
+        }
+
+        .xv_Tip_Align_left .xv_Mask_Box_CloseBtn {
+            left: 8px;
+            top: 50%;
+            margin-top: -2px;
+        }
+
+        .xv_Tip_Align_left .xv_Mask_Icon {
+            right: -10px;
+            top: 20%;
+            border-left-color: rgba(8, 128, 206, 1);
+            *border-left-color: #0880ce;
+        }
+
+        .xv_Tip_Align_right {
+            padding-right: 20px;
+        }
+
+        .xv_Tip_Align_right .xv_Mask_Box_CloseBtn {
+            right: 8px;
+            top: 50%;
+            margin-top: -2px;
+        }
+
+        .xv_Tip_Align_right .xv_Mask_Icon {
+            left: -10px;
+            top: 20%;
+            border-right-color: rgba(8, 128, 206, 1);
+            *border-right-color: #0880ce;
+        }
+
+        .xv_Tip_Align_top {
+            padding-right: 20px;
+        }
+
+        .xv_Tip_Align_top .xv_Mask_Box_CloseBtn {
+            right: 8px;
+            top: 50%;
+            margin-top: -2px;
+        }
+
+        .xv_Tip_Align_top .xv_Mask_Icon {
+            left: 20%;
+            bottom: -10px;
+            /*border-top-color: rgba(8, 128, 206, 1);*/
+            border-top-color: #0880ce;
+        }
+
+        .xv_Tip_Align_bottom {
+            padding-right: 20px;
+        }
+
+        .xv_Tip_Align_bottom .xv_Mask_Box_CloseBtn {
+            right: 8px;
+            top: 50%;
+            margin-top: -2px;
+        }
+
+        .xv_Tip_Align_bottom .xv_Mask_Icon {
+            left: 20%;
+            top: -10px;
+            border-bottom-color: rgba(8, 128, 206, 1);
+            *border-bottom-color: #0880ce;;
+        }
+
+        .xv_Mask_Tip em {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 5px dashed transparent;
+        }
+
+        input {
+            margin: 0 10px;
+        }
+
+        .xv_Mask_Main::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+            background-color:rgba(0,0,0,.2);
+        }
+
+        .xv_Mask_Main::-webkit-scrollbar-track {
+            background-color: #eee;
+        }
+
+        .xv_Mask_Main::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+        }
+
+        .xv_Mask_Main::-webkit-scrollbar-track {
+            width:8px;
+        }
+
+        .xv_Mask_Main::-webkit-scrollbar-corner {
+            background: transparent;
+        }
 
 
 
     </style>
 </head>
 <body>
-<!--
-<embed src="http://player.youku.com/player.php/sid/XNjYyMzk2NDYw/v.swf" allowFullScreen="true" quality="high" width="480" height="400" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>
--->
+
+
+<embed src="http://player.youku.com/player.php/sid/XNjYyMzk2NDYw/v.swf" allowFullScreen="true" quality="high" width="480" height="400" align="middle"  type="application/x-shockwave-flash"></embed>
 
 <!--<embed src=http://static.youku.com/v1.0.0149/v/swf/loader.swf?VideoIDS=XNjYyMzk2NDYw&winType=adshow&isAutoPlay=true" quality="high" width="x" height="y" align="middle" allowScriptAccess="never" width="480" height="400" allowNetworking="internal" allowfullscreen="true" autostart="0" type="application/x-shockwave-flash"></embed>-->
 
+<!--<embed src="http://static.youku.com/v1.0.0223/v/swf/loader.swf?winType=adshow&VideoIDS=XNjYyMzk2NDYw&isAutoPlay=true" quality="high" width="480" height="400" align="middle" loop="true" allowscriptaccess="never" autostart="0" type="application/x-shockwave-flash" /></embed>-->
 
-<embed src="http://static.youku.com/v1.0.0223/v/swf/loader.swf?winType=adshow&VideoIDS=XNjYyMzk2NDYw&isAutoPlay=false" quality="high" width="480" height="400" align="middle" allowscriptaccess="never" autostart="0" type="application/x-shockwave-flash" /></embed>
+<textarea name="" id="texta" cols="30" rows="10"></textarea>
 
 
+<div id="copyBtn">fdsfdsafsdafsda</div>
 </body>
 
 <!--
 <div id="div2" style="width:300px;height:300px; background-color: #fefefe;overflow: auto;margin:100px auto;">
     <div style="width:600px;height:700px;"></div>
 </div>-->
+
 <script>
+$(".frame").click(function(){
+
+
+    $.xvDialog({
+        index: 3,
+        type: 'dialog',
+//                    drag: false,
+//                    scroll:false,
+        /*scrollX:false,*/
+//                    scrollX:false,
+        title: '七里香',
+        closeBtn: false,
+        buttons: false,
+//                    icon: false,
+//                    setTimes:3000,
+
+        iconType: 'waring', /*waring,error,info*/
+        contentId: ''
+
+    });
+    alert(11);
+    $(window.top).find('.btn2-2').click(function() {
+                console.log('111')
+    });
+});
+
+
+
+var docH = $(document).contents('body').height();
+console.log(docH);
+
+
+
 
 
 </script>

@@ -16,7 +16,7 @@
             overflow: hidden;
         }
 
-        body, ul, li, img, p, pre {
+        body, ul, li, img, p, pre,iframe {
             padding: 0px;
             margin: 0px;
             font-size: 12px;
@@ -97,7 +97,8 @@
             position: relative;
             background: #fff;
             z-index: 1;
-            overflow-y: scroll;
+            font-size:0;
+            word-spacing: -5px;
         }
 
         .xv_Mask_Msg_Box {
@@ -332,7 +333,6 @@
         }
 
 
-
         .xv_Mask_Main::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -369,24 +369,24 @@
 
 
 <div style="padding-top:100px;text-align: center">
-    <input class="btn1" type="button" value="弹！"/>
+    <input class="btn1" type="button" value="弹！对话框"/>
 
-    <input class="btn1" type="button" value="弹！"/>
+    <input class="btn1-1" type="button" value="弹！对话框"/>
 
-    <input class="btn1" type="button" value="弹！"/>
+    <input class="btn1-2" type="button" value="弹！对话框"/>
 
-    <input class="btn1" type="button" value="弹走鱼尾纹！"/>
+    <input class="btn1-3" type="button" value="弹走鱼尾纹！"/>
 
 </div>
 
 <div style="padding-top:100px;text-align: center">
-    <input class="btn2" type="button" value="弹！"/>
+    <input class="btn2" type="button" value="弹！七里香！"/>
 
-    <input class="btn2" type="button" value="弹！"/>
+    <input class="btn2-1" type="button" value="弹！页面层！"/>
 
-    <input class="btn2" type="button" value="弹！"/>
+    <input class="btn2-2" type="button" value="弹！"/>
 
-    <input class="btn2" type="button" value="弹出个框架"/>
+    <input class="btn2-3" type="button" value="弹出个框架"/>
 
 </div>
 
@@ -577,38 +577,83 @@ dsafdsa
 
     $(".closeTip").click(
             function () {
-                /*type可以为：all、tips、alert、index*/
-//            xvDialog.close(type)
-                xvDialog.close('all');
+             /*type可以为：all、tips、alert、index*/
+             //xvDialog.close(type)
+              xvDialog.close('all');
             }
     );
 
+
+    /*弹出框架iframe*/
     $(".btn2").click(
             function () {
                 xv2 = $.xvDialog({
                     index: 2,
                     type: 'dialog',
-//
 //                    drag: false,
 //                    scroll:false,
                     /*scrollX:false,*/
 //                    scrollX:false,
-                    title: '我是一个页面弹出层',
+                    title: '七里香',
+                    closeBtn: false,
+                    buttons: false,
+//                    icon: false,
+//                    setTimes:3000,
+                    iconType: 'waring', /*waring,error,info*/
+                    content: '<iframe name="fr1" src="iframe.html" width="480" height="400"  frameborder="0"></iframe>'
+                });
+
+    });
+
+    /*弹出页面层*/
+    $(".btn2-1").click(
+            function () {
+                xv2 = $.xvDialog({
+                    index: 2,
+                    type: 'dialog',
+//                    drag: false,
+//                    scroll:false,
+                    /*scrollX:false,*/
+//                    scrollX:false,
+                    title: '七里香',
                     closeBtn: false,
                     buttons: false,
 //                    icon: false,
 //                    setTimes:3000,
 
                     iconType: 'waring', /*waring,error,info*/
-                    content: '<iframe src="iframe.html" width="480" height="400" frameborder="0"></iframe>'
-
+                    content: '<div style="width:500px;height:300px; font-size:12px; background:#fbb627;">hello我是页面层</div>'
                 });
             });
-    /*content*/
 
 
+    /*弹出页面层*/
+    var xv4;
+    $(".btn2-2").click(
+            function () {
+                xv4 = $.xvDialog({
+                    index: 4,
+                    type: 'iframe',
+//                    drag: false,
+//                    scroll:false,
+                    /*scrollX:false,*/
+//                    scrollX:false,
+                    title: '七里香',
+                    closeBtn: false,
+                    buttons: false,
+//                    icon: false,
+//                    setTimes:3000,
 
-
+                    iconType: 'waring', /*waring,error,info*/
+                    iframe: {
+                        src:'//iframe.html',
+                        width:100,
+                        height:100,
+                        name:'',
+                        id:''
+                    }
+                });
+            });
 
 </script>
 </html>

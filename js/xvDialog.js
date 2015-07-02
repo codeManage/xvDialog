@@ -20,6 +20,9 @@
             maskBoxCancelBtn: 'xv_Mask_Box_CancelBtn',
             maskBoxOkBtn: 'xv_Mask_Box_OkBtn',
             maskMsgBox: 'xv_Mask_Msg_Box',
+            maskIframe:'xv_Mask_Iframe',
+            iframeName:'xv_Mask_Iframe_Name_',
+            iframeId:'xv_Mask_Iframe_Id_',
             icon: 'xv_Mask_Icon',
             waring: 'xv_Mask_Waring',
             tip: 'xv_Mask_Tip',
@@ -100,10 +103,19 @@
             var tmpOps = {};
             _S.index = tmpOps.index = (Number(opts.index) >= 0) ? opts.index : xvDialog.index++;
             tmpOps.type = opts.type || 'dialog';
+/*
+            if(opts.type === 'iframe') {
+                tmpOps.type = 'dialog';
+            }else{
+                tmpOps.type = 'dialog';
+            }*/
+
             tmpOps.closeBtn = opts.closeBtn;
             tmpOps.drag = opts.drag;
             tmpOps.setTimes = opts.setTimes || '';
             tmpOps.content = opts.content || '';
+            tmpOps.contentMsg = opts.contentMsg || '';
+            tmpOps.zIndex = parseInt(opts.zIndex) || G.defaultSize.zIndex;
             switch (tmpOps.type) {
                 case 'dialog':
                     tmpOps.title = (!opts.title && opts.title!==false)?'':opts.title;
@@ -138,6 +150,7 @@
                     } else {
                         tmpOps.position = {left: 0, top: 0};
                     }
+                    break;
             }
 
             //初始化boxsize
@@ -147,8 +160,7 @@
                     height: opts.height || 'auto'
                 }
             }
-            tmpOps.contentMsg = opts.contentMsg || '';
-            tmpOps.zIndex = parseInt(opts.zIndex) || G.defaultSize.zIndex;
+
 
             return tmpOps
         },
@@ -162,42 +174,20 @@
             var body = $('body');
 
             var contentMsg = opts.contentMsg ? "<pre>" + opts.contentMsg + "</pre>":'';
-            var contentHtml = opts.content ?  opts.content :'';
-            var contentframe = opts.iframe ?  opts.iframe :'';
+
 
             var mkBox = "<div id='" + doms.maskBox + '_' + idx + "' class='" + doms.maskBox + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'></div>";
-            var mkBoxCon = "<div class='" + doms.maskBoxCon + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "'  style='z-index:" + (opts.zIndex + idx + 1) + ";'><div class='" + doms.maskConBrd + "'><div class='" + doms.maskBoxMain + "'><div class='" + doms.maskTxtBox + "'>"+((opts.icon===false) ? " ": ("<i class='" + doms.icon + ' ' + doms.icon + '_' + opts.iconType + "'></i>"))+"<div class='" + doms.maskTxt + "'>" + (contentMsg || contentHtml)+ "</div></div></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
+            var mkBoxCon = "<div class='" + doms.maskBoxCon + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "'  style='z-index:" + (opts.zIndex + idx + 1) + ";'><div class='" + doms.maskConBrd + "'><div class='" + doms.maskBoxMain + "'><div class='" + doms.maskTxtBox + "'>"+((opts.icon===false) ? " ": ("<i class='" + doms.icon + ' ' + doms.icon + '_' + opts.iconType + "'></i>"))+"<div class='" + doms.maskTxt + "'>" + contentMsg+ "</div></div></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
 
-            var mkBoxTit = "<div class=" + doms.maskBoxTit + "><p class='" + doms.maskBoxTitMsg + "'>" + opts.title + "</p></div>";
+
             var closeBtn = "<div class='" + doms.maskBoxCloseBtn + "'>x</div>";
-
 
             switch (type) {
                 case dType.dialog :
-                    mkBoxCon = $(mkBoxCon).appendTo(body);
-                    var maskConBrd = mkBoxCon.find("." + doms.maskConBrd),
-                        mkBoxMain = mkBoxCon.find("." + doms.maskBoxMain),
-                        maskBoxFoot = mkBoxCon.find("." + doms.maskBoxFoot),
-                        overF={'overflow':'auto'};
-                        if(contentHtml){
-                            if(opts.scroll === false){
-                                overF = {'overflow':'hidden'};
-                            }else if(opts.scrollX === false){
-                                overF['overflow-x'] = 'hidden';
-                            }else if(opts.scrollY === false){
-                                overF['overflow-y'] = 'hidden';
-                            }
-                            mkBoxMain.css(overF);
-                            mkBoxMain.html(contentHtml)
-                        }
-                        //if(contentframe){mkBoxMain.html(contentframe)}
                     _S.mkObj = {
-                        body: body,
-                        ctr: mkBoxCon,
-                        brd: maskConBrd,
-                        main: mkBoxMain
+                        body:body
                     };
-                    _S.publicArea(closeBtn,mkBoxTit,maskBoxFoot,maskConBrd,mkBox);
+                    _S.pubDlgArea(dType['dialog'],closeBtn,mkBoxCon,mkBox);
                     break;
                 case dType.tips :
                     var tips = "<div id='" + doms.tip + '_' + idx + "' class='" + doms.tip + " " + doms.tipAlign + opts.align + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'><i class='" + doms.icon + "'></i><em></em><div class='" + doms.tip + "_Container'><pre>" + opts.contentMsg + "</pre></div></div>";
@@ -208,21 +198,66 @@
                     };
                     opts.closeBtn !== false ? _S.mkObj.clsBtn = $(closeBtn).appendTo(tips):'';
                     break;
-                case dType.frame:
-
+                case dType.iframe:
+                    _S.mkObj = {
+                        body:body
+                    };
+                    _S.pubDlgArea(dType['dialog'],closeBtn,mkBoxCon,mkBox);
                     break;
 
             }
             _S.resetEvent(type);
         },
 
-        publicArea:function(closeBtn,mkBoxTit,maskBoxFoot,maskConBrd,mkBox){
+        pubDlgArea:function(type,closeBtn,mkBoxCon,mkBox){
             var _S = this;
+            var idx = _S.index;
             var opts = _S.config;
+            var doms = G.doms;
+            var mkBoxTit = "<div class=" + doms.maskBoxTit + "><p class='" + doms.maskBoxTitMsg + "'>" + opts.title + "</p></div>";
+
+            var contentHtml = opts.content ?  opts.content :'';
+
+            var iframeHtml = opts.iframe && opts.iframe.src ?  "<iframe id='"+(opts.iframe.id || doms.iframeId+idx)+"' name='"+(opts.iframe.name || doms.iframeName+idx)+"' src='"+opts.iframe.src+"' width='"+( opts.iframe.width || 'auto')+"' height='"+( opts.iframe.height || 'auto')+"'></iframe>" : '';
+
+            var mkBoxCon = $(mkBoxCon).appendTo(_S.mkObj.body),
+                maskConBrd = mkBoxCon.find("." + doms.maskConBrd),
+                mkBoxMain = mkBoxCon.find("." + doms.maskBoxMain),
+                maskBoxFoot = mkBoxCon.find("." + doms.maskBoxFoot),
+                overF={'overflow':'auto'};
+
+                if(type === 'dialog' || type === 'iframe') {
+                    if (opts.scroll === false) {
+                        overF['overflow'] = 'hidden';
+                    } else if (opts.scrollX === false) {
+                        overF['overflow-x'] = 'hidden';
+                    } else if (opts.scrollY === false) {
+                        overF['overflow-y'] = 'hidden';
+                    }
+                    mkBoxMain.css(overF);
+                    if(contentHtml) {mkBoxMain.html(contentHtml)}
+                }
+
+                if(type === 'iframe') {
+                    //var contentframe = opts.iframe ?  opts.iframe :'';
+                    mkBoxMain.html(iframeHtml);
+                }
+
+            _S.mkObj.ctr = mkBoxCon;
+            _S.mkObj.brd = maskConBrd;
+            _S.mkObj.main = mkBoxMain;
+
+
+            /*遮罩box*/
             _S.mkObj.mkBox = $(mkBox).appendTo(_S.mkObj.body);
+
+            /*弹出层标题*/
             opts.title !== false ? _S.mkObj.tit = $(mkBoxTit).prependTo(maskConBrd):'';
+
+            /*弹出层关闭按钮*/
             opts.closeBtn !== false ? _S.mkObj.clsBtn = $(closeBtn).appendTo(maskConBrd):'';
 
+            /*弹出层脚部按钮*/
             if(opts.buttons !== false) {
                 _S.mkObj.ft = maskBoxFoot;
                 _S.mkObj.buttons =  _S.setButtons(maskBoxFoot);
@@ -265,7 +300,7 @@
                 brdW = brd.outerWidth(),
                 brdH = brd.outerHeight(),
                 lineW = parseInt(_O.brd.css('borderLeftWidth'));
-            lineW = lineW ? lineW : 0;
+                lineW = lineW ? lineW : 0;
 
             /*获取弹出层尺寸*/
             if (opts.wh) {
@@ -286,7 +321,6 @@
             /*计算弹出box内容的高度*/
             var mainH = brdH - lineW * 2 - ftH - titH;
             var mainW = brdW - lineW * 2;
-
             main.outerHeight(mainH);
             //todo:人生总会遇到这样那样的奇葩问题，ie7下面须要先进行计算一次clientWidth，
             /*为了计算出浏览器的滚动条宽度*/
@@ -330,8 +364,8 @@
          * setPosition：计算obj的位置
          * opt ｛object｝
          * */
-        setPosition: function (opts) {
 
+         setPosition: function (opts) {
             var data = opts.data ? opts.data : opts;
             var p;
             var _S = data.that || this;
@@ -351,6 +385,7 @@
             obj.css({left: p.left, top: p.top});
         },
 
+        /*初始化事件*/
         resetEvent: function (type) {
             var _S = this;
             var _O = _S.mkObj;
@@ -423,12 +458,12 @@
             if(time>0) {
                 _S.timer = setTimeout(function () {
                     _S.close();
-
                 }, time);
             }
             opts.closeBtn !== false ?_O.clsBtn.on('click', {that: _S}, _S.close):'';
         },
 
+        /*关闭*/
         close: function (e) {
             var _S = e && e.data ? e.data.that : this;
             xvDialog.close(_S.index);
@@ -437,6 +472,7 @@
             }
         },
 
+        /*按钮监听事件的添加*/
         on: function (type, func) {
             var _S = this;
             var buttons = _S.config.buttons;
