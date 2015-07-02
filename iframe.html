@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>jQuery弹出框</title>
     <script src="js/jquery.js"></script>
-    <script type="text/javascript" src="js/zClip.js"></script>
     <script src="js/xvDialog.js"></script>
 
     <style>
@@ -380,53 +379,9 @@
 <!--<embed src=http://static.youku.com/v1.0.0149/v/swf/loader.swf?VideoIDS=XNjYyMzk2NDYw&winType=adshow&isAutoPlay=true" quality="high" width="x" height="y" align="middle" allowScriptAccess="never" width="480" height="400" allowNetworking="internal" allowfullscreen="true" autostart="0" type="application/x-shockwave-flash"></embed>-->
 
 <!--<embed src="http://static.youku.com/v1.0.0223/v/swf/loader.swf?winType=adshow&VideoIDS=XNjYyMzk2NDYw&isAutoPlay=true" quality="high" width="480" height="400" align="middle" loop="true" allowscriptaccess="never" autostart="0" type="application/x-shockwave-flash" /></embed>-->
-
-<textarea name="" id="texta" cols="30" rows="10"></textarea>
-
-
-<div id="copyBtn">fdsfdsafsdafsda</div>
 </body>
-
 <!--
 <div id="div2" style="width:300px;height:300px; background-color: #fefefe;overflow: auto;margin:100px auto;">
     <div style="width:600px;height:700px;"></div>
 </div>-->
-
-<script>
-$(".frame").click(function(){
-
-
-    $.xvDialog({
-        index: 3,
-        type: 'dialog',
-//                    drag: false,
-//                    scroll:false,
-        /*scrollX:false,*/
-//                    scrollX:false,
-        title: '七里香',
-        closeBtn: false,
-        buttons: false,
-//                    icon: false,
-//                    setTimes:3000,
-
-        iconType: 'waring', /*waring,error,info*/
-        contentId: ''
-
-    });
-    alert(11);
-    $(window.top).find('.btn2-2').click(function() {
-                console.log('111')
-    });
-});
-
-
-
-var docH = $(document).contents('body').height();
-console.log(docH);
-
-
-
-
-
-</script>
 </html>

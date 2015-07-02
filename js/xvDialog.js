@@ -20,9 +20,9 @@
             maskBoxCancelBtn: 'xv_Mask_Box_CancelBtn',
             maskBoxOkBtn: 'xv_Mask_Box_OkBtn',
             maskMsgBox: 'xv_Mask_Msg_Box',
-            maskIframe:'xv_Mask_Iframe',
-            iframeName:'xv_Mask_Iframe_Name_',
-            iframeId:'xv_Mask_Iframe_Id_',
+            maskIframe: 'xv_Mask_Iframe',
+            iframeName: 'xv_Mask_Iframe_Name_',
+            iframeId: 'xv_Mask_Iframe_Id_',
             icon: 'xv_Mask_Icon',
             waring: 'xv_Mask_Waring',
             tip: 'xv_Mask_Tip',
@@ -32,6 +32,7 @@
         },
         type: {
             dialog: 'dialog',
+            iframe:'iframe',
             confirm: 'confirm',
             message: 'message',
             tips: 'tips'
@@ -42,7 +43,7 @@
                 height: 100
             },
             dltGap: 10,
-            zIndex:19890620
+            zIndex: 19890620
         }
     };
 
@@ -103,12 +104,12 @@
             var tmpOps = {};
             _S.index = tmpOps.index = (Number(opts.index) >= 0) ? opts.index : xvDialog.index++;
             tmpOps.type = opts.type || 'dialog';
-/*
-            if(opts.type === 'iframe') {
-                tmpOps.type = 'dialog';
-            }else{
-                tmpOps.type = 'dialog';
-            }*/
+            /*
+             if(opts.type === 'iframe') {
+             tmpOps.type = 'dialog';
+             }else{
+             tmpOps.type = 'dialog';
+             }*/
 
             tmpOps.closeBtn = opts.closeBtn;
             tmpOps.drag = opts.drag;
@@ -118,27 +119,11 @@
             tmpOps.zIndex = parseInt(opts.zIndex) || G.defaultSize.zIndex;
             switch (tmpOps.type) {
                 case 'dialog':
-                    tmpOps.title = (!opts.title && opts.title!==false)?'':opts.title;
-                    tmpOps.icon = opts.icon;
-                    tmpOps.scroll = opts.scroll !== false;
-                    tmpOps.scrollX = opts.scrollX !== false;
-                    tmpOps.scrollY = opts.scrollY !== false;
-                    tmpOps.buttons = (opts.buttons || opts.buttons === false) ? opts.buttons : [{
-                        type: 'ok',
-                        text: '确定',
-                        cls: G.doms.maskBoxOkBtn
-                    },
-                        {
-                            type: 'cancel',
-                            text: '取消',
-                            cls: G.doms.maskBoxCancelBtn,
-                            callBack: function () {
-                                _S.close();
-                            }
-                        }
-                    ];
-
-                    tmpOps.iconType = opts.iconType || 'success';
+                    tmpOps = _S.pubOptions('dialog', tmpOps, opts);
+                    console.log(tmpOps);
+                    break;
+                case 'iframe':
+                    tmpOps = _S.pubOptions('iframe', tmpOps, opts);
                     break;
                 case 'tips':
                     tmpOps.align = opts.align || 'right';
@@ -161,9 +146,40 @@
                 }
             }
 
-
             return tmpOps
         },
+
+        pubOptions: function (type, tmpOps, opts) {
+            var _S = this;
+            tmpOps.title = (!opts.title && opts.title !== false) ? '' : opts.title;
+            tmpOps.icon = opts.icon;
+            tmpOps.scroll = opts.scroll !== false;
+            tmpOps.scrollX = opts.scrollX !== false;
+            tmpOps.scrollY = opts.scrollY !== false;
+            tmpOps.buttons = (opts.buttons || opts.buttons === false) ? opts.buttons : [{
+                type: 'ok',
+                text: '确定',
+                cls: G.doms.maskBoxOkBtn
+            },
+                {
+                    type: 'cancel',
+                    text: '取消',
+                    cls: G.doms.maskBoxCancelBtn,
+                    callBack: function () {
+                        _S.close();
+                    }
+                }
+            ];
+
+            if (type === 'iframe') {
+                tmpOps.iframe = opts.iframe || '';
+            }
+
+            tmpOps.iconType = opts.iconType || 'success';
+
+            return tmpOps;
+        },
+
         building: function (options) {
             var _S = this;
             var opts = _S.config = _S.settings(options);
@@ -173,11 +189,11 @@
             var type = _S.currentType = dType[opts.type];
             var body = $('body');
 
-            var contentMsg = opts.contentMsg ? "<pre>" + opts.contentMsg + "</pre>":'';
+            var contentMsg = opts.contentMsg ? "<pre>" + opts.contentMsg + "</pre>" : '';
 
 
             var mkBox = "<div id='" + doms.maskBox + '_' + idx + "' class='" + doms.maskBox + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'></div>";
-            var mkBoxCon = "<div class='" + doms.maskBoxCon + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "'  style='z-index:" + (opts.zIndex + idx + 1) + ";'><div class='" + doms.maskConBrd + "'><div class='" + doms.maskBoxMain + "'><div class='" + doms.maskTxtBox + "'>"+((opts.icon===false) ? " ": ("<i class='" + doms.icon + ' ' + doms.icon + '_' + opts.iconType + "'></i>"))+"<div class='" + doms.maskTxt + "'>" + contentMsg+ "</div></div></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
+            var mkBoxCon = "<div class='" + doms.maskBoxCon + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "'  style='z-index:" + (opts.zIndex + idx + 1) + ";'><div class='" + doms.maskConBrd + "'><div class='" + doms.maskBoxMain + "'><div class='" + doms.maskTxtBox + "'>" + ((opts.icon === false) ? " " : ("<i class='" + doms.icon + ' ' + doms.icon + '_' + opts.iconType + "'></i>")) + "<div class='" + doms.maskTxt + "'>" + contentMsg + "</div></div></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
 
 
             var closeBtn = "<div class='" + doms.maskBoxCloseBtn + "'>x</div>";
@@ -185,9 +201,9 @@
             switch (type) {
                 case dType.dialog :
                     _S.mkObj = {
-                        body:body
+                        body: body
                     };
-                    _S.pubDlgArea(dType['dialog'],closeBtn,mkBoxCon,mkBox);
+                    _S.pubDlgArea(dType['dialog'], closeBtn, mkBoxCon, mkBox);
                     break;
                 case dType.tips :
                     var tips = "<div id='" + doms.tip + '_' + idx + "' class='" + doms.tip + " " + doms.tipAlign + opts.align + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'><i class='" + doms.icon + "'></i><em></em><div class='" + doms.tip + "_Container'><pre>" + opts.contentMsg + "</pre></div></div>";
@@ -196,52 +212,54 @@
                         body: body,
                         ctr: tips
                     };
-                    opts.closeBtn !== false ? _S.mkObj.clsBtn = $(closeBtn).appendTo(tips):'';
+                    opts.closeBtn !== false ? _S.mkObj.clsBtn = $(closeBtn).appendTo(tips) : '';
                     break;
                 case dType.iframe:
                     _S.mkObj = {
-                        body:body
+                        body: body
                     };
-                    _S.pubDlgArea(dType['dialog'],closeBtn,mkBoxCon,mkBox);
+                    _S.pubDlgArea(dType['iframe'], closeBtn, mkBoxCon, mkBox);
                     break;
 
             }
             _S.resetEvent(type);
         },
 
-        pubDlgArea:function(type,closeBtn,mkBoxCon,mkBox){
+        pubDlgArea: function (type, closeBtn, mkBoxCon, mkBox) {
             var _S = this;
             var idx = _S.index;
             var opts = _S.config;
             var doms = G.doms;
             var mkBoxTit = "<div class=" + doms.maskBoxTit + "><p class='" + doms.maskBoxTitMsg + "'>" + opts.title + "</p></div>";
 
-            var contentHtml = opts.content ?  opts.content :'';
+            var contentHtml = opts.content ? opts.content : '';
 
-            var iframeHtml = opts.iframe && opts.iframe.src ?  "<iframe id='"+(opts.iframe.id || doms.iframeId+idx)+"' name='"+(opts.iframe.name || doms.iframeName+idx)+"' src='"+opts.iframe.src+"' width='"+( opts.iframe.width || 'auto')+"' height='"+( opts.iframe.height || 'auto')+"'></iframe>" : '';
+            var iframeHtml = opts.iframe && opts.iframe.src ? "<iframe id='" + (opts.iframe.id || doms.iframeId + idx) + "' name='" + (opts.iframe.name || doms.iframeName + idx) + "' src='" + opts.iframe.src + "' width='" + ( opts.iframe.width || 'auto') + "' height='" + ( opts.iframe.height || 'auto') + "'></iframe>" : '';
 
             var mkBoxCon = $(mkBoxCon).appendTo(_S.mkObj.body),
                 maskConBrd = mkBoxCon.find("." + doms.maskConBrd),
                 mkBoxMain = mkBoxCon.find("." + doms.maskBoxMain),
                 maskBoxFoot = mkBoxCon.find("." + doms.maskBoxFoot),
-                overF={'overflow':'auto'};
+                overF = {'overflow': 'auto'};
 
-                if(type === 'dialog' || type === 'iframe') {
-                    if (opts.scroll === false) {
-                        overF['overflow'] = 'hidden';
-                    } else if (opts.scrollX === false) {
-                        overF['overflow-x'] = 'hidden';
-                    } else if (opts.scrollY === false) {
-                        overF['overflow-y'] = 'hidden';
-                    }
-                    mkBoxMain.css(overF);
-                    if(contentHtml) {mkBoxMain.html(contentHtml)}
+            if (type === 'dialog' || type === 'iframe') {
+                if (opts.scroll === false) {
+                    overF['overflow'] = 'hidden';
+                } else if (opts.scrollX === false) {
+                    overF['overflow-x'] = 'hidden';
+                } else if (opts.scrollY === false) {
+                    overF['overflow-y'] = 'hidden';
                 }
+                mkBoxMain.css(overF);
+                if (contentHtml) {
+                    mkBoxMain.html(contentHtml)
+                }
+            }
 
-                if(type === 'iframe') {
-                    //var contentframe = opts.iframe ?  opts.iframe :'';
-                    mkBoxMain.html(iframeHtml);
-                }
+            if (type === 'iframe') {
+                //var contentframe = opts.iframe ?  opts.iframe :'';
+                mkBoxMain.html(iframeHtml);
+            }
 
             _S.mkObj.ctr = mkBoxCon;
             _S.mkObj.brd = maskConBrd;
@@ -252,16 +270,16 @@
             _S.mkObj.mkBox = $(mkBox).appendTo(_S.mkObj.body);
 
             /*弹出层标题*/
-            opts.title !== false ? _S.mkObj.tit = $(mkBoxTit).prependTo(maskConBrd):'';
+            opts.title !== false ? _S.mkObj.tit = $(mkBoxTit).prependTo(maskConBrd) : '';
 
             /*弹出层关闭按钮*/
-            opts.closeBtn !== false ? _S.mkObj.clsBtn = $(closeBtn).appendTo(maskConBrd):'';
+            opts.closeBtn !== false ? _S.mkObj.clsBtn = $(closeBtn).appendTo(maskConBrd) : '';
 
             /*弹出层脚部按钮*/
-            if(opts.buttons !== false) {
+            if (opts.buttons !== false) {
                 _S.mkObj.ft = maskBoxFoot;
-                _S.mkObj.buttons =  _S.setButtons(maskBoxFoot);
-            }else{
+                _S.mkObj.buttons = _S.setButtons(maskBoxFoot);
+            } else {
                 maskBoxFoot.hide();
             }
         },
@@ -296,11 +314,11 @@
                 ctr = _O.ctr,
                 titH = _O.tit ? _O.tit.outerHeight() : 0,
                 ftH = _O.ft ? _O.ft.outerHeight() : 0,
-                /*ie下面中文标点符号产生空白符，引起换行，所以 brdW = brd.outerWidth()+5*/
+            /*ie下面中文标点符号产生空白符，引起换行，所以 brdW = brd.outerWidth()+5*/
                 brdW = brd.outerWidth(),
                 brdH = brd.outerHeight(),
                 lineW = parseInt(_O.brd.css('borderLeftWidth'));
-                lineW = lineW ? lineW : 0;
+            lineW = lineW ? lineW : 0;
 
             /*获取弹出层尺寸*/
             if (opts.wh) {
@@ -325,8 +343,8 @@
             //todo:人生总会遇到这样那样的奇葩问题，ie7下面须要先进行计算一次clientWidth，
             /*为了计算出浏览器的滚动条宽度*/
             var cliW = main[0].clientWidth;
-            var scrollW =mainW-main[0].clientWidth;
-            if( scrollW > 0 ) {
+            var scrollW = mainW - main[0].clientWidth;
+            if (scrollW > 0) {
                 brdW = brdW + scrollW;
             }
 
@@ -365,7 +383,7 @@
          * opt ｛object｝
          * */
 
-         setPosition: function (opts) {
+        setPosition: function (opts) {
             var data = opts.data ? opts.data : opts;
             var p;
             var _S = data.that || this;
@@ -415,7 +433,7 @@
                 });
 
                 /*触发拖拽*/
-                opts.drag !== false?_S.drag(tit):'';
+                opts.drag !== false ? _S.drag(tit) : '';
 
             } else if (type == 'tips') {
                 var tips = _O.ctr;
@@ -426,7 +444,7 @@
                 var tipsH = tips.outerHeight();
                 var setP = opts.position;
                 var tP = target.offset();
-                var tmpP={left:0,top:0};
+                var tmpP = {left: 0, top: 0};
                 var dltGap = G.defaultSize.dltGap;
 
                 if (opts.align == 'left') {
@@ -455,19 +473,19 @@
                 tips.css(tmpP);
             }
 
-            if(time>0) {
+            if (time > 0) {
                 _S.timer = setTimeout(function () {
                     _S.close();
                 }, time);
             }
-            opts.closeBtn !== false ?_O.clsBtn.on('click', {that: _S}, _S.close):'';
+            opts.closeBtn !== false ? _O.clsBtn.on('click', {that: _S}, _S.close) : '';
         },
 
         /*关闭*/
         close: function (e) {
             var _S = e && e.data ? e.data.that : this;
             xvDialog.close(_S.index);
-            if(_S.timer){
+            if (_S.timer) {
                 clearTimeout(_S.timer);
             }
         },
