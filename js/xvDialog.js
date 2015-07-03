@@ -6,6 +6,7 @@
     //常用dom字符
     var G = {//可以自己配置适合自己的结构名称
         doms: {
+            maskDrag: 'xv_Mask_Drag',
             maskBox: 'xv_Mask_Box',
             maskBoxCon: 'xv_Mask_Container',
             maskBoxMain: 'xv_Mask_Main',
@@ -32,7 +33,7 @@
         },
         type: {
             dialog: 'dialog',
-            iframe:'iframe',
+            iframe: 'iframe',
             confirm: 'confirm',
             message: 'message',
             tips: 'tips'
@@ -104,25 +105,18 @@
             var tmpOps = {};
             _S.index = tmpOps.index = (Number(opts.index) >= 0) ? opts.index : xvDialog.index++;
             tmpOps.type = opts.type || 'dialog';
-            /*
-             if(opts.type === 'iframe') {
-             tmpOps.type = 'dialog';
-             }else{
-             tmpOps.type = 'dialog';
-             }*/
-
             tmpOps.closeBtn = opts.closeBtn;
             tmpOps.drag = opts.drag;
-            tmpOps.setTimes = opts.setTimes || '';
+            tmpOps.closeTimes = opts.closeTimes || '';
             tmpOps.content = opts.content || '';
             tmpOps.contentMsg = opts.contentMsg || '';
             tmpOps.zIndex = parseInt(opts.zIndex) || G.defaultSize.zIndex;
             switch (tmpOps.type) {
                 case 'dialog':
                     tmpOps = _S.pubOptions('dialog', tmpOps, opts);
-                    console.log(tmpOps);
                     break;
                 case 'iframe':
+                    tmpOps.load = (opts.load && typeof opts.load === 'function') ? opts.load : '';
                     tmpOps = _S.pubOptions('iframe', tmpOps, opts);
                     break;
                 case 'tips':
@@ -226,6 +220,7 @@
         },
 
         pubDlgArea: function (type, closeBtn, mkBoxCon, mkBox) {
+
             var _S = this;
             var idx = _S.index;
             var opts = _S.config;
@@ -234,7 +229,7 @@
 
             var contentHtml = opts.content ? opts.content : '';
 
-            var iframeHtml = opts.iframe && opts.iframe.src ? "<iframe id='" + (opts.iframe.id || doms.iframeId + idx) + "' name='" + (opts.iframe.name || doms.iframeName + idx) + "' src='" + opts.iframe.src + "' width='" + ( opts.iframe.width || 'auto') + "' height='" + ( opts.iframe.height || 'auto') + "'></iframe>" : '';
+            var iframeHtml = opts.iframe && opts.iframe.src ? "<iframe id='" + (opts.iframe.id || doms.iframeId + idx) + "' name='" + (opts.iframe.name || doms.iframeName + idx) + "' frameborder='0' src='" + opts.iframe.src + "' width='" + ( opts.iframe.width || 'auto') + "' height='" + ( opts.iframe.height || 'auto') + "'></iframe>" : '';
 
             var mkBoxCon = $(mkBoxCon).appendTo(_S.mkObj.body),
                 maskConBrd = mkBoxCon.find("." + doms.maskConBrd),
@@ -257,14 +252,25 @@
             }
 
             if (type === 'iframe') {
-                //var contentframe = opts.iframe ?  opts.iframe :'';
-                mkBoxMain.html(iframeHtml);
+                if (iframeHtml) {
+                    var ifrId = doms.iframeId + idx;
+
+                    mkBoxMain.html(iframeHtml);
+                    var iframe = mkBoxMain.find('iframe');
+
+                    iframe.load(function () {
+                        var that = $(this);
+                        var childWin = self.frames[that.attr('name')];
+                        _S.frameWindow = $(childWin);
+                        _S.frameBody = $(childWin.document.body);
+                        opts.load ? opts.load(_S.frameWindow, _S.frameBody) : '';
+                    })
+                }
             }
 
             _S.mkObj.ctr = mkBoxCon;
             _S.mkObj.brd = maskConBrd;
             _S.mkObj.main = mkBoxMain;
-
 
             /*遮罩box*/
             _S.mkObj.mkBox = $(mkBox).appendTo(_S.mkObj.body);
@@ -289,15 +295,18 @@
             var _S = this;
             var opts = _S.config;
             var tmpArr = [];
+            var buttons = opts.buttons;
             /*按钮初始化*/
-            for (var i = 0; i < opts.buttons.length; i++) {
-                var buttons = opts.buttons[i];
-                if (typeof buttons == 'object' && buttons.type) {
-                    var btn = $("<span xv-button-type='" + buttons.type + "' class='" + G.doms.maskBoxBtn + " " + (buttons.cls || '') + "'>" + (buttons.text || '') + "</span>");
-                    var callBack = buttons.callBack || '';
+            for (var i = 0; i < buttons.length; i++) {
+                var button = opts.buttons[i];
+                if (typeof button === 'object' && button.type) {
+                    var btn = $("<span xv-button-type='" + button.type + "' class='" + G.doms.maskBoxBtn + " " + (button.cls || '') + "'>" + (button.text || '') + "</span>");
+                    var fn = button.callBack || '';
                     btn.appendTo(ft);
-                    if (typeof callBack == 'function') {
-                        btn.on('click', callBack);
+                    if (typeof fn == 'function') {
+                        btn.on('click', {callback: fn}, function (e) {
+                            e.data.callback(_S);
+                        });
                     }
                     tmpArr.push(btn);
                 }
@@ -340,7 +349,7 @@
             var mainH = brdH - lineW * 2 - ftH - titH;
             var mainW = brdW - lineW * 2;
             main.outerHeight(mainH);
-            //todo:人生总会遇到这样那样的奇葩问题，ie7下面须要先进行计算一次clientWidth，
+            //todo:人生总会遇到这样那样的奇葩问题，ie7下面须要先进行计算一次clientWidth,何解？
             /*为了计算出浏览器的滚动条宽度*/
             var cliW = main[0].clientWidth;
             var scrollW = mainW - main[0].clientWidth;
@@ -393,10 +402,9 @@
                 /*对元素居中处理*/
                 p = _S.computeCenter();
             } else {
-                data = opts;
                 p = data;
             }
-            obj.position = {
+            _S.mkObj.ctr.ps = {
                 left: p.left,
                 top: p.top
             };
@@ -409,16 +417,15 @@
             var _O = _S.mkObj;
             var opts = _S.config;
             var ctr = _O.ctr;
-            var time = Number(opts.setTimes);
-            if (type == 'dialog') {
+            var time = Number(opts.closeTimes);
+            if (type == 'dialog' || type == 'iframe') {
                 var tit = _O.tit;
 
                 /*初始化弹出框的尺寸*/
-
                 _S.boxSize = _S.computeBoxSize();
 
                 /*位置初始化*/
-                ctr.position = {left: 0, top: 0};
+                ctr.ps = {left: 0, top: 0};
 
                 /*位置居中*/
                 _S.setPosition(_S.computeCenter());
@@ -453,7 +460,6 @@
                         top: tP.top + setP.top
                     }
                 } else if (opts.align == 'top') {
-
                     tmpP = {
                         left: tP.left + setP.left,
                         top: tP.top - tipsH - setP.top - dltGap
@@ -469,7 +475,6 @@
                         top: tP.top + setP.top
                     };
                 }
-
                 tips.css(tmpP);
             }
 
@@ -478,6 +483,7 @@
                     _S.close();
                 }, time);
             }
+
             opts.closeBtn !== false ? _O.clsBtn.on('click', {that: _S}, _S.close) : '';
         },
 
@@ -498,7 +504,9 @@
             if (type && func) {
                 for (var i = 0; i < buttons.length; i++) {
                     if ((buttons[i].type == type) && typeof func == 'function') {
-                        btnObj[i].on('click', func);
+                        btnObj[i].on('click', function () {
+                            func(_S)
+                        });
                     }
                 }
             }
@@ -508,22 +516,28 @@
             var _S = this,
                 ctr = _S.mkObj.ctr;
             obj.on('mousedown', function (e) {
-                var p = ctr.position,
+
+                var p = ctr.ps,
                     disX = e.clientX - p.left,
                     disY = e.clientY - p.top,
-                    doc,
-                    objProt = obj.get(0);
+                    doc;
+
+                var dragBox = $("<div class='" + G.doms.maskDrag + " '></div>").appendTo($('body'));
+              var objProt = dragBox.get(0);
+                dragBox.outerWidth(_S.boxSize.w);
+                dragBox.outerHeight(_S.boxSize.h);
+                dragBox.css({left: p.left, top: p.top});
 
                 if (objProt.setCapture) {
-                    doc = obj;
+                    doc = dragBox;
                     objProt.setCapture();
                 } else {
                     doc = $(document);
                 }
 
-                $(document).on('mouseup', {that: _S, objProt: objProt, doc: doc}, _S.clearDrag);
+                $(document).on('mouseup', {that: _S, objProt: objProt, doc: doc, dragBox: dragBox}, _S.clearDrag);
 
-                doc.on('mousemove', {that: _S, win: $(window), disX: disX, disY: disY}, _S.moveFunc);
+                doc.on('mousemove', {that: _S, win: $(window),dragBox: dragBox, disX: disX, disY: disY}, _S.moveFunc);
 
             });
         },
@@ -532,10 +546,16 @@
             var opts = e.data,
                 objProt = opts.objProt,
                 doc = opts.doc,
-                that = opts.that;
+                dragBox = opts.dragBox,
+                that = opts.that,
+                p = that.mkObj.ctr.ps;
+
             if (objProt.releaseCapture) {
                 objProt.releaseCapture();
             }
+
+            that.mkObj.ctr.css({left: p.left, top: p.top});
+            dragBox.remove();
             doc.off('mousemove', that.moveFunc);
             $(document).off('mouseup', that.clearDrag);
         },
@@ -563,7 +583,8 @@
             } else if (boxT >= maxT) {
                 boxT = maxT;
             }
-            that.setPosition({left: boxL, top: boxT});
+
+            that.setPosition({left: boxL, top: boxT, obj: opts.dragBox});
             e.preventDefault();
         }
     };

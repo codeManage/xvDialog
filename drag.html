@@ -1,362 +1,370 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
-    <meta charset="utf-8">
-    <title>jQuery弹出框</title>
-    <script src="js/jquery.js"></script>
-    <script src="js/xvDialog.js"></script>
-    <style>
-        body {
+<meta charset="utf-8">
+<title>jQuery弹出框</title>
+<script src="js/jquery.js"></script>
+<script src="js/xvDialog.js"></script>
+<style>
+body {
 
-            background: url("xvDialogImg/bg-1.jpg") repeat-x;
-            overflow: hidden;
-        }
+    background: url("xvDialogImg/bg-1.jpg") repeat-x;
+    overflow: hidden;
+}
 
-        html {
-            overflow: hidden;
-        }
+html {
+    overflow: hidden;
+}
 
-        body, ul, li, img, p, pre,iframe {
-            padding: 0px;
-            margin: 0px;
-            font-size: 12px;
-            font-family: Arial, Helvetica, sans-serif;
-        }
+body, ul, li, img, p, pre, iframe {
+    padding: 0px;
+    margin: 0px;
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
-        h1, div {
-            margin: 0;
-            padding: 0;
-        }
+h1, div {
+    margin: 0;
+    padding: 0;
+}
 
-        img {
-            display: inline;
-            border: none;
-        }
+img {
+    display: inline;
+    border: none;
+}
 
-        ul, li {
-            list-style-type: none;
-        }
+iframe {
+    border: none;
+}
 
-        table {
-            border-collapse: collapse;
-            border-spacing: 0;
-            word-break: keep-all;
-            table-layout: fixed;
-            margin-left: -1px;
-            margin-top: -1px;
-        }
+ul, li {
+    list-style-type: none;
+}
 
-        /*message*/
-        .xv_Mask_Box {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1;
-        }
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    word-break: keep-all;
+    table-layout: fixed;
+    margin-left: -1px;
+    margin-top: -1px;
+}
 
-        .xv_Mask_Container {
-            position: absolute;
-            left: 50%;
-            z-index: 2;
-        }
+/*message*/
+.xv_Mask_Box {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
 
-        .xv_Mask_Border {
-            position: relative;
-            border: 8px solid rgba(0, 0, 0, 0.3);
-            *border: 8px solid #1F8ED8;
-            border-radius: 4px;
+.xv_Mask_Drag {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.7);
+    border:1px dashed #848484;
+    z-index: 210013147788;
+}
 
-        }
+.xv_Mask_Container {
+    position: absolute;
+    left: 50%;
+    z-index: 2;
+}
 
-        .xv_Mask_Box_Tit {
-            position: relative;
-            width: 100%;
-            height: 30px;
-            line-height: 30px;
-            background: #1F8ED8;
-            border-bottom: 1px solid #0a5383;
-            cursor: move;
-            z-index: 2;
-        }
+.xv_Mask_Border {
+    position: relative;
+    border: 8px solid rgba(0, 0, 0, 0.3);
+    *border: 8px solid #1F8ED8;
+    border-radius: 4px;
+}
 
-        .xv_Mask_Box_Tit_Msg {
-            position: absolute;
-            left: 15px;
-            top: 0;
-            height: 30px;
-            line-height: 30px;
-            color: #fff;
-            z-index: 3;
-            font-weight: bold;
-        }
+.xv_Mask_Box_Tit {
+    position: relative;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    background: #1F8ED8;
+    border-bottom: 1px solid #0a5383;
+    cursor: move;
+    z-index: 2;
+}
 
-        .xv_Mask_Main {
-            position: relative;
-            background: #fff;
-            z-index: 1;
-            font-size:0;
-            word-spacing: -5px;
-        }
+.xv_Mask_Box_Tit_Msg {
+    position: absolute;
+    left: 15px;
+    top: 0;
+    height: 30px;
+    line-height: 30px;
+    color: #fff;
+    z-index: 3;
+    font-weight: bold;
+}
 
-        .xv_Mask_Msg_Box {
-            padding: 15px;
-        }
+.xv_Mask_Main {
+    position: relative;
+    background: #fff;
+    z-index: 1;
+    font-size: 0;
+    word-spacing: -5px;
+}
 
-        .xv_Mask_Txt_Box {
-            position: relative;
-            display: inline-block;
-            padding: 10px;
-            height: auto;
-            top: 0;
-            bottom: 0;
-            font-size: 0;
-            word-spacing: -5px;
-        }
+.xv_Mask_Msg_Box {
+    padding: 15px;
+}
 
-        .xv_Mask_Txt_Box .xv_Mask_Txt {
-            font-size: 12px;
-            display: inline-block;
-            *display: inline;
-            *zoom: 1;
-            font-family: normal;
-            line-height: 26px;
-            vertical-align: middle;
-        }
+.xv_Mask_Txt_Box {
+    position: relative;
+    display: inline-block;
+    padding: 10px;
+    height: auto;
+    top: 0;
+    bottom: 0;
+    font-size: 0;
+    word-spacing: -5px;
+}
 
-        .xv_Mask_Border .xv_Mask_Icon {
-            display: inline-block;
-            *display: inline;
-            *zoom: 1;
-            width: 38px;
-            height: 38px;
-            margin-right: 15px;
-            background-image: url("xvDialogImg/xv-md-icon.png");
-            background-repeat: no-repeat;
-            vertical-align: middle;
-        }
+.xv_Mask_Txt_Box .xv_Mask_Txt {
+    font-size: 12px;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    font-family: normal;
+    line-height: 26px;
+    vertical-align: middle;
+}
 
-        .xv_Mask_Msg_Box span {
-            display: block;
-            font-size: 12px;
-            line-height: 24px;
-            padding: 15px 20px 0 70px;
-        }
+.xv_Mask_Border .xv_Mask_Icon {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    width: 38px;
+    height: 38px;
+    margin-right: 15px;
+    background-image: url("xvDialogImg/xv-md-icon.png");
+    background-repeat: no-repeat;
+    vertical-align: middle;
+}
 
-        .xv_Mask_Icon_success {
-            background-position: 0 0;
-        }
+.xv_Mask_Msg_Box span {
+    display: block;
+    font-size: 12px;
+    line-height: 24px;
+    padding: 15px 20px 0 70px;
+}
 
-        .xv_Mask_Icon_waring {
-            background-position: -114px 0;
-        }
+.xv_Mask_Icon_success {
+    background-position: 0 0;
+}
 
-        .xv_Mask_Icon_error {
-            background-position: -76px 0;
-        }
+.xv_Mask_Icon_waring {
+    background-position: -114px 0;
+}
 
-        .xv_Mask_Icon_info {
-            background-position: -38px 0;
-        }
+.xv_Mask_Icon_error {
+    background-position: -76px 0;
+}
 
-        .xv_Mask_Container .xv_Mask_Box_CloseBtn {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            line-height: 8px;
-            *line-height: 9px;
-            overflow: hidden;
-            right: 10px;
-            top: 8px;
-            text-align: center;
-            border: 1px solid #1977b5;
-            background: #fff;
-            color: #1977b5;
-            font-family: "microsoft yahei";
-            z-index: 2;
-            cursor: pointer;
-        }
+.xv_Mask_Icon_info {
+    background-position: -38px 0;
+}
 
-        .xv_Mask_Box_Foot {
-            position: relative;
-            text-align: center;
-            width: 100%;
-            padding: 5px 0 5px 0;
-            z-index: 2;
-            background: #eee;
-        }
+.xv_Mask_Container .xv_Mask_Box_CloseBtn {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    line-height: 8px;
+    *line-height: 9px;
+    overflow: hidden;
+    right: 10px;
+    top: 8px;
+    text-align: center;
+    border: 1px solid #1977b5;
+    background: #fff;
+    color: #1977b5;
+    font-family: "microsoft yahei";
+    z-index: 2;
+    cursor: pointer;
+}
 
-        .xv_Mask_Box_Btn {
-            display: inline-block;
-            *display: inline;
-            height: 24px;
-            line-height: 24px;
-            color: #fff;
-            border: 1px solid #fff;
-            padding: 0 20px;
-            margin: 0 10px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            *zoom: 1;
-        }
+.xv_Mask_Box_Foot {
+    position: relative;
+    text-align: center;
+    width: 100%;
+    padding: 5px 0 5px 0;
+    z-index: 2;
+    background: #eee;
+}
 
-        .xv_Mask_Box_Btn:hover {
-            opacity: 0.8;
-        }
+.xv_Mask_Box_Btn {
+    display: inline-block;
+    *display: inline;
+    height: 24px;
+    line-height: 24px;
+    color: #fff;
+    border: 1px solid #fff;
+    padding: 0 20px;
+    margin: 0 10px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    *zoom: 1;
+}
 
-        .xv_Mask_Box_Btn:active {
-            opacity: 1;
-        }
+.xv_Mask_Box_Btn:hover {
+    opacity: 0.8;
+}
 
-        .xv_Mask_Box_CancelBtn,.cancel_style {
-            color: #333;
-            border: 1px solid #848484;
-            background: #dbdddf;
-        }
+.xv_Mask_Box_Btn:active {
+    opacity: 1;
+}
 
-        .xv_Mask_Box_OkBtn,.ok_style {
-            border: 1px solid #1977b5;
-            background: #1f8ed8;
-        }
+.xv_Mask_Box_CancelBtn, .cancel_style {
+    color: #333;
+    border: 1px solid #848484;
+    background: #dbdddf;
+}
 
-        .add_style {
-            border: 1px solid #f34627;
-            background: #fbb627;
-        }
+.xv_Mask_Box_OkBtn, .ok_style {
+    border: 1px solid #1977b5;
+    background: #1f8ed8;
+}
 
-        /*tips*/
-        .xv_Mask_Tip {
-            background: rgba(8, 128, 206, 1);
-            *background: #0880ce;
-            border-radius: 5px;
-            padding: 10px;
-            position: absolute;
-            color: #f3d266;
-        }
+.add_style {
+    border: 1px solid #f34627;
+    background: #fbb627;
+}
 
-        .xv_Mask_Tip .xv_Mask_Box_CloseBtn {
-            position: absolute;
-            color: #a5ebfd;
-            height: 5px;
-            width: 5px;
-            line-height: 5px;
-            cursor: pointer;
-        }
+/*tips*/
+.xv_Mask_Tip {
+    background: rgba(8, 128, 206, 1);
+    *background: #0880ce;
+    border-radius: 5px;
+    padding: 10px;
+    position: absolute;
+    color: #f3d266;
+}
 
-        .xv_Mask_Tip .xv_Mask_Icon {
-            position: absolute;
-            width: 0;
-            height: 0;
-            border: 5px dashed transparent;
-        }
+.xv_Mask_Tip .xv_Mask_Box_CloseBtn {
+    position: absolute;
+    color: #a5ebfd;
+    height: 5px;
+    width: 5px;
+    line-height: 5px;
+    cursor: pointer;
+}
 
-        .xv_Tip_Align_left {
-            padding-left: 20px;
-        }
+.xv_Mask_Tip .xv_Mask_Icon {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 5px dashed transparent;
+}
 
-        .xv_Tip_Align_left .xv_Mask_Box_CloseBtn {
-            left: 8px;
-            top: 50%;
-            margin-top: -2px;
-        }
+.xv_Tip_Align_left {
+    padding-left: 20px;
+}
 
-        .xv_Tip_Align_left .xv_Mask_Icon {
-            right: -10px;
-            top: 20%;
-            border-left-color: rgba(8, 128, 206, 1);
-            *border-left-color: #0880ce;
-        }
+.xv_Tip_Align_left .xv_Mask_Box_CloseBtn {
+    left: 8px;
+    top: 50%;
+    margin-top: -2px;
+}
 
-        .xv_Tip_Align_right {
-            padding-right: 20px;
-        }
+.xv_Tip_Align_left .xv_Mask_Icon {
+    right: -10px;
+    top: 20%;
+    border-left-color: rgba(8, 128, 206, 1);
+    *border-left-color: #0880ce;
+}
 
-        .xv_Tip_Align_right .xv_Mask_Box_CloseBtn {
-            right: 8px;
-            top: 50%;
-            margin-top: -2px;
-        }
+.xv_Tip_Align_right {
+    padding-right: 20px;
+}
 
-        .xv_Tip_Align_right .xv_Mask_Icon {
-            left: -10px;
-            top: 20%;
-            border-right-color: rgba(8, 128, 206, 1);
-            *border-right-color: #0880ce;
-        }
+.xv_Tip_Align_right .xv_Mask_Box_CloseBtn {
+    right: 8px;
+    top: 50%;
+    margin-top: -2px;
+}
 
-        .xv_Tip_Align_top {
-            padding-right: 20px;
-        }
+.xv_Tip_Align_right .xv_Mask_Icon {
+    left: -10px;
+    top: 20%;
+    border-right-color: rgba(8, 128, 206, 1);
+    *border-right-color: #0880ce;
+}
 
-        .xv_Tip_Align_top .xv_Mask_Box_CloseBtn {
-            right: 8px;
-            top: 50%;
-            margin-top: -2px;
-        }
+.xv_Tip_Align_top {
+    padding-right: 20px;
+}
 
-        .xv_Tip_Align_top .xv_Mask_Icon {
-            left: 20%;
-            bottom: -10px;
-            /*border-top-color: rgba(8, 128, 206, 1);*/
-            border-top-color: #0880ce;
-        }
+.xv_Tip_Align_top .xv_Mask_Box_CloseBtn {
+    right: 8px;
+    top: 50%;
+    margin-top: -2px;
+}
 
-        .xv_Tip_Align_bottom {
-            padding-right: 20px;
-        }
+.xv_Tip_Align_top .xv_Mask_Icon {
+    left: 20%;
+    bottom: -10px;
+    /*border-top-color: rgba(8, 128, 206, 1);*/
+    border-top-color: #0880ce;
+}
 
-        .xv_Tip_Align_bottom .xv_Mask_Box_CloseBtn {
-            right: 8px;
-            top: 50%;
-            margin-top: -2px;
-        }
+.xv_Tip_Align_bottom {
+    padding-right: 20px;
+}
 
-        .xv_Tip_Align_bottom .xv_Mask_Icon {
-            left: 20%;
-            top: -10px;
-            border-bottom-color: rgba(8, 128, 206, 1);
-            *border-bottom-color: #0880ce;;
-        }
+.xv_Tip_Align_bottom .xv_Mask_Box_CloseBtn {
+    right: 8px;
+    top: 50%;
+    margin-top: -2px;
+}
 
-        .xv_Mask_Tip em {
-            position: absolute;
-            width: 0;
-            height: 0;
-            border: 5px dashed transparent;
-        }
+.xv_Tip_Align_bottom .xv_Mask_Icon {
+    left: 20%;
+    top: -10px;
+    border-bottom-color: rgba(8, 128, 206, 1);
+    *border-bottom-color: #0880ce;;
+}
 
-        input {
-            margin: 0 10px;
-        }
+.xv_Mask_Tip em {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 5px dashed transparent;
+}
 
+input {
+    margin: 0 10px;
+}
 
-        .xv_Mask_Main::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-            background-color:rgba(0,0,0,.2);
-        }
+.xv_Mask_Main::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: rgba(0, 0, 0, .2);
+}
 
-        .xv_Mask_Main::-webkit-scrollbar-track {
-            background-color: #eee;
-        }
+.xv_Mask_Main::-webkit-scrollbar-track {
+    background-color: #eee;
+}
 
-        .xv_Mask_Main::-webkit-scrollbar-thumb {
-            background-color: #ccc;
-        }
+.xv_Mask_Main::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+}
 
-        .xv_Mask_Main::-webkit-scrollbar-track {
-            width:8px;
-        }
+.xv_Mask_Main::-webkit-scrollbar-track {
+    width: 8px;
+}
 
+.xv_Mask_Main::-webkit-scrollbar-corner {
+    background: transparent;
+}
 
-        .xv_Mask_Main::-webkit-scrollbar-corner {
-            background: transparent;
-        }
-
-    </style>
+</style>
 </head>
 <body>
 
@@ -493,6 +501,12 @@ dsafdsa
 <br/>dsafdsafdsaf
 <br/>
 <br/>
+
+
+<iframe src="" frameborder="0">
+
+
+</iframe>
 </body>
 <script>
 
@@ -503,11 +517,11 @@ dsafdsa
                     index: 0,
                     type: 'dialog',
 //
-                    /*drag:false,
-                     title: false,
-                     closeBtn:false,
-                     buttons:false,
-                     icon:false,*/
+                    drag: false,
+                    title: false,
+                    closeBtn: false,
+                    buttons: false,
+                    icon: false,
 //                    setTimes:3000,
                     iconType: 'waring', /*waring,error,info*/
                     contentMsg: 'hello，我是xv-大前端！！'
@@ -568,7 +582,7 @@ dsafdsa
                     type: 'tips',
 //                    closeBtn:false,
                     align: 'top', /*对齐位置默认为靠右*/
-//                    setTimes:5000,
+//                    closeTimes:5000,
                     position: {left: 5, top: 0},
                     contentMsg: 'hello，我是xv-大前端！欢迎使用xvDialog。'
                 });
@@ -577,9 +591,9 @@ dsafdsa
 
     $(".closeTip").click(
             function () {
-             /*type可以为：all、tips、alert、index*/
-             //xvDialog.close(type)
-              xvDialog.close('all');
+                /*type可以为：all、tips、alert、index*/
+                //xvDialog.close(type)
+                xvDialog.close('all');
             }
     );
 
@@ -603,7 +617,7 @@ dsafdsa
                     content: '<iframe name="fr1" src="iframe.html" width="480" height="400"  frameborder="0"></iframe>'
                 });
 
-    });
+            });
 
     /*弹出页面层*/
     $(".btn2-1").click(
@@ -620,7 +634,6 @@ dsafdsa
                     buttons: false,
 //                    icon: false,
 //                    setTimes:3000,
-
                     iconType: 'waring', /*waring,error,info*/
                     content: '<div style="width:500px;height:300px; font-size:12px; background:#fbb627;">hello我是页面层</div>'
                 });
@@ -639,19 +652,51 @@ dsafdsa
                     /*scrollX:false,*/
 //                    scrollX:false,
                     title: '七里香',
-                    closeBtn: false,
-                    buttons: false,
+//                    closeBtn: false,
+//                    buttons: false,
 //                    icon: false,
 //                    setTimes:3000,
 
                     iconType: 'waring', /*waring,error,info*/
                     iframe: {
-                        src:'iframe.html',
-                        width:100,
-                        height:100,
-                        name:'',
-                        id:''
-                    }
+                        src: 'iframe.html',
+                        width: 480,
+                        height: 400,
+                        name: 'iframe1',
+                        id: 'iframe1'
+                    },
+                    load: function (frameWindow, frameBody) {
+                        console.log(frameWindow);
+                        console.log(frameBody);
+                    },
+                    buttons: [
+                        {
+                            type: 'ok',
+                            text: '确定',
+                            cls: 'ok_style',
+                            callBack: function (_this) {
+                                console.log(_this);
+                                console.log('确定1');
+                            }
+                        },
+                        {
+                            type: 'cancel',
+                            text: '取消',
+                            cls: 'cancel_style',
+                            callBack: function () {
+                                console.log('取消2');
+                                xvDialog.close(0)
+                            }
+                        },
+                        {
+                            type: 'add',
+                            text: '添加',
+                            cls: 'cancel_style',
+                            callBack: function () {
+                                console.log('添加');
+                            }
+                        }
+                    ]
                 });
             });
 
