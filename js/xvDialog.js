@@ -51,17 +51,9 @@
     win.xvDialog = {
         index: 0,
         alert: function (config) {
-            var dfltOpts = {
-                area: [],
-                contentMsg: '...',
-                icon: 'waring',
-                button: ['yes', 'no', 'close']
-            }
+
         }, tips: function (config) {
-            var dfltOpts = {
-                area: [],
-                contentMsg: '...'
-            }
+
         }, close: function (object) {
             if (!(object || object === 0)) {
                 return false;
@@ -105,8 +97,9 @@
             var tmpOps = {};
             _S.index = tmpOps.index = (Number(opts.index) >= 0) ? opts.index : xvDialog.index++;
             tmpOps.type = opts.type || 'dialog';
-            tmpOps.closeBtn = opts.closeBtn;
-            tmpOps.drag = opts.drag;
+            tmpOps.closeBtn = opts.closeBtn || '';
+            tmpOps.esc = opts.esc || '';
+            tmpOps.drag = opts.drag || '';
             tmpOps.closeTimes = opts.closeTimes || '';
             tmpOps.content = opts.content || '';
             tmpOps.contentMsg = opts.contentMsg || '';
@@ -253,8 +246,6 @@
 
             if (type === 'iframe') {
                 if (iframeHtml) {
-                    var ifrId = doms.iframeId + idx;
-
                     mkBoxMain.html(iframeHtml);
                     var iframe = mkBoxMain.find('iframe');
 
@@ -442,6 +433,8 @@
                 /*触发拖拽*/
                 opts.drag !== false ? _S.drag(tit) : '';
 
+                ctr.addClass('animate_dialog');
+
             } else if (type == 'tips') {
                 var tips = _O.ctr;
                 var target = $(event.srcElement);
@@ -475,6 +468,7 @@
                         top: tP.top + setP.top
                     };
                 }
+                tips.addClass('animate_tips');
                 tips.css(tmpP);
             }
 
@@ -485,15 +479,25 @@
             }
 
             opts.closeBtn !== false ? _O.clsBtn.on('click', {that: _S}, _S.close) : '';
+
+            opts.esc !== false ? $(document).on('keyup',{that: _S},_S.close) : '';
+
         },
 
         /*关闭*/
         close: function (e) {
+            if(e && e.keyCode){
+                var isEsc;
+                if(e.keyCode !== 27) {
+                    return false;
+                }else{
+                    isEsc = true;
+                }
+            }
             var _S = e && e.data ? e.data.that : this;
             xvDialog.close(_S.index);
-            if (_S.timer) {
-                clearTimeout(_S.timer);
-            }
+            _S.timer ? clearTimeout(_S.timer):'';
+            isEsc ? $(document).off('keyup',_S.close):'';
         },
 
         /*按钮监听事件的添加*/
@@ -516,7 +520,7 @@
             var _S = this,
                 ctr = _S.mkObj.ctr;
             obj.on('mousedown', function (e) {
-
+                e.preventDefault();
                 var p = ctr.ps,
                     disX = e.clientX - p.left,
                     disY = e.clientY - p.top,
@@ -538,7 +542,6 @@
                 $(document).on('mouseup', {that: _S, objProt: objProt, doc: doc, dragBox: dragBox}, _S.clearDrag);
 
                 doc.on('mousemove', {that: _S, win: $(window),dragBox: dragBox, disX: disX, disY: disY}, _S.moveFunc);
-
             });
         },
 
