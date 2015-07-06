@@ -29,7 +29,8 @@
             tip: 'xv_Mask_Tip',
             tipAlign: 'xv_Tip_Align_',
             type: 'xvmktype',
-            times: 'mktimes'
+            times: 'mktimes',
+            mkAnimate:'xv_dlt_animate'
         },
         type: {
             dialog: 'dialog',
@@ -103,6 +104,7 @@
             tmpOps.closeTimes = opts.closeTimes || '';
             tmpOps.content = opts.content || '';
             tmpOps.contentMsg = opts.contentMsg || '';
+            tmpOps.animate = (opts.animate || opts.animate === false) ? opts.animate : G.doms.mkAnimate;
             tmpOps.zIndex = parseInt(opts.zIndex) || G.defaultSize.zIndex;
             switch (tmpOps.type) {
                 case 'dialog':
@@ -434,7 +436,7 @@
 
                 /*触发拖拽*/
                 opts.drag !== false ? _S.drag(tit) : '';
-                opts.animate === false ? '' : ctr.addClass(opts.animate);
+                opts.animate !== false ? ctr.addClass(opts.animate) : ctr.css({opacity:1});
 
             } else if (type == 'tips') {
                 var tips = _O.ctr;
@@ -468,9 +470,12 @@
                         top: tP.top + setP.top
                     };
                 }
+
                 tmpP.opacity = 1;
-                if(opts.animate === false){tips.css(tmpP)}else{
-                    tips.css({left:tmpP.left+10,top:tmpP.top-20}).addClass('xv_tips_dlt_animate');
+                if(opts.animate === false){
+                    tips.css(tmpP);
+                }else{
+                    tips.css({left:tmpP.left+10,top:tmpP.top-20}).addClass(opts.animate);
                     var tipsTimer = setTimeout(function(){tips.css(tmpP);tipsTimer=null},30);
                 }
 
@@ -483,7 +488,6 @@
             }
 
             opts.closeBtn !== false ? _O.clsBtn.on('click', {that: _S}, _S.close) : '';
-
             opts.esc !== false ? $(document).on('keyup',{that: _S},_S.close) : '';
 
         },

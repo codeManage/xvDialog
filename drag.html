@@ -71,10 +71,9 @@
         /*cubic-bezier(.4,-0.55,.56,1.56)*/
         .xv_Mask_Container {
             position: absolute;
-            left: 60%;
             top: 0;
             z-index: 2;
-            opacity: 0;
+            opacity: 1;
         }
 
         .xv_Mask_Border {
@@ -248,7 +247,7 @@
             padding: 10px;
             position: absolute;
             color: #f3d266;
-            opacity: 0.5;
+            opacity: 0;
         }
 
         .xv_Mask_Tip .xv_Mask_Box_CloseBtn {
@@ -370,14 +369,14 @@
 
 
         /*动画*/
-        .xv_dialog_dlt_animate {
+       /* .xv_dialog_dlt_animate {
             transition: all 0.4s ease-out;
             opacity: 1;
 
-        }
+        }*/
 
-        .xv_tips_dlt_animate {
-            transition: all 0.2s ease-in-out;
+        .xv_dlt_animate {
+            transition: all 0.4s ease-in-out;
             opacity: 1;
         }
 
@@ -528,15 +527,17 @@ dsafdsa
                 xv1 = $.xvDialog({
                     index: 0,
                     type: 'dialog',
+                    drag: false,
+
 //
-                    /*  drag: false,
+                    /*  ,
                      title: false,
                      closeBtn: false,
                      buttons: false,
                      icon: false,*/
-                    closeTimes:3000,
+//                    closeTimes:3000,
                     iconType: 'waring', /*waring,error,info*/
-                    contentMsg: 'hello，我是xv-大前端！！'
+                    contentMsg: 'hello，我是xv-大前端'
 
                     /*button: [
                      {
@@ -637,7 +638,7 @@ dsafdsa
                     load:function(_this,content){
                         console.log("加载完毕");
                         console.log(content);
-                        console.log($(content[0].document).find("#div2").length);
+                        console.log();
                     }
                 });
 
