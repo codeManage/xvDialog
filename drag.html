@@ -248,6 +248,7 @@
             padding: 10px;
             position: absolute;
             color: #f3d266;
+            opacity: 0.5;
         }
 
         .xv_Mask_Tip .xv_Mask_Box_CloseBtn {
@@ -263,7 +264,7 @@
             position: absolute;
             width: 0;
             height: 0;
-            border: 5px dashed transparent;
+            border:5px transparent solid;
         }
 
         .xv_Tip_Align_left {
@@ -369,14 +370,14 @@
 
 
         /*动画*/
-        .animate_dialog {
+        .xv_dialog_dlt_animate {
             transition: all 0.4s ease-out;
             opacity: 1;
-            -webkit-transform: rotate(360deg);
+
         }
 
-        .animate_tips {
-            transition: all 0.4s ease-out;
+        .xv_tips_dlt_animate {
+            transition: all 0.2s ease-in-out;
             opacity: 1;
         }
 
@@ -591,8 +592,9 @@ dsafdsa
                 xv2 = $.xvDialog({
                     index: 1,
                     type: 'tips',
+                    follow:'#tip',
 //                    closeBtn:false,
-                    align: 'top', /*对齐位置默认为靠右*/
+                    align: 'bottom', /*对齐位置默认为靠右*/
 //                    closeTimes:5000,
                     position: {left: 5, top: 0},
                     contentMsg: 'hello，我是xv-大前端！欢迎使用xvDialog。'
@@ -609,6 +611,12 @@ dsafdsa
     );
 
 
+    /*$(contentHtml).load(function () {
+     var that = $(this);
+     opts.load ? opts.load(_S,that) : '';
+     })*/
+
+
     /*弹出框架iframe*/
     $(".btn2").click(
             function () {
@@ -620,11 +628,17 @@ dsafdsa
                     /*scrollX:false,*/
 //                    scrollX:false,
                     title: '七里香',
+
 //                    buttons: false,
 //                    icon: false,
 //                    setTimes:3000,
                     iconType: 'waring', /*waring,error,info*/
-                    content: '<iframe name="fr1" src="iframe.html" width="480" height="400"  frameborder="0"></iframe>'
+                    content: '<iframe name="fr1" src="iframe.html" width="480" height="400"  frameborder="0"></iframe>',
+                    load:function(_this,content){
+                        console.log("加载完毕");
+                        console.log(content);
+                        console.log($(content[0].document).find("#div2").length);
+                    }
                 });
 
             });
@@ -666,7 +680,7 @@ dsafdsa
 //                    buttons: false,
 //                    icon: false,
 //                    setTimes:3000,
-
+                    animate:false,
                     iconType: 'waring', /*waring,error,info*/
                     iframe: {
                         src: 'iframe.html',
@@ -675,8 +689,10 @@ dsafdsa
                         name: 'iframe1',
                         id: 'iframe1'
                     },
-                    load: function (frameWindow, frameBody) {
-
+                    load: function ($this,frameWindow, frameBody) {
+                        console.log($this);
+                        console.log(frameWindow);
+                        console.log(frameBody);
                     },
                     buttons: [
                         {

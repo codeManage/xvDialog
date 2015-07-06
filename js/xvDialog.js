@@ -109,11 +109,11 @@
                     tmpOps = _S.pubOptions('dialog', tmpOps, opts);
                     break;
                 case 'iframe':
-                    tmpOps.load = (opts.load && typeof opts.load === 'function') ? opts.load : '';
                     tmpOps = _S.pubOptions('iframe', tmpOps, opts);
                     break;
                 case 'tips':
                     tmpOps.align = opts.align || 'right';
+                    tmpOps.follow = opts.follow || '';
                     if (opts.position) {
                         var p = opts.position;
                         tmpOps.position = p;
@@ -138,6 +138,7 @@
 
         pubOptions: function (type, tmpOps, opts) {
             var _S = this;
+            tmpOps.load = (opts.load && typeof opts.load === 'function') ? opts.load : '';
             tmpOps.title = (!opts.title && opts.title !== false) ? '' : opts.title;
             tmpOps.icon = opts.icon;
             tmpOps.scroll = opts.scroll !== false;
@@ -240,7 +241,8 @@
                 }
                 mkBoxMain.css(overF);
                 if (contentHtml) {
-                    mkBoxMain.html(contentHtml)
+                    mkBoxMain.html(contentHtml);
+                    opts.load ? opts.load(_S,$(contentHtml)) : '';
                 }
             }
 
@@ -254,7 +256,7 @@
                         var childWin = self.frames[that.attr('name')];
                         _S.frameWindow = $(childWin);
                         _S.frameBody = $(childWin.document.body);
-                        opts.load ? opts.load(_S.frameWindow, _S.frameBody) : '';
+                        opts.load ? opts.load(_S,_S.frameWindow, _S.frameBody) : '';
                     })
                 }
             }
@@ -432,12 +434,11 @@
 
                 /*触发拖拽*/
                 opts.drag !== false ? _S.drag(tit) : '';
-
-                ctr.addClass('animate_dialog');
+                opts.animate === false ? '' : ctr.addClass(opts.animate);
 
             } else if (type == 'tips') {
                 var tips = _O.ctr;
-                var target = $(event.srcElement);
+                var target = $(opts.follow);
                 var trtW = target.outerWidth();
                 var trtH = target.outerHeight();
                 var tipsW = tips.outerWidth();
@@ -446,7 +447,6 @@
                 var tP = target.offset();
                 var tmpP = {left: 0, top: 0};
                 var dltGap = G.defaultSize.dltGap;
-
                 if (opts.align == 'left') {
                     tmpP = {
                         left: tP.left - tipsW + setP.left - dltGap,
@@ -468,8 +468,12 @@
                         top: tP.top + setP.top
                     };
                 }
-                tips.addClass('animate_tips');
-                tips.css(tmpP);
+                tmpP.opacity = 1;
+                if(opts.animate === false){tips.css(tmpP)}else{
+                    tips.css({left:tmpP.left+10,top:tmpP.top-20}).addClass('xv_tips_dlt_animate');
+                    var tipsTimer = setTimeout(function(){tips.css(tmpP);tipsTimer=null},30);
+                }
+
             }
 
             if (time > 0) {
