@@ -81,6 +81,7 @@
             border: 8px solid rgba(0, 0, 0, 0.3);
             *border: 8px solid #1F8ED8;
             border-radius: 4px;
+            font-size:0;
         }
 
         .xv_Mask_Box_Tit {
@@ -107,10 +108,9 @@
 
         .xv_Mask_Main {
             position: relative;
+            display: block;
             background: #fff;
             z-index: 1;
-            font-size: 0;
-            word-spacing: -5px;
         }
 
         .xv_Mask_Msg_Box {
@@ -119,29 +119,28 @@
 
         .xv_Mask_Txt_Box {
             position: relative;
-            display: inline-block;
+            line-height:100%;
             padding: 10px;
             height: auto;
+            overflow: hidden;
             top: 0;
             bottom: 0;
-            font-size: 0;
-            word-spacing: -5px;
         }
 
         .xv_Mask_Txt_Box .xv_Mask_Txt {
+            display: block;
             font-size: 12px;
-            display: inline-block;
-            *display: inline;
-            *zoom: 1;
-            font-family: normal;
-            line-height: 26px;
+            line-height: 22px;
+            padding-left:38px;
             vertical-align: middle;
+            word-break:break-all;
         }
 
         .xv_Mask_Border .xv_Mask_Icon {
-            display: inline-block;
+            float:left;
+            /*display: inline-block;
             *display: inline;
-            *zoom: 1;
+            *zoom: 1;*/
             width: 38px;
             height: 38px;
             margin-right: 15px;
@@ -189,6 +188,7 @@
             font-family: "microsoft yahei";
             z-index: 2;
             cursor: pointer;
+            font-size:12px;
         }
 
         .xv_Mask_Box_Foot {
@@ -528,6 +528,8 @@ dsafdsa
                     index: 0,
                     type: 'dialog',
                     drag: false,
+                    width:250,
+                    closeAction:'hide',
 
 //
                     /*  ,
@@ -537,7 +539,7 @@ dsafdsa
                      icon: false,*/
 //                    closeTimes:3000,
                     iconType: 'waring', /*waring,error,info*/
-                    contentMsg: 'hello，我是xv-大前端'
+                    contentMsg: '我是xv-大前端！欢迎使用xvDialog欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用'
 
                     /*button: [
                      {
@@ -625,7 +627,7 @@ dsafdsa
                     index: 2,
                     type: 'dialog',
 //                    drag: false,
-//                    scroll:false,
+//                    scroll:,
                     /*scrollX:false,*/
 //                    scrollX:false,
                     title: '七里香',
@@ -638,7 +640,6 @@ dsafdsa
                     load:function(_this,content){
                         console.log("加载完毕");
                         console.log(content);
-                        console.log();
                     }
                 });
 
@@ -725,6 +726,11 @@ dsafdsa
                     ]
                 });
             });
+
+
+
+
+
 
 </script>
 </html>

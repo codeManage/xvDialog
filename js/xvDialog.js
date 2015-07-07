@@ -27,6 +27,7 @@
             icon: 'xv_Mask_Icon',
             waring: 'xv_Mask_Waring',
             tip: 'xv_Mask_Tip',
+            tipTxt: 'xv_Mask_Tip_Txt',
             tipAlign: 'xv_Tip_Align_',
             type: 'xvmktype',
             times: 'mktimes',
@@ -99,9 +100,10 @@
             _S.index = tmpOps.index = (Number(opts.index) >= 0) ? opts.index : xvDialog.index++;
             tmpOps.type = opts.type || 'dialog';
             tmpOps.closeBtn = opts.closeBtn || '';
-            tmpOps.esc = opts.esc || '';
-            tmpOps.drag = opts.drag || '';
             tmpOps.closeTimes = opts.closeTimes || '';
+            tmpOps.closeAction = opts.closeAction || '';
+            tmpOps.esc = opts.esc || '';
+            tmpOps.drag = (opts.drag || opts.drag === false) ? opts.drag : '';
             tmpOps.content = opts.content || '';
             tmpOps.contentMsg = opts.contentMsg || '';
             tmpOps.animate = (opts.animate || opts.animate === false) ? opts.animate : G.doms.mkAnimate;
@@ -179,11 +181,9 @@
             var type = _S.currentType = dType[opts.type];
             var body = $('body');
 
-            var contentMsg = opts.contentMsg ? "<pre>" + opts.contentMsg + "</pre>" : '';
-
 
             var mkBox = "<div id='" + doms.maskBox + '_' + idx + "' class='" + doms.maskBox + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'></div>";
-            var mkBoxCon = "<div class='" + doms.maskBoxCon + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "'  style='z-index:" + (opts.zIndex + idx + 1) + ";'><div class='" + doms.maskConBrd + "'><div class='" + doms.maskBoxMain + "'><div class='" + doms.maskTxtBox + "'>" + ((opts.icon === false) ? " " : ("<i class='" + doms.icon + ' ' + doms.icon + '_' + opts.iconType + "'></i>")) + "<div class='" + doms.maskTxt + "'>" + contentMsg + "</div></div></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
+            var mkBoxCon = "<div class='" + doms.maskBoxCon + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "'  style='z-index:" + (opts.zIndex + idx + 1) + ";'><div class='" + doms.maskConBrd + "'><div class='" + doms.maskBoxMain + "'><div class='" + doms.maskTxtBox + "'>" + ((opts.icon === false) ? " " : ("<i class='" + doms.icon + ' ' + doms.icon + '_' + opts.iconType + "'></i>")) + "<div class='" + doms.maskTxt + "'></div></div></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
 
 
             var closeBtn = "<div class='" + doms.maskBoxCloseBtn + "'>x</div>";
@@ -196,7 +196,7 @@
                     _S.pubDlgArea(dType['dialog'], closeBtn, mkBoxCon, mkBox);
                     break;
                 case dType.tips :
-                    var tips = "<div id='" + doms.tip + '_' + idx + "' class='" + doms.tip + " " + doms.tipAlign + opts.align + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'><i class='" + doms.icon + "'></i><em></em><div class='" + doms.tip + "_Container'><pre>" + opts.contentMsg + "</pre></div></div>";
+                    var tips = "<div id='" + doms.tip + '_' + idx + "' class='" + doms.tip + " " + doms.tipAlign + opts.align + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'><i class='" + doms.icon + "'></i><em></em><div class='" + doms.tipTxt + "'>" + opts.contentMsg + "</div></div>";
                     tips = $(tips).appendTo(body);
                     _S.mkObj = {
                         body: body,
@@ -210,7 +210,6 @@
                     };
                     _S.pubDlgArea(dType['iframe'], closeBtn, mkBoxCon, mkBox);
                     break;
-
             }
             _S.resetEvent(type);
         },
@@ -224,6 +223,7 @@
             var mkBoxTit = "<div class=" + doms.maskBoxTit + "><p class='" + doms.maskBoxTitMsg + "'>" + opts.title + "</p></div>";
 
             var contentHtml = opts.content ? opts.content : '';
+            var contentMsg = opts.contentMsg ? opts.contentMsg : '';
 
             var iframeHtml = opts.iframe && opts.iframe.src ? "<iframe id='" + (opts.iframe.id || doms.iframeId + idx) + "' name='" + (opts.iframe.name || doms.iframeName + idx) + "' frameborder='0' src='" + opts.iframe.src + "' width='" + ( opts.iframe.width || 'auto') + "' height='" + ( opts.iframe.height || 'auto') + "'></iframe>" : '';
 
@@ -231,7 +231,7 @@
                 maskConBrd = mkBoxCon.find("." + doms.maskConBrd),
                 mkBoxMain = mkBoxCon.find("." + doms.maskBoxMain),
                 maskBoxFoot = mkBoxCon.find("." + doms.maskBoxFoot),
-                overF = {'overflow': 'auto'};
+                overF = {'overflow':'auto'};
 
             if (type === 'dialog' || type === 'iframe') {
                 if (opts.scroll === false) {
@@ -245,6 +245,9 @@
                 if (contentHtml) {
                     mkBoxMain.html(contentHtml);
                     opts.load ? opts.load(_S,$(contentHtml)) : '';
+                }
+                if(contentMsg) {
+                    $('<div></div>').text(contentMsg).appendTo(mkBoxMain.find("."+doms.maskTxt));
                 }
             }
 
