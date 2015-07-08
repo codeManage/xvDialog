@@ -31,7 +31,8 @@
             tipAlign: 'xv_Tip_Align_',
             type: 'xvmktype',
             times: 'mktimes',
-            mkAnimate:'xv_dlt_animate'
+            mkrAnimate: 'xv_reset_animate',
+            mkAnimate: 'xv_dlt_animate'
         },
         type: {
             dialog: 'dialog',
@@ -56,7 +57,7 @@
 
         }, tips: function (config) {
 
-        }, close: function (object) {
+        }, close: function (object, closeType) {
             if (!(object || object === 0)) {
                 return false;
             }
@@ -79,7 +80,7 @@
                 }
                 ctr = $("[" + attr + "=" + object.index + "]");
             }
-            ctr.remove();
+            closeType === 'hide' ? ctr.hide() : ctr.remove();
         }
     };
 
@@ -106,6 +107,7 @@
             tmpOps.drag = (opts.drag || opts.drag === false) ? opts.drag : '';
             tmpOps.content = opts.content || '';
             tmpOps.contentMsg = opts.contentMsg || '';
+            tmpOps.contentId = opts.contentId || '';
             tmpOps.animate = (opts.animate || opts.animate === false) ? opts.animate : G.doms.mkAnimate;
             tmpOps.zIndex = parseInt(opts.zIndex) || G.defaultSize.zIndex;
             switch (tmpOps.type) {
@@ -148,6 +150,7 @@
             tmpOps.scroll = opts.scroll !== false;
             tmpOps.scrollX = opts.scrollX !== false;
             tmpOps.scrollY = opts.scrollY !== false;
+            tmpOps.showAlign = opts.showAlign || '';
             tmpOps.buttons = (opts.buttons || opts.buttons === false) ? opts.buttons : [{
                 type: 'ok',
                 text: '确定',
@@ -181,9 +184,9 @@
             var type = _S.currentType = dType[opts.type];
             var body = $('body');
 
-
+            var rAnimate = opts.animate === false ? '' : doms.mkrAnimate;
             var mkBox = "<div id='" + doms.maskBox + '_' + idx + "' class='" + doms.maskBox + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'></div>";
-            var mkBoxCon = "<div class='" + doms.maskBoxCon + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "'  style='z-index:" + (opts.zIndex + idx + 1) + ";'><div class='" + doms.maskConBrd + "'><div class='" + doms.maskBoxMain + "'><div class='" + doms.maskTxtBox + "'>" + ((opts.icon === false) ? " " : ("<i class='" + doms.icon + ' ' + doms.icon + '_' + opts.iconType + "'></i>")) + "<div class='" + doms.maskTxt + "'></div></div></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
+            var mkBoxCon = "<div class='" + doms.maskBoxCon + " " + rAnimate + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "'  style='z-index:" + (opts.zIndex + idx + 1) + ";'><div class='" + doms.maskConBrd + "'><div class='" + doms.maskBoxMain + "'><div class='" + doms.maskTxtBox + "'>" + ((opts.icon === false) ? " " : ("<i class='" + doms.icon + ' ' + doms.icon + '_' + opts.iconType + "'></i>")) + "<div class='" + doms.maskTxt + "'></div></div></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
 
 
             var closeBtn = "<div class='" + doms.maskBoxCloseBtn + "'>x</div>";
@@ -224,6 +227,7 @@
 
             var contentHtml = opts.content ? opts.content : '';
             var contentMsg = opts.contentMsg ? opts.contentMsg : '';
+            var contentId = opts.contentId ? opts.contentId : '';
 
             var iframeHtml = opts.iframe && opts.iframe.src ? "<iframe id='" + (opts.iframe.id || doms.iframeId + idx) + "' name='" + (opts.iframe.name || doms.iframeName + idx) + "' frameborder='0' src='" + opts.iframe.src + "' width='" + ( opts.iframe.width || 'auto') + "' height='" + ( opts.iframe.height || 'auto') + "'></iframe>" : '';
 
@@ -231,7 +235,7 @@
                 maskConBrd = mkBoxCon.find("." + doms.maskConBrd),
                 mkBoxMain = mkBoxCon.find("." + doms.maskBoxMain),
                 maskBoxFoot = mkBoxCon.find("." + doms.maskBoxFoot),
-                overF = {'overflow':'auto'};
+                overF = {'overflow': 'auto'};
 
             if (type === 'dialog' || type === 'iframe') {
                 if (opts.scroll === false) {
@@ -244,24 +248,27 @@
                 mkBoxMain.css(overF);
                 if (contentHtml) {
                     mkBoxMain.html(contentHtml);
-                    opts.load ? opts.load(_S,$(contentHtml)) : '';
+                    opts.load ? opts.load(_S, $(contentHtml)) : '';
                 }
-                if(contentMsg) {
-                    $('<div></div>').text(contentMsg).appendTo(mkBoxMain.find("."+doms.maskTxt));
+                if (contentMsg) {
+                    $('<div></div>').text(contentMsg).appendTo(mkBoxMain.find("." + doms.maskTxt));
                 }
+                if (contentId) {
+                    mkBoxMain.html($('#' + contentId));
+                }
+
             }
 
             if (type === 'iframe') {
                 if (iframeHtml) {
                     mkBoxMain.html(iframeHtml);
                     var iframe = mkBoxMain.find('iframe');
-
                     iframe.load(function () {
                         var that = $(this);
                         var childWin = self.frames[that.attr('name')];
                         _S.frameWindow = $(childWin);
                         _S.frameBody = $(childWin.document.body);
-                        opts.load ? opts.load(_S,_S.frameWindow, _S.frameBody) : '';
+                        opts.load ? opts.load(_S, _S.frameWindow, _S.frameBody) : '';
                     })
                 }
             }
@@ -402,11 +409,19 @@
             } else {
                 p = data;
             }
+
+            p.left = Number(p.left) >= 0 ? p.left : 'auto';
+            p.right = Number(p.right) >= 0 ? p.right : 'auto';
+            p.top = Number(p.top) >= 0 ? p.top : 'auto';
+            p.bottom = Number(p.bottom) >= 0 ? p.bottom : 'auto';
+
             _S.mkObj.ctr.ps = {
                 left: p.left,
-                top: p.top
+                right: p.right,
+                top: p.top,
+                bottom: p.bottom
             };
-            obj.css({left: p.left, top: p.top});
+            obj.css(_S.mkObj.ctr.ps);
         },
 
         /*初始化事件*/
@@ -425,11 +440,12 @@
                 /*位置初始化*/
                 ctr.ps = {left: 0, top: 0};
 
+
                 /*位置居中*/
-                _S.setPosition(_S.computeCenter());
+                _S.setPosition(opts.showAlign);
 
                 /*位置随着视口的变换自动居中*/
-                $(window).on('resize', {auto: true, that: _S}, _S.setPosition);
+                $(window).on('resize', {left: 0, bottom: 0, that: _S}, _S.setPosition);
 
                 /*位置随着视口的变换自动居中*/
                 $(window).on('scroll', function (e) {
@@ -439,7 +455,10 @@
 
                 /*触发拖拽*/
                 opts.drag !== false ? _S.drag(tit) : '';
-                opts.animate !== false ? ctr.addClass(opts.animate) : ctr.css({opacity:1});
+
+                /*是否开启动画*/
+                opts.animate !== false ? ctr.addClass(opts.animate) : ctr.css({opacity: 1});
+
 
             } else if (type == 'tips') {
                 var tips = _O.ctr;
@@ -475,13 +494,15 @@
                 }
 
                 tmpP.opacity = 1;
-                if(opts.animate === false){
+                if (opts.animate === false) {
                     tips.css(tmpP);
-                }else{
-                    tips.css({left:tmpP.left+10,top:tmpP.top-20}).addClass(opts.animate);
-                    var tipsTimer = setTimeout(function(){tips.css(tmpP);tipsTimer=null},30);
+                } else {
+                    tips.css({left: tmpP.left + 10, top: tmpP.top - 20}).addClass(opts.animate);
+                    var tipsTimer = setTimeout(function () {
+                        tips.css(tmpP);
+                        tipsTimer = null
+                    }, 30);
                 }
-
             }
 
             if (time > 0) {
@@ -491,24 +512,51 @@
             }
 
             opts.closeBtn !== false ? _O.clsBtn.on('click', {that: _S}, _S.close) : '';
-            opts.esc !== false ? $(document).on('keyup',{that: _S},_S.close) : '';
+            opts.esc !== false ? $(document).on('keyup', {that: _S}, _S.close) : '';
 
         },
 
         /*关闭*/
         close: function (e) {
-            if(e && e.keyCode){
+            if (e && e.keyCode) {
                 var isEsc;
-                if(e.keyCode !== 27) {
+                if (e.keyCode !== 27) {
                     return false;
-                }else{
+                } else {
                     isEsc = true;
                 }
             }
             var _S = e && e.data ? e.data.that : this;
-            xvDialog.close(_S.index);
-            _S.timer ? clearTimeout(_S.timer):'';
-            isEsc ? $(document).off('keyup',_S.close):'';
+            /*炭层位置初始化*/
+
+            /*var ps = _S.computeCenter();
+             _S.mkObj.ctr.css({left:ps.left,top:0});*/
+            var opts = _S.config;
+
+            if (opts.closeAction === 'hide' && opts.animate) {
+                _S.mkObj.ctr.removeClass(opts.animate);
+                xvDialog.close(_S.index, 'hide')
+            } else {
+                xvDialog.close(_S.index);
+            }
+            _S.timer ? clearTimeout(_S.timer) : '';
+            isEsc ? $(document).off('keyup', _S.close) : '';
+        },
+
+        show: function () {
+            var _S = this;
+            var mkObj = _S.mkObj;
+            mkObj.ctr.show();
+            mkObj.mkBox.show();
+            _S.resetEvent(_S.currentType);
+            /*if(mkObj.ctr.length){
+             mkObj.ctr.show();
+             mkObj.mkBox.show();
+             if(opts.closeAction === 'hide' && opts.animate) {
+             _S.mkObj.ctr.addClass(opts.animate);
+             }
+             mkObj.ctr.css(_S.computeCenter());
+             }*/
         },
 
         /*按钮监听事件的添加*/
@@ -533,16 +581,15 @@
             obj.on('mousedown', function (e) {
                 e.preventDefault();
                 var p = ctr.ps,
-                    disX = e.clientX - p.left,
-                    disY = e.clientY - p.top,
+                    disX = e.clientX - (!Number(p.left) >= 0 ? 0 : p.left),
+                    disY = e.clientY - (!Number(p.top) >= 0 ? 0 : p.top),
                     doc;
 
                 var dragBox = $("<div class='" + G.doms.maskDrag + " '></div>").appendTo($('body'));
-              var objProt = dragBox.get(0);
+                var objProt = dragBox.get(0);
                 dragBox.outerWidth(_S.boxSize.w);
                 dragBox.outerHeight(_S.boxSize.h);
-                dragBox.css({left: p.left, top: p.top});
-
+                dragBox.css(ctr.offset());
                 if (objProt.setCapture) {
                     doc = dragBox;
                     objProt.setCapture();
@@ -552,7 +599,7 @@
 
                 $(document).on('mouseup', {that: _S, objProt: objProt, doc: doc, dragBox: dragBox}, _S.clearDrag);
 
-                doc.on('mousemove', {that: _S, win: $(window),dragBox: dragBox, disX: disX, disY: disY}, _S.moveFunc);
+                doc.on('mousemove', {that: _S, win: $(window), dragBox: dragBox, disX: disX, disY: disY}, _S.moveFunc);
             });
         },
 
@@ -585,7 +632,7 @@
                 boxT = e.clientY - disY,
                 maxL = $win.width() - boxSize.w,
                 maxT = $win.height() - boxSize.h;
-
+            
             if (boxL <= 0) {
                 boxL = 0;
             } else if (boxL >= maxL) {
@@ -598,9 +645,12 @@
                 boxT = maxT;
             }
 
+
+
             that.setPosition({left: boxL, top: boxT, obj: opts.dragBox});
             e.preventDefault();
         }
+
     };
 
 })(window, jQuery);

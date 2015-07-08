@@ -71,7 +71,6 @@
         /*cubic-bezier(.4,-0.55,.56,1.56)*/
         .xv_Mask_Container {
             position: absolute;
-            top: 0;
             z-index: 2;
             opacity: 1;
         }
@@ -111,6 +110,7 @@
             display: block;
             background: #fff;
             z-index: 1;
+            font-size:12px;
         }
 
         .xv_Mask_Msg_Box {
@@ -375,9 +375,15 @@
 
         }*/
 
+        .xv_reset_animate {
+            opacity: 0;
+            transform: scale(0);
+        }
         .xv_dlt_animate {
             transition: all 0.4s ease-in-out;
             opacity: 1;
+            /*transform: scale(1);*/
+            transform: scale(1);
         }
 
     </style>
@@ -429,6 +435,12 @@
 
 </div>
 
+
+<div id="testContent">
+    <div style="background:#6BB791;width:400px;height:300px;">
+        这是通过id加载进来的页面层
+    </div>
+</div>
 
 <br/>
 <br/>safdsfdsaafds
@@ -597,9 +609,9 @@ dsafdsa
                     type: 'tips',
                     follow:'#tip',
 //                    closeBtn:false,
-                    align: 'bottom', /*对齐位置默认为靠右*/
+                    align: 'left', /*对齐位置默认为靠右*/
 //                    closeTimes:5000,
-                    position: {left: 5, top: 0},
+                    position: {left: 0, top: 0},
                     contentMsg: 'hello，我是xv-大前端！欢迎使用xvDialog。'
                 });
             });
@@ -621,6 +633,7 @@ dsafdsa
 
 
     /*弹出框架iframe*/
+    var xv2;
     $(".btn2").click(
             function () {
                 xv2 = $.xvDialog({
@@ -646,10 +659,12 @@ dsafdsa
             });
 
     /*弹出页面层*/
+    var xv3;
     $(".btn2-1").click(
             function () {
-                xv2 = $.xvDialog({
-                    index: 2,
+                if(!xv3) {
+                    xv3 = $.xvDialog({
+                    index: 3,
                     type: 'dialog',
 //                    drag: false,
 //                    scroll:false,
@@ -658,11 +673,17 @@ dsafdsa
                     title: '七里香',
                     closeBtn: false,
                     buttons: false,
+                    showAlign:{bottom:0,left:0},
+                    closeAction:'hide',
 //                    icon: false,
 //                    setTimes:3000,
                     iconType: 'waring', /*waring,error,info*/
-                    content: '<div style="width:500px;height:300px; font-size:12px; background:#fbb627;">hello我是页面层</div>'
+//                    content: '<div style="width:500px;height:300px; font-size:12px; background:#fbb627;">hello我是页面层</div>',
+                    contentId:'testContent'
                 });
+                }else{
+                    xv3.show();
+                }
             });
 
 
