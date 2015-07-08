@@ -410,17 +410,12 @@
                 p = data;
             }
 
-            p.left = Number(p.left) >= 0 ? p.left : 'auto';
-            p.right = Number(p.right) >= 0 ? p.right : 'auto';
-            p.top = Number(p.top) >= 0 ? p.top : 'auto';
-            p.bottom = Number(p.bottom) >= 0 ? p.bottom : 'auto';
-
             _S.mkObj.ctr.ps = {
-                left: p.left,
-                right: p.right,
-                top: p.top,
-                bottom: p.bottom
+                left:p.left,
+                top: p.top
+
             };
+
             obj.css(_S.mkObj.ctr.ps);
         },
 
@@ -440,12 +435,30 @@
                 /*位置初始化*/
                 ctr.ps = {left: 0, top: 0};
 
-
+                var sAlign = opts.showAlign || '';
                 /*位置居中*/
-                _S.setPosition(opts.showAlign);
+                var tmpL,tmpT;
+                if(sAlign) {
+                    if(Number(sAlign.right) >= 0) {
+                        tmpL = $(window).width()-_S.boxSize.w-sAlign.right;
+                    }else if(Number(sAlign.left) >= 0){
+                        tmpL = sAlign.left
+                    }
+
+                    if(Number(sAlign.bottom) >= 0) {
+                        tmpT = $(window).height()-_S.boxSize.h-sAlign.bottom;
+                    }else if(Number(sAlign.top) >= 0){
+                        tmpT = sAlign.top;
+                    }
+                }else{
+                    tmpL =  _S.computeCenter().left;
+                    tmpT =  _S.computeCenter().top;
+                }
+
+                _S.setPosition({left:tmpL,top:tmpT});
 
                 /*位置随着视口的变换自动居中*/
-                $(window).on('resize', {left: 0, bottom: 0, that: _S}, _S.setPosition);
+                $(window).on('resize', {left:tmpL,top:tmpT, that: _S}, _S.setPosition);
 
                 /*位置随着视口的变换自动居中*/
                 $(window).on('scroll', function (e) {
@@ -581,8 +594,8 @@
             obj.on('mousedown', function (e) {
                 e.preventDefault();
                 var p = ctr.ps,
-                    disX = e.clientX - (!Number(p.left) >= 0 ? 0 : p.left),
-                    disY = e.clientY - (!Number(p.top) >= 0 ? 0 : p.top),
+                    disX = e.clientX - p.left,
+                    disY = e.clientY - p.top,
                     doc;
 
                 var dragBox = $("<div class='" + G.doms.maskDrag + " '></div>").appendTo($('body'));
@@ -632,7 +645,7 @@
                 boxT = e.clientY - disY,
                 maxL = $win.width() - boxSize.w,
                 maxT = $win.height() - boxSize.h;
-            
+
             if (boxL <= 0) {
                 boxL = 0;
             } else if (boxL >= maxL) {
@@ -644,8 +657,6 @@
             } else if (boxT >= maxT) {
                 boxT = maxT;
             }
-
-
 
             that.setPosition({left: boxL, top: boxT, obj: opts.dragBox});
             e.preventDefault();
