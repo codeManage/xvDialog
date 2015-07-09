@@ -3,11 +3,12 @@
 <head lang="en">
     <meta charset="utf-8">
     <title>jQuery弹出框</title>
-    <script src="js/jquery.js"></script>
-    <script src="js/xvDialog.js"></script>
+    <script src="basic/js/jquery.js"></script>
+    <script src="src/js/xvDialog.js"></script>
+
     <style>
         body {
-            background: url("xvDialogImg/bg-1.jpg") repeat-x;
+            background: url("src/xvDialogImg/bg-1.jpg") repeat-x;
         }
 
         html {
@@ -51,16 +52,21 @@
         /*message*/
         .xv_Mask_Box {
             position: absolute;
+            position: fixed;
             left: 0;
             top: 0;
+            filter:alpha(opacity=50);
+            -moz-opacity:0.5;
+            opacity:0.5;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: #000;
             z-index: 1;
         }
 
         .xv_Mask_Drag {
             position: absolute;
+            position: fixed;
             /*background: rgba(255, 255, 255, 0.7);*/
             border: 1px dashed #dfdfdf;
             z-index: 210013147788;
@@ -69,6 +75,7 @@
         /*cubic-bezier(.4,-0.55,.56,1.56)*/
         .xv_Mask_Container {
             position: absolute;
+            position: fixed;
             z-index: 2;
             opacity: 1;
         }
@@ -142,7 +149,7 @@
             width: 38px;
             height: 38px;
             margin-right: 15px;
-            background-image: url("xvDialogImg/xv-md-icon.png");
+            background-image: url("src/xvDialogImg/xv-md-icon.png");
             background-repeat: no-repeat;
             vertical-align: middle;
         }
