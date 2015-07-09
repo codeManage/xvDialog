@@ -6,95 +6,123 @@
     //常用dom字符
     var G = {//可以自己配置适合自己的结构名称
         doms: {
+
+            /*整体框架公用Class*/
             maskDrag: 'xv_Mask_Drag',
             maskBox: 'xv_Mask_Box',
+            maskConBrd: 'xv_Mask_Border',
             maskBoxCon: 'xv_Mask_Container',
             maskBoxMain: 'xv_Mask_Main',
+            maskMsgBox: 'xv_Mask_Msg_Box',
+
+            /*标题和标题的详细内容*/
+            maskBoxTit: 'xv_Mask_Box_Tit',
+            maskBoxTitMsg: 'xv_Mask_Box_Tit_Msg',
+
+            /*弹出一般对话框、或提示框的文本box和内容*/
             maskTxtBox: 'xv_Mask_Txt_Box',
             maskTxt: 'xv_Mask_Txt',
-            maskConBrd: 'xv_Mask_Border',
-            maskBoxTit: 'xv_Mask_Box_Tit',
+
+            /*框架弹层*/
+            maskIframe: 'xv_Mask_Iframe',
+            iframeName: 'xv_Mask_Iframe_Name_',
+            iframeId: 'xv_Mask_Iframe_Id_',
+
+            /*tips*/
+            tip: 'xv_Mask_Tip',
+            tipTxt: 'xv_Mask_Tip_Txt',
+            tipAlign: 'xv_Tip_Align_',
+
+            /*弹出层底部按钮*/
             maskBoxFoot: 'xv_Mask_Box_Foot',
-            maskBoxTitMsg: 'xv_Mask_Box_Tit_Msg',
             maskBoxBtn: 'xv_Mask_Box_Btn',
             maskBoxCloseBtn: 'xv_Mask_Box_CloseBtn',
             maskBoxCancelBtn: 'xv_Mask_Box_CancelBtn',
             maskBoxOkBtn: 'xv_Mask_Box_OkBtn',
-            maskMsgBox: 'xv_Mask_Msg_Box',
-            maskIframe: 'xv_Mask_Iframe',
-            iframeName: 'xv_Mask_Iframe_Name_',
-            iframeId: 'xv_Mask_Iframe_Id_',
+
+            /*弹出框的icon*/
             icon: 'xv_Mask_Icon',
             waring: 'xv_Mask_Waring',
-            tip: 'xv_Mask_Tip',
-            tipTxt: 'xv_Mask_Tip_Txt',
-            tipAlign: 'xv_Tip_Align_',
+
+            /*公用默认配置标识*/
             type: 'xvmktype',
             times: 'mktimes',
             mkrAnimate: 'xv_reset_animate',
             mkAnimate: 'xv_dlt_animate'
         },
         type: {
+            /*所有弹出框类型*/
             dialog: 'dialog',
             iframe: 'iframe',
+            tips: 'tips',
+            /*待增加...*/
             confirm: 'confirm',
-            message: 'message',
-            tips: 'tips'
+            message: 'message'
         },
+
+        /*默认的一些基础size*/
         defaultSize: {
             wh: {
                 width: 200,
                 height: 100
             },
+            /*默认的tips弹出间隙*/
             dltGap: 10,
+            /*默认初始化的层级索引*/
             zIndex: 19890620
         }
     };
 
+    /*对外公共方法*/
     win.xvDialog = {
         index: 0,
         alert: function (config) {
-
+            /*待增加...*/
         }, tips: function (config) {
-
+            /*待增加...*/
         }, close: function (object, closeType) {
+
             if (!(object || object === 0)) {
                 return false;
             }
-            var ctr,
-                idx = Number(object),
-                type = G.doms['type'],
-                attr = G.doms['times'];
+            var ctr,idx = Number(object),type = G.doms['type'],attr = G.doms['times'];
             if (idx >= 0) {
-                /*如果为数值*/
+                /*如果为数值,通过弹出层的序号来关闭对应的弹出层*/
                 ctr = $("[" + attr + "=" + idx + "]");
             } else if (typeof object == 'string') {
+                /*通过类型来关闭对应的弹出层*/
                 if (object === 'all') {
                     ctr = $("[" + type + "]");
                 } else {
                     ctr = $("[" + type + "=" + object + "]");
                 }
             } else {
+                /*通过实例来进行删除对应的弹出层*/
                 if (!object.index) {
                     return false;
                 }
                 ctr = $("[" + attr + "=" + object.index + "]");
             }
+
+            /*关闭类型：hide|remove*/
             closeType === 'hide' ? ctr.hide() : ctr.remove();
         }
     };
 
-    //入口
+    /*入口*/
     $.xvDialog = function (opts) {
         return new DialogBox(opts);
     };
 
-    //主框架
+    /*主框架*/
     var DialogBox = function (options) {
         this.building(options);
     };
 
+    /*原型结构*/
     DialogBox.pt = DialogBox.prototype = {
+
+        /*传参的过滤*/
         settings: function (opts) {
             var _S = this;
             var tmpOps = {};
@@ -108,7 +136,8 @@
             tmpOps.content = opts.content || '';
             tmpOps.contentMsg = opts.contentMsg || '';
             tmpOps.contentId = opts.contentId || '';
-            tmpOps.animate = (opts.animate || opts.animate === false) ? opts.animate : G.doms.mkAnimate;
+            tmpOps.animate = (opts.animate || opts.animate === false) ? opts.animate : [G.doms.mkrAnimate, G.doms.mkAnimate];
+
             tmpOps.zIndex = parseInt(opts.zIndex) || G.defaultSize.zIndex;
             switch (tmpOps.type) {
                 case 'dialog':
@@ -138,10 +167,10 @@
                     height: opts.height || 'auto'
                 }
             }
-
             return tmpOps
         },
 
+        /*一些弹出层类型的公用参数过滤*/
         pubOptions: function (type, tmpOps, opts) {
             var _S = this;
             tmpOps.load = (opts.load && typeof opts.load === 'function') ? opts.load : '';
@@ -175,6 +204,7 @@
             return tmpOps;
         },
 
+        /*构建弹出层框架结构*/
         building: function (options) {
             var _S = this;
             var opts = _S.config = _S.settings(options);
@@ -184,10 +214,9 @@
             var type = _S.currentType = dType[opts.type];
             var body = $('body');
 
-            var rAnimate = opts.animate === false ? '' : doms.mkrAnimate;
+            var rAnimate = opts.animate === false ? '' : (opts.animate[0] || doms.mkrAnimate);
             var mkBox = "<div id='" + doms.maskBox + '_' + idx + "' class='" + doms.maskBox + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'></div>";
             var mkBoxCon = "<div class='" + doms.maskBoxCon + " " + rAnimate + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "'  style='z-index:" + (opts.zIndex + idx + 1) + ";'><div class='" + doms.maskConBrd + "'><div class='" + doms.maskBoxMain + "'><div class='" + doms.maskTxtBox + "'>" + ((opts.icon === false) ? " " : ("<i class='" + doms.icon + ' ' + doms.icon + '_' + opts.iconType + "'></i>")) + "<div class='" + doms.maskTxt + "'></div></div></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
-
 
             var closeBtn = "<div class='" + doms.maskBoxCloseBtn + "'>x</div>";
 
@@ -217,6 +246,7 @@
             _S.resetEvent(type);
         },
 
+        /*一些弹出层类型公用的结构初始化*/
         pubDlgArea: function (type, closeBtn, mkBoxCon, mkBox) {
 
             var _S = this;
@@ -256,7 +286,6 @@
                 if (contentId) {
                     mkBoxMain.html($('#' + contentId));
                 }
-
             }
 
             if (type === 'iframe') {
@@ -295,6 +324,7 @@
             }
         },
 
+        /*设置弹出层底部按钮*/
         setButtons: function (ft) {
             /*设置弹出层的按钮*/
             var _S = this;
@@ -319,6 +349,7 @@
             return tmpArr;
         },
 
+        /*计算弹出层的尺寸，并进行初始化尺寸设置*/
         computeBoxSize: function () {
             /*计算整个弹出层的尺寸，进行初始化*/
             var _O = this.mkObj,
@@ -368,6 +399,7 @@
             return {w: brdW, h: brdH};
         },
 
+        /*居中计算*/
         computeCenter: function (obj) {
             /*计算obj居中的位置并返回*/
             var w,
@@ -392,14 +424,11 @@
             };
         },
 
-        /*
-         * setPosition：计算obj的位置
-         * opt ｛object｝
-         * */
 
+        /*弹出层位置的计算*/
         setPosition: function (opts) {
             var data = opts.data ? opts.data : opts;
-            var p;
+            var p, tmpPs = {}, tmpL, tmpT;
             var _S = data.that || this;
             var obj = data.obj ? data.obj : _S.mkObj.ctr;
 
@@ -410,13 +439,34 @@
                 p = data;
             }
 
-            _S.mkObj.ctr.ps = {
-                left:p.left,
-                top: p.top
+            /*分别判断拖拽和窗口特殊定位*/
+            if (Number(p.right) >= 0) {
+                tmpL = $(window).width() - _S.boxSize.w - p.right;
+                tmpPs.right = p.right;
+            } else if (Number(p.left) >= 0) {
+                tmpL = p.left;
+                tmpPs.left = p.left;
+            }
 
+            if (Number(p.bottom) >= 0) {
+                tmpT = $(window).height() - _S.boxSize.h - p.bottom;
+                tmpPs.bottom = p.bottom;
+            } else if (Number(p.top) >= 0) {
+                tmpT = p.top;
+                tmpPs.top = p.top;
+            }
+
+            _S.mkObj.ctr.ps = {
+                left: tmpL,
+                top: tmpT
             };
 
             obj.css(_S.mkObj.ctr.ps);
+
+            if (p.type) {
+                obj.css(tmpPs);
+            }
+
         },
 
         /*初始化事件*/
@@ -425,6 +475,7 @@
             var _O = _S.mkObj;
             var opts = _S.config;
             var ctr = _O.ctr;
+            var autoP;
             var time = Number(opts.closeTimes);
             if (type == 'dialog' || type == 'iframe') {
                 var tit = _O.tit;
@@ -435,42 +486,29 @@
                 /*位置初始化*/
                 ctr.ps = {left: 0, top: 0};
 
-                var sAlign = opts.showAlign || '';
-                /*位置居中*/
-                var tmpL,tmpT;
-                if(sAlign) {
-                    if(Number(sAlign.right) >= 0) {
-                        tmpL = $(window).width()-_S.boxSize.w-sAlign.right;
-                    }else if(Number(sAlign.left) >= 0){
-                        tmpL = sAlign.left
-                    }
-
-                    if(Number(sAlign.bottom) >= 0) {
-                        tmpT = $(window).height()-_S.boxSize.h-sAlign.bottom;
-                    }else if(Number(sAlign.top) >= 0){
-                        tmpT = sAlign.top;
-                    }
-                }else{
-                    tmpL =  _S.computeCenter().left;
-                    tmpT =  _S.computeCenter().top;
+                /*判断初始化的弹层的位置，默认居中*/
+                /*位置随着视口的变换自动居中*/
+                if (opts.showAlign) {
+                    _S.setPosition(opts.showAlign);
+                    autoP = $.extend(opts.showAlign, {type: true, that: _S});
+                } else {
+                    _S.setPosition(_S.computeCenter());
+                    autoP = {auto: true, type: true, that: _S}
                 }
+                $(window).on('resize', autoP, _S.setPosition);
 
-                _S.setPosition({left:tmpL,top:tmpT});
-
-                /*位置随着视口的变换自动居中*/
-                $(window).on('resize', {left:tmpL,top:tmpT, that: _S}, _S.setPosition);
-
-                /*位置随着视口的变换自动居中*/
+                /*滚动条位置置顶，并组织滚动条默认事件*/
                 $(window).on('scroll', function (e) {
+                    e.returnvalue=false;
                     $(this).scrollTop(0);
-                    e.preventDefault()
+                    return false;
                 });
 
                 /*触发拖拽*/
                 opts.drag !== false ? _S.drag(tit) : '';
 
                 /*是否开启动画*/
-                opts.animate !== false ? ctr.addClass(opts.animate) : ctr.css({opacity: 1});
+                opts.animate !== false ? ctr.addClass(opts.animate[1]||opts.animate) : ctr.css({opacity: 1});
 
 
             } else if (type == 'tips') {
@@ -510,7 +548,7 @@
                 if (opts.animate === false) {
                     tips.css(tmpP);
                 } else {
-                    tips.css({left: tmpP.left + 10, top: tmpP.top - 20}).addClass(opts.animate);
+                    tips.css({left: tmpP.left + 10, top: tmpP.top - 20}).addClass(opts.animate[1]);
                     var tipsTimer = setTimeout(function () {
                         tips.css(tmpP);
                         tipsTimer = null
@@ -541,13 +579,9 @@
             }
             var _S = e && e.data ? e.data.that : this;
             /*炭层位置初始化*/
-
-            /*var ps = _S.computeCenter();
-             _S.mkObj.ctr.css({left:ps.left,top:0});*/
             var opts = _S.config;
-
-            if (opts.closeAction === 'hide' && opts.animate) {
-                _S.mkObj.ctr.removeClass(opts.animate);
+            if (opts.closeAction === 'hide' && opts.animate[1]) {
+                _S.mkObj.ctr.removeClass(opts.animate[1]);
                 xvDialog.close(_S.index, 'hide')
             } else {
                 xvDialog.close(_S.index);
@@ -556,20 +590,13 @@
             isEsc ? $(document).off('keyup', _S.close) : '';
         },
 
+        /*单改层关闭类型为hide的时候，可以通过show来恢复层*/
         show: function () {
             var _S = this;
             var mkObj = _S.mkObj;
             mkObj.ctr.show();
             mkObj.mkBox.show();
             _S.resetEvent(_S.currentType);
-            /*if(mkObj.ctr.length){
-             mkObj.ctr.show();
-             mkObj.mkBox.show();
-             if(opts.closeAction === 'hide' && opts.animate) {
-             _S.mkObj.ctr.addClass(opts.animate);
-             }
-             mkObj.ctr.css(_S.computeCenter());
-             }*/
         },
 
         /*按钮监听事件的添加*/
@@ -588,21 +615,25 @@
             }
         },
 
+        /*拖拽*/
         drag: function (obj) {
             var _S = this,
                 ctr = _S.mkObj.ctr;
+            _S.mkObj.mkBox.on('mousemove',function(e){
+                return false;
+                e.preventDefault();
+            });
             obj.on('mousedown', function (e) {
                 e.preventDefault();
                 var p = ctr.ps,
                     disX = e.clientX - p.left,
                     disY = e.clientY - p.top,
                     doc;
-
                 var dragBox = $("<div class='" + G.doms.maskDrag + " '></div>").appendTo($('body'));
                 var objProt = dragBox.get(0);
                 dragBox.outerWidth(_S.boxSize.w);
                 dragBox.outerHeight(_S.boxSize.h);
-                dragBox.css(ctr.offset());
+                dragBox.css(p);
                 if (objProt.setCapture) {
                     doc = dragBox;
                     objProt.setCapture();
@@ -611,7 +642,6 @@
                 }
 
                 $(document).on('mouseup', {that: _S, objProt: objProt, doc: doc, dragBox: dragBox}, _S.clearDrag);
-
                 doc.on('mousemove', {that: _S, win: $(window), dragBox: dragBox, disX: disX, disY: disY}, _S.moveFunc);
             });
         },
@@ -661,7 +691,6 @@
             that.setPosition({left: boxL, top: boxT, obj: opts.dragBox});
             e.preventDefault();
         }
-
     };
 
 })(window, jQuery);

@@ -7,13 +7,11 @@
     <script src="js/xvDialog.js"></script>
     <style>
         body {
-
             background: url("xvDialogImg/bg-1.jpg") repeat-x;
-            overflow: hidden;
         }
 
         html {
-            overflow: hidden;
+
         }
 
         body, ul, li, img, p, pre, iframe {
@@ -386,6 +384,24 @@
             transform: scale(1);
         }
 
+
+        /*自定义动画*/
+        .xv_ft_reset_animate {
+            opacity: 0;
+            /*transform: scale(0);*/
+            /*transform:translate(-300px,-300px)*/
+            -webkit-transform-origin: center bottom;
+            -ms-transform-origin: center bottom;
+            transform: scale(1,0);
+        }
+
+        .xv_ft_dlt_animate {
+            transition: all 0.4s ease-in-out;
+            opacity: 1;
+            transform: scale(1);
+            /*transform:translate(0,0)*/
+        }
+
     </style>
 </head>
 <body>
@@ -674,6 +690,7 @@ dsafdsa
                     closeBtn: false,
                     buttons: false,
                     showAlign:{bottom:0,left:0},
+                    animate:['xv_ft_reset_animate','xv_ft_dlt_animate'],
                     closeAction:'hide',
 //                    icon: false,
 //                    setTimes:3000,
@@ -703,7 +720,7 @@ dsafdsa
 //                    buttons: false,
 //                    icon: false,
 //                    setTimes:3000,
-                    animate:false,
+//                    animate:false,
                     iconType: 'waring', /*waring,error,info*/
                     iframe: {
                         src: 'iframe.html',
@@ -733,7 +750,7 @@ dsafdsa
                             cls: 'cancel_style',
                             callBack: function () {
                                 console.log('取消2');
-                                xvDialog.close(0)
+                                xvDialog.close(0);
                             }
                         },
                         {
@@ -747,11 +764,5 @@ dsafdsa
                     ]
                 });
             });
-
-
-
-
-
-
 </script>
 </html>
