@@ -2,7 +2,7 @@ html, body {
     height: 100%;
     font: 12px/1.5 \5b8b\4f53, Helvetica, Arial, sans-serif;
     color: #000;
-    background-color: #fff
+    background-color: #eee;
 }
 
 body, p, h1, h2, h3, h4, h5, h6, dl, dt, dd, ul, ol, li, form, select, input, textarea, button, table, caption, tr, th, td {
@@ -33,10 +33,6 @@ a {
 a:hover {
     color: #005580;
     text-decoration: underline
-}
-
-a:active {
-    background-color: transparent
 }
 
 input, button, textarea, select, option {

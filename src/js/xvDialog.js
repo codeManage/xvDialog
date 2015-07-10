@@ -77,8 +77,52 @@
     win.xvDialog = {
         index: 0,
         alert: function (config) {
-            /*待增加...*/
-        }, tips: function (config) {
+            var config = config || {};
+            var dltConfig = {
+                title:'提示信息',
+                iconType: 'info',
+                width:300,
+                height:200
+            };
+            if(config.size === 'auto') {
+                delete dltConfig.width;
+                delete dltConfig.height;
+            }
+            config = $.extend(dltConfig,config,{type:'dialog',contentId:'',content:''});
+           return $.xvDialog(config);
+        },
+        contentPage:function(config){
+            var config = config || {};
+            var dltConfig = {
+                closeAction:'hide',
+                title:false,
+                buttons:false
+            };
+
+            config = $.extend(dltConfig,config,{type:'dialog',contentMsg:''});
+            return $.xvDialog(config);
+        },
+        iframe:function(config){
+
+            var config = config || {};
+            var dltConfig = {
+                title:false,
+                buttons:false
+            };
+            config = $.extend(dltConfig,config,{type:'iframe'});
+            return $.xvDialog(config);
+        }
+        ,
+        tips: function (config) {
+            var config = config || {};
+            var dltConfig = {
+                align: 'right',
+                mask:false,
+                position: {left: 0, top: 0}
+            };
+            config = $.extend(dltConfig,config,{type:'tips'});
+            return $.xvDialog(config);
+
             /*待增加...*/
         }, close: function (object, closeType) {
 
@@ -129,6 +173,7 @@
             _S.index = tmpOps.index = (Number(opts.index) >= 0) ? opts.index : xvDialog.index++;
             tmpOps.type = opts.type || 'dialog';
             tmpOps.closeBtn = opts.closeBtn || '';
+            tmpOps.mask = (opts.mask === false) ? opts.mask : '';
             tmpOps.closeTimes = opts.closeTimes || '';
             tmpOps.closeAction = opts.closeAction || '';
             tmpOps.esc = opts.esc || '';
@@ -180,7 +225,7 @@
             tmpOps.scrollX = opts.scrollX !== false;
             tmpOps.scrollY = opts.scrollY !== false;
             tmpOps.showAlign = opts.showAlign || '';
-            tmpOps.buttons = (opts.buttons || opts.buttons === false) ? opts.buttons : [{
+            tmpOps.buttons = (typeof(opts.buttons) === 'object' || opts.buttons === false) ? opts.buttons : [{
                 type: 'ok',
                 text: '确定',
                 cls: G.doms.maskBoxOkBtn
@@ -200,7 +245,6 @@
             }
 
             tmpOps.iconType = opts.iconType || 'success';
-
             return tmpOps;
         },
 
@@ -228,7 +272,7 @@
                     _S.pubDlgArea(dType['dialog'], closeBtn, mkBoxCon, mkBox);
                     break;
                 case dType.tips :
-                    var tips = "<div id='" + doms.tip + '_' + idx + "' class='" + doms.tip + " " + doms.tipAlign + opts.align + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'><i class='" + doms.icon + "'></i><em></em><div class='" + doms.tipTxt + "'>" + opts.contentMsg + "</div></div>";
+                    var tips = "<div id='" + doms.tip + '_' + idx + "' class='" + doms.tip + " " + doms.tipAlign + opts.align + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx+1) + ";'><i class='" + doms.icon + "'></i><em></em><div class='" + doms.tipTxt + "'>" + opts.contentMsg + "</div></div>";
                     tips = $(tips).appendTo(body);
                     _S.mkObj = {
                         body: body,
@@ -243,11 +287,13 @@
                     _S.pubDlgArea(dType['iframe'], closeBtn, mkBoxCon, mkBox);
                     break;
             }
+            /*遮罩box*/
+            (opts.mask === false) ? '' :  _S.mkObj.mkBox = $(mkBox).appendTo(_S.mkObj.body);
             _S.resetEvent(type);
         },
 
         /*一些弹出层类型公用的结构初始化*/
-        pubDlgArea: function (type, closeBtn, mkBoxCon, mkBox) {
+        pubDlgArea: function (type, closeBtn, mkBoxCon) {
 
             var _S = this;
             var idx = _S.index;
@@ -260,6 +306,7 @@
             var contentId = opts.contentId ? opts.contentId : '';
 
             var iframeHtml = opts.iframe && opts.iframe.src ? "<iframe id='" + (opts.iframe.id || doms.iframeId + idx) + "' name='" + (opts.iframe.name || doms.iframeName + idx) + "' frameborder='0' src='" + opts.iframe.src + "' width='" + ( opts.iframe.width || 'auto') + "' height='" + ( opts.iframe.height || 'auto') + "'></iframe>" : '';
+
 
             var mkBoxCon = $(mkBoxCon).appendTo(_S.mkObj.body),
                 maskConBrd = mkBoxCon.find("." + doms.maskConBrd),
@@ -305,9 +352,6 @@
             _S.mkObj.ctr = mkBoxCon;
             _S.mkObj.brd = maskConBrd;
             _S.mkObj.main = mkBoxMain;
-
-            /*遮罩box*/
-            _S.mkObj.mkBox = $(mkBox).appendTo(_S.mkObj.body);
 
             /*弹出层标题*/
             opts.title !== false ? _S.mkObj.tit = $(mkBoxTit).prependTo(maskConBrd) : '';
@@ -478,7 +522,6 @@
             var autoP;
             var time = Number(opts.closeTimes);
             if (type == 'dialog' || type == 'iframe') {
-                var tit = _O.tit;
 
                 /*初始化弹出框的尺寸*/
                 _S.boxSize = _S.computeBoxSize();
@@ -509,7 +552,7 @@
                 });
 
                 /*触发拖拽*/
-                opts.drag !== false ? _S.drag(tit) : '';
+                (_O.tit && (opts.drag !== false)) ? _S.drag(_O.tit) : '';
 
                 /*是否开启动画*/
                 opts.animate !== false ? ctr.addClass(opts.animate[1]||opts.animate) : ctr.css({opacity: 1});
@@ -599,7 +642,7 @@
             var _S = this;
             var mkObj = _S.mkObj;
             mkObj.ctr.show();
-            mkObj.mkBox.show();
+            mkObj.mkBox ? mkObj.mkBox.show() : '';
             _S.resetEvent(_S.currentType);
         },
 
@@ -623,10 +666,11 @@
         drag: function (obj) {
             var _S = this,
                 ctr = _S.mkObj.ctr;
-            _S.mkObj.mkBox.on('mousemove',function(e){
+            /*_S.mkObj.mkBox.on('mousemove',function(e){
                 return false;
                 e.preventDefault();
-            });
+            });*/
+            if(!obj.length) {return false}
             obj.on('mousedown', function (e) {
                 e.preventDefault();
                 var p = ctr.ps,

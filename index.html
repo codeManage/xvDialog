@@ -8,155 +8,139 @@
     <link rel="stylesheet" href="src/css/xvDialog.css"/>
     <script type="text/javascript" src="basic/js/jquery.js"></script>
     <script src="src/js/xvDialog.js"></script>
+    <!--<script src="google-code-prettify/prettify.js"></script>
+    <link rel="stylesheet" href="google-code-prettify/prettify.css"/>-->
+
     <script type="text/javascript" src="codejs/jquery.snippet.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="codejs/jquery.snippet.min.css" />
+    <link rel="stylesheet" type="text/css" href="codejs/jquery.snippet.min.css"/>
 
     <style>
         .demo-box {
-            width:300px;
-            padding:15px;
+            padding: 15px;
         }
 
         .info {
-            font-size:16px;
-            font-family:'Microsoft Yahei';
-            line-height:30px;
-            padding:15px;
-            border:1px solid #ddd;
+            font-size: 16px;
+            font-family: 'Microsoft Yahei';
+            line-height: 30px;
+            padding: 15px;
             background: #efefef;
         }
 
         .tit {
-            font-size:30px;
+            font-size: 30px;
             text-align: center;
-            padding:15px 0px;
+            padding: 15px 0px;
         }
 
         pre {
-            font-size:14px;
+            font-size: 14px;
             font-family: "Microsoft Yahei";
         }
+
+        .blue-btn {
+            background: #f34627;
+            color: #fff;
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 5px;
+            margin-left: 30px;
+            border-radius: 5px;
+            box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+
+        }
+
+        .bind-btn {
+            background: #f67e69;
+        }
+
+        .blue-btn:hover {
+            color: #fff;
+        }
+
+        .help_style {
+            background-color: #f34627;
+            border-radius: 4px;
+            box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+        }
+
     </style>
 </head>
 <body>
 
-<h2 class="tit">xvDialog.js一款轻量级的弹层插件</h2>
+<h2 class="tit">xvDialog.js一款基于jquery轻量级的弹层插件</h2>
+
 <div class="info">
     <h3>使用说明：</h3>
     <hr/>
     <p style="font-weight:bold">需要引入插件xvDialog.js/xvDialog.min.js</p>
+
     <p style="font-weight:bold">须要引入xvDialog.css 样式表，可以自定义自己想要的皮肤</p>
-    <p style="font-weight:bold;color:red;">本弹出层组件基于jquery库开发</p><br/>
-    <h3>使用方法如下：</h3>
+
+    <p style="font-weight:bold;color:red;">本弹出层组件基于jquery库开发版本1.8.0以上</p><br/>
+
+    <h3>参数说明如下：</h3>
+
     <div>
     <pre class="js">
-$.xvDialog({
-    index: 0,//弹出层的索引
-    type: 'dialog',//弹出层的类型，tips
-    drag: false,//是否开启拖拽功能，默认开启
-    width:250,//弹出层的宽度
-    width:150,//弹出层的高度
-    closeAction:'hide',//弹出层的关闭类型，默认直接销毁，hide表示隐藏并不销毁
-    title: false,//是否开启标题，默认开启
-    closeBtn: false,//是否开启关闭按钮，默认开启
-    icon: false,//是否开启图标，默认开启
-    closeTimes:3000,//是否开启自动关闭，默认不开启
-    iconType: 'waring', //选择图标类型 分别有，success、waring、error、info
-    contentMsg: '我是xv-大前端！欢迎使用xvDialog欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用'//弹出层的内容
-    buttons: false,//是否显示弹层脚步的按钮，可以自定义，默认显示底部默认按钮，也可以自定义，如下：
-    /*button: [
-            {
-                type:'ok',//按钮类型，每个按钮的类型都不一样
-                text: '确定',//按钮的名字
-                cls: 'ok_style',//按钮的样式
-                callBack: function () {//按钮点击后的回调
-                console.log('确定1');
-            }
-            },
-            {
-                type:'cancel',
-                text: '取消',
-                cls: 'cancel_style',
-                callBack: function () {
-                console.log('取消2');
-                xvDialog.close(0)
-            }
-            },
-            {
-                type:'add',
-                text: '添加',
-                cls: 'cancel_style',
-                callBack: function () {
-                console.log('添加');
-                }
-            }
-        ]*/
-});
-            </pre>
+            index: 0,//弹出层的索引
+            mask:false//默认开启遮罩
+            type: 'dialog',//弹出层的类型，tips、iframe下面会介绍这几种类型的具体用法
+            drag: false,//是否开启拖拽功能，默认开启
+            width:250,//弹出层的宽度
+            width:150,//弹出层的高度
+            closeAction:'hide',//弹出层的关闭类型，默认直接销毁，hide表示隐藏并不销毁
+            title: false,//是启用标题，默认启用,可以通过title:'自定义标题'
+            closeBtn: false,//false不开启关闭按钮，默认开启
+            icon: false,//关闭图标显示，默认开启，tips类型不可使用
+            iconType: 'waring', //选择图标类型 分别有，success、waring、error、info,可以自定义类型，下面用法会详细介绍
+            closeTimes:3000,//是否开启自动关闭，默认不开启
+            contentMsg: '我是xv-大前端！欢迎使用xvDialog欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用',//弹出层的内容,tips、dialog类型可使用
+            contentId:'#id',//通过页面的id来获取该dom的所有内容，然后显示在弹出层上面
+            content:'&lt;div&gt;自定义字符串标签结构&lt;/div&gt;',//通过字符串定义拼接成dom结构，然后显示在弹出层上面
+            buttons: false,//是否显示弹层脚步的按钮，默认显示底部默认按钮，也可以自定义，下面用法中会介绍具体使用方法
+    </pre>
     </div>
 
 </div>
-<div class="demo-box">
 
-    <div class="demo-view">
-        <form class="form-horizontal" method="post" action="#">
-            <div class="form-item">
-                <div class="form-lab">Example 1:</div>
-                <div class="form-field">
-                    <div>
-                        <div class="select-win" id="datesWrap1">
-                            <div class="select-btn" >
-                                <span class="select-btn-icon new-icon-calendar" id="dateBtn1"></span>
-                            </div>
-                            <input type="text" placeholder="YYYY-MM-DD hh:mm:ss" id="date1" class="select-text"/>
-                        </div>
-                        <span style="color: red;">*触发日历对象是输入框和按钮</span>
-                    </div>
-                </div>
-            </div>
+<div class="info">
+    <h3>关闭类型</h3>
 
-            <div class="form-item">
-                <div class="form-lab">Example 2:</div>
-                <div class="form-field">
-                    <div>
-                        <div class="select-win" id="datesWrap2">
-                            <div class="select-btn">
-                                <span class="select-btn-icon new-icon-calendar" id="dateBtn2"></span>
-                            </div>
-                            <input type="text" placeholder="YYYY-MM-DD hh:mm:ss" id="date2" class="select-text"/>
-                        </div>
-                    </div>
-                    <span style="color: red;">*触发日历对象是按钮</span>
-                </div>
-            </div>
-
-            <div class="form-item">
-                <div class="form-lab">Example 3:</div>
-                <div class="form-field">
-                    <div id="date-btn1">
-                        <div class="select-win" id="datesWrap3">
-                            <div class="select-btn">
-                                <span class="select-btn-icon new-icon-calendar" id="dateBtn3"></span>
-                            </div>
-                            <input type="text" placeholder="YYYY/MM/DD" id="date3" class="select-text"/>
-                        </div>
-                        <span style="color: red;">*触发日历对象是输入框</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-item">
-                <div class="form-lab">Example 4:</div>
-                <div class="form-field">
-                    <div class="select-win">
-                        <input type="text" placeholder="YYYY-MM-DD hh:mm:ss" id="date4" class="select-text"/>
-                    </div>
-                    <span style="color: red;">*触发日历对象是输入框</span>
-                </div>
-            </div>
-        </form>
+    <div class="demo-box" style="position: relative;z-index: 99999999999">
+        <div class="form-item">
+            <a class="closeAlert blue-btn" href="javascript:void('');">关闭alert</a>
+            <a class="closeTip blue-btn" href="javascript:void('');">关闭tip</a>
+            <a class="closeIframe blue-btn" href="javascript:void('');">关闭iframe</a>
+            <a class="closeContent blue-btn" href="javascript:void('');">关闭contentPage</a>
+        </div>
     </div>
+
+    <h3>alert用法</h3>
+
+    <div class="demo-box">
+        <div class="form-item">
+            <a class="dialog-btn-1 blue-btn bind-btn" href="javascript:void('');">更换alert的icon</a>
+            <a class="dialog-btn-2 blue-btn bind-btn" href="javascript:void('');">自定义按钮</a>
+            <a class="dialog-btn-3 blue-btn bind-btn" href="javascript:void('');">关闭iframe</a>
+            <a class="dialog-btn-3 blue-btn bind-btn" href="javascript:void('');">关闭contentPage</a>
+        </div>
+    </div>
+
+    <h3>tips用法</h3>
+
+    <div class="demo-box">
+        <div class="form-item">
+            <a class="closeAll blue-btn bind-btn" href="javascript:void('');">关闭所有弹出层</a>
+            <a class="closeAlert blue-btn bind-btn" href="javascript:void('');">dialog</a>
+            <a class="closeTip blue-btn bind-btn" href="javascript:void('');">关闭tip</a>
+            <a class="closeIframe blue-btn bind-btn" href="javascript:void('');">关闭iframe</a>
+            <a class="closeContent blue-btn bind-btn" href="javascript:void('');">关闭contentPage</a>
+        </div>
+    </div>
+
 </div>
+
 <br/>
 <br/>
 <br/>
@@ -171,13 +155,78 @@ $.xvDialog({
 <br/>
 <br/>
 <br/>
+
 <!--<script src="seajs-2.3.0/sea.js"></script>-->
 
 <!--<script src="src/js/calendar.js"></script>-->
 
 <script type="text/javascript">
-    $(function(){
-        $("pre.js").snippet("javascript",{style:"rand01",box:"#ffffff",boxFill:"#ffffff",showNum:true});
+
+    $(function () {
+//        代码高亮
+        $("pre.js").snippet("javascript", {style: "rand01", box: "#ffffff", boxFill: "#ffffff", showNum: true});
+
+
+        /*弹出层关闭方法*/
+        $(".closeAlert").click(
+                function () {
+                    xvDialog.close('all');
+                }
+        );
+
+
+        /*xvDialog用法*/
+
+        var dialog1, dialog2, dialog3, dialog4, dialogIdx = 0;
+
+        var iconType = ['success', 'info', 'waring', 'error'];
+
+        /**/
+        $(".dialog-btn-1").click(function () {
+            dialog1 = $.xvDialog({
+                iconType: iconType[dialogIdx],
+                contentMsg: 'hello,点击确定更换图标icon'
+            });
+            if (dialogIdx > 3) {
+                dialogIdx = 0;
+            } else {
+                dialogIdx++;
+            }
+            dialog1.on('ok', function (_this) {
+                _this.close();
+            });
+
+        });
+
+        $(".dialog-btn-2").click(function () {
+            dialog2 = $.xvDialog({
+                contentMsg: 'hello,我是自定义按钮！',
+                buttons: [{
+                    type: 'helpself',
+                    text: '自定义按钮',
+                    cls: 'help_style',
+                    callBack: function (_this) {
+                        alert('自定义按钮');
+                        _this.close();
+                    }
+                }]
+            });
+
+            dialog2.on('ok', function (_this) {
+                _this.close();
+            });
+
+
+        });
+
+
+        $(".dialog-btn-3").click(function () {
+            dialog3 = $.xvDialog({contentMsg: 'hello,dialog3'});
+        });
+
+        $(".dialog-btn-4").click(function () {
+            dialog4 = $.xvDialog({contentMsg: 'hello,dialog4'});
+        });
     });
 </script>
 </body>

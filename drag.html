@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="utf-8">
-    <title>jQuery弹出框</title>
+    <title>xvDialog弹出框</title>
     <script src="basic/js/jquery.js"></script>
     <script src="src/js/xvDialog.js"></script>
 
@@ -565,7 +565,6 @@ dsafdsa
                     drag: false,
                     width:250,
                     closeAction:'hide',
-
 //
                     /*  ,
                      title: false,
@@ -679,6 +678,7 @@ dsafdsa
                     }
                 });
 
+
             });
 
     /*弹出页面层*/
@@ -688,6 +688,7 @@ dsafdsa
                 if(!xv3) {
                     xv3 = $.xvDialog({
                     index: 3,
+                    mask:false,
                     type: 'dialog',
 //                    drag: false,
 //                    scroll:false,
@@ -771,5 +772,26 @@ dsafdsa
                     ]
                 });
             });
+
+//    var xv5 = xvDialog.alert();
+    var xv6 = xvDialog.tips({follow:".btn1-3",contentMsg: 'hello，我是xv-大前端！欢迎使用xvDialog。'});
+    /*var xv7 = xvDialog.iframe({
+        title:'视频框架',
+        iframe:{
+            src: 'iframe.html',
+            width: 480,
+            height: 400,
+            name: 'iframe1',
+            id: 'iframe1'
+        },
+        buttons:'auto'
+    });*/
+
+    var xv7 = xvDialog.contentPage({
+         contentId:'testContent'
+     });
+
+
+
 </script>
 </html>
