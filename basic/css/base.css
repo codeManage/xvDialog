@@ -1,0 +1,149 @@
+html, body {
+    height: 100%;
+    font: 12px/1.5 \5b8b\4f53, Helvetica, Arial, sans-serif;
+    color: #000;
+    background-color: #fff
+}
+
+body, p, h1, h2, h3, h4, h5, h6, dl, dt, dd, ul, ol, li, form, select, input, textarea, button, table, caption, tr, th, td {
+    margin: 0;
+    padding: 0
+}
+
+ol, ul {
+    list-style: none
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0
+}
+
+img {
+    max-width: 100%;
+    border: 0
+}
+
+a {
+    outline: 0;
+    color: #08c;
+    text-decoration: none
+}
+
+a:hover {
+    color: #005580;
+    text-decoration: underline
+}
+
+a:active {
+    background-color: transparent
+}
+
+input, button, textarea, select, option {
+    font-family: inherit;
+    font-size: 100%;
+    outline: 0
+}
+
+textarea {
+    overflow: auto;
+    resize: none
+}
+
+button {
+    border: 0
+}
+
+button::-moz-focus-inner, input::-moz-focus-inner {
+    padding: 0;
+    border: 0
+}
+
+strong {
+    font-weight: 700
+}
+
+sub, sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline
+}
+
+sup {
+    top: -.5em
+}
+
+sub {
+    bottom: -.25em
+}
+
+input::-moz-placeholder, textarea::-moz-placeholder {
+    color: #a1a1a1;
+    opacity: 1
+}
+
+input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+    color: #a1a1a1
+}
+
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+    color: #a1a1a1
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #fff inset
+}
+
+.text, select, textarea, .textarea {
+    padding: 2px;
+    border: 1px solid #b3b3b3;
+    background-color: #fff
+}
+
+.text {
+    height: 16px;
+    line-height: 16px;
+    vertical-align: middle
+}
+
+.text:hover {
+    border-color: gray
+}
+
+select {
+    height: 22px;
+    vertical-align: middle
+}
+
+.checkbox, .radio {
+    display: inline-block;
+    padding-right: 4px;
+    height: 16px;
+    line-height: 16px;
+    vertical-align: middle
+}
+
+.checkbox + .checkbox, .checkbox + .radio, .radio + .checkbox, .radio + .radio {
+    margin-left: 6px
+}
+
+.checkbox input, .radio input {
+    margin: 1px 4px 0 0;
+    width: 13px;
+    height: 13px;
+    vertical-align: top
+}
+
+.textarea {
+    display: block
+}
+
+.textarea textarea {
+    padding: 0;
+    border: 0;
+    width: 100%;
+    height: 100%;
+    vertical-align: top
+}
+

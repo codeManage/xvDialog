@@ -499,9 +499,13 @@
 
                 /*滚动条位置置顶，并组织滚动条默认事件*/
                 $(window).on('scroll', function (e) {
-                    e.returnvalue=false;
-                    $(this).scrollTop(0);
-                    return false;
+
+
+
+
+                    /*e.returnvalue=false;
+                    //$(this).scrollTop(0);
+                    return false;*/
                 });
 
                 /*触发拖拽*/
@@ -641,8 +645,9 @@
                     doc = $(document);
                 }
 
+
                 $(document).on('mouseup', {that: _S, objProt: objProt, doc: doc, dragBox: dragBox}, _S.clearDrag);
-                doc.on('mousemove', {that: _S, win: $(window), dragBox: dragBox, disX: disX, disY: disY}, _S.moveFunc);
+                doc.on('mousemove', {that: _S, win: $(window), scrollT:$(document).scrollTop(), dragBox: dragBox, disX: disX, disY: disY}, _S.moveFunc);
             });
         },
 
@@ -687,6 +692,7 @@
             } else if (boxT >= maxT) {
                 boxT = maxT;
             }
+
 
             that.setPosition({left: boxL, top: boxT, obj: opts.dragBox});
             e.preventDefault();
