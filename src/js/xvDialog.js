@@ -79,37 +79,37 @@
         alert: function (config) {
             var config = config || {};
             var dltConfig = {
-                title:'提示信息',
+                title: '提示信息',
                 iconType: 'info',
-                width:300,
-                height:200
+                width: 300,
+                height: 200
             };
-            if(config.size === 'auto') {
+            if (config.size === 'auto') {
                 delete dltConfig.width;
                 delete dltConfig.height;
             }
-            config = $.extend(dltConfig,config,{type:'dialog',contentId:'',content:''});
-           return $.xvDialog(config);
-        },
-        contentPage:function(config){
-            var config = config || {};
-            var dltConfig = {
-                closeAction:'hide',
-                title:false,
-                buttons:false
-            };
-
-            config = $.extend(dltConfig,config,{type:'dialog',contentMsg:''});
+            config = $.extend(dltConfig, config, {type: 'dialog', contentId: '', content: ''});
             return $.xvDialog(config);
         },
-        iframe:function(config){
+        contentPage: function (config) {
+            var config = config || {};
+            var dltConfig = {
+                closeAction: 'hide',
+                title: false,
+                buttons: false
+            };
+
+            config = $.extend(dltConfig, config, {type: 'dialog', contentMsg: ''});
+            return $.xvDialog(config);
+        },
+        iframe: function (config) {
 
             var config = config || {};
             var dltConfig = {
-                title:false,
-                buttons:false
+                title: false,
+                buttons: false
             };
-            config = $.extend(dltConfig,config,{type:'iframe'});
+            config = $.extend(dltConfig, config, {type: 'iframe'});
             return $.xvDialog(config);
         }
         ,
@@ -117,10 +117,10 @@
             var config = config || {};
             var dltConfig = {
                 align: 'right',
-                mask:false,
+                mask: false,
                 position: {left: 0, top: 0}
             };
-            config = $.extend(dltConfig,config,{type:'tips'});
+            config = $.extend(dltConfig, config, {type: 'tips'});
             return $.xvDialog(config);
 
             /*待增加...*/
@@ -129,7 +129,7 @@
             if (!(object || object === 0)) {
                 return false;
             }
-            var ctr,idx = Number(object),type = G.doms['type'],attr = G.doms['times'];
+            var ctr, idx = Number(object), type = G.doms['type'], attr = G.doms['times'];
             if (idx >= 0) {
                 /*如果为数值,通过弹出层的序号来关闭对应的弹出层*/
                 ctr = $("[" + attr + "=" + idx + "]");
@@ -172,7 +172,7 @@
             var tmpOps = {};
             _S.index = tmpOps.index = (Number(opts.index) >= 0) ? opts.index : xvDialog.index++;
             tmpOps.type = opts.type || 'dialog';
-            tmpOps.closeBtn = opts.closeBtn || '';
+            tmpOps.closeBtn = (opts.closeBtn || opts.closeBtn === false) ? opts.closeBtn : '';
             tmpOps.mask = (opts.mask === false) ? opts.mask : '';
             tmpOps.closeTimes = opts.closeTimes || '';
             tmpOps.closeAction = opts.closeAction || '';
@@ -225,17 +225,23 @@
             tmpOps.scrollX = opts.scrollX !== false;
             tmpOps.scrollY = opts.scrollY !== false;
             tmpOps.showAlign = opts.showAlign || '';
-            tmpOps.buttons = (typeof(opts.buttons) === 'object' || opts.buttons === false) ? opts.buttons : [{
-                type: 'ok',
-                text: '确定',
-                cls: G.doms.maskBoxOkBtn
-            },
+            tmpOps.buttons = (typeof(opts.buttons) === 'object' || opts.buttons === false) ? opts.buttons : [
+                {
+                    type: 'ok',
+                    text: '确定',
+                    cls: G.doms.maskBoxOkBtn,
+                    callback:function(){
+                        var result = typeof opts.okBtn === 'function' ? opts.okBtn(_S) : '';
+                        if(result !== false) {_S.close();}
+                    }
+                },
                 {
                     type: 'cancel',
                     text: '取消',
                     cls: G.doms.maskBoxCancelBtn,
-                    callBack: function () {
-                        _S.close();
+                    callback: function () {
+                        var result = typeof opts.cancelBtn === 'function' ? opts.cancelBtn(_S) : '';
+                        if(result !== false) {_S.close();}
                     }
                 }
             ];
@@ -272,7 +278,7 @@
                     _S.pubDlgArea(dType['dialog'], closeBtn, mkBoxCon, mkBox);
                     break;
                 case dType.tips :
-                    var tips = "<div id='" + doms.tip + '_' + idx + "' class='" + doms.tip + " " + doms.tipAlign + opts.align + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx+1) + ";'><i class='" + doms.icon + "'></i><em></em><div class='" + doms.tipTxt + "'>" + opts.contentMsg + "</div></div>";
+                    var tips = "<div id='" + doms.tip + '_' + idx + "' class='" + doms.tip + " " + doms.tipAlign + opts.align + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx + 1) + ";'><i class='" + doms.icon + "'></i><em></em><div class='" + doms.tipTxt + "'>" + opts.contentMsg + "</div></div>";
                     tips = $(tips).appendTo(body);
                     _S.mkObj = {
                         body: body,
@@ -288,7 +294,7 @@
                     break;
             }
             /*遮罩box*/
-            (opts.mask === false) ? '' :  _S.mkObj.mkBox = $(mkBox).appendTo(_S.mkObj.body);
+            (opts.mask === false) ? '' : _S.mkObj.mkBox = $(mkBox).appendTo(_S.mkObj.body);
             _S.resetEvent(type);
         },
 
@@ -378,9 +384,10 @@
             /*按钮初始化*/
             for (var i = 0; i < buttons.length; i++) {
                 var button = opts.buttons[i];
+                var buttonId = button.id ? " id='"+button.id+"' ":"id='"+button.type+'_'+_S.index+'_'+i+"'";
                 if (typeof button === 'object' && button.type) {
-                    var btn = $("<span xv-button-type='" + button.type + "' class='" + G.doms.maskBoxBtn + " " + (button.cls || '') + "'>" + (button.text || '') + "</span>");
-                    var fn = button.callBack || '';
+                    var btn = $("<span "+(buttonId || '')+"xv-button-type='" + button.type + "' class='" + G.doms.maskBoxBtn + " " + (button.cls || '') + "'>" + (button.text || '') + "</span>");
+                    var fn = button.callback || '';
                     btn.appendTo(ft);
                     if (typeof fn == 'function') {
                         btn.on('click', {callback: fn}, function (e) {
@@ -547,15 +554,15 @@
 
 
                     /*e.returnvalue=false;
-                    //$(this).scrollTop(0);
-                    return false;*/
+                     //$(this).scrollTop(0);
+                     return false;*/
                 });
 
                 /*触发拖拽*/
                 (_O.tit && (opts.drag !== false)) ? _S.drag(_O.tit) : '';
 
                 /*是否开启动画*/
-                opts.animate !== false ? ctr.addClass(opts.animate[1]||opts.animate) : ctr.css({opacity: 1});
+                opts.animate !== false ? ctr.addClass(opts.animate[1] || opts.animate) : ctr.css({opacity: 1});
 
 
             } else if (type == 'tips') {
@@ -647,16 +654,17 @@
         },
 
         /*按钮监听事件的添加*/
-        on: function (type, func) {
+        on: function (id, func) {
             var _S = this;
             var buttons = _S.config.buttons;
             var btnObj = _S.mkObj.buttons;
-            if (type && func) {
+            if (id && func) {
                 for (var i = 0; i < buttons.length; i++) {
-                    if ((buttons[i].type == type) && typeof func == 'function') {
+                    if ((buttons[i].id == id) && typeof func == 'function') {
                         btnObj[i].on('click', function () {
-                            func(_S)
+                            func(_S);
                         });
+                        break;
                     }
                 }
             }
@@ -667,10 +675,12 @@
             var _S = this,
                 ctr = _S.mkObj.ctr;
             /*_S.mkObj.mkBox.on('mousemove',function(e){
-                return false;
-                e.preventDefault();
-            });*/
-            if(!obj.length) {return false}
+             return false;
+             e.preventDefault();
+             });*/
+            if (!obj.length) {
+                return false
+            }
             obj.on('mousedown', function (e) {
                 e.preventDefault();
                 var p = ctr.ps,
@@ -691,7 +701,14 @@
 
 
                 $(document).on('mouseup', {that: _S, objProt: objProt, doc: doc, dragBox: dragBox}, _S.clearDrag);
-                doc.on('mousemove', {that: _S, win: $(window), scrollT:$(document).scrollTop(), dragBox: dragBox, disX: disX, disY: disY}, _S.moveFunc);
+                doc.on('mousemove', {
+                    that: _S,
+                    win: $(window),
+                    scrollT: $(document).scrollTop(),
+                    dragBox: dragBox,
+                    disX: disX,
+                    disY: disY
+                }, _S.moveFunc);
             });
         },
 

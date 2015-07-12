@@ -573,7 +573,14 @@ dsafdsa
                      icon: false,*/
 //                    closeTimes:3000,
                     iconType: 'waring', /*waring,error,info*/
-                    contentMsg: '我是xv-大前端！欢迎使用xvDialog欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用'
+                    contentMsg: '我是xv-大前端！欢迎使用xvDialog欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用',
+                    okBtn:function(_this){
+                        console.log(_this);
+                        return false;
+                    },
+                    cancelBtn:function(_this){
+                        return false;
+                    }
 
                     /*button: [
                      {
@@ -775,22 +782,20 @@ dsafdsa
 
 //    var xv5 = xvDialog.alert();
     var xv6 = xvDialog.tips({follow:".btn1-3",contentMsg: 'hello，我是xv-大前端！欢迎使用xvDialog。'});
-    /*var xv7 = xvDialog.iframe({
-        title:'视频框架',
+    var xv7 = xvDialog.iframe({
         iframe:{
             src: 'iframe.html',
             width: 480,
             height: 400,
             name: 'iframe1',
             id: 'iframe1'
-        },
-        buttons:'auto'
-    });*/
+        }
+    });
 
-    var xv7 = xvDialog.contentPage({
+   /* var xv8= xvDialog.contentPage({
          contentId:'testContent'
      });
-
+*/
 
 
 </script>

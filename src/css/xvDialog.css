@@ -264,7 +264,7 @@
 }
 
 .xv_Tip_Align_top .xv_Mask_Icon {
-    left: 20%;
+    left: 15px;
     bottom: -10px;
     /*border-top-color: rgba(8, 128, 206, 1);*/
     border-top-color: #0880ce;
@@ -281,7 +281,7 @@
 }
 
 .xv_Tip_Align_bottom .xv_Mask_Icon {
-    left: 20%;
+    left: 15px;
     top: -10px;
     border-bottom-color: rgba(8, 128, 206, 1);
     *border-bottom-color: #0880ce;;

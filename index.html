@@ -43,11 +43,9 @@
             color: #fff;
             display: inline-block;
             padding: 5px 10px;
-            margin: 5px;
-            margin-left: 30px;
+            margin-right: 30px;
             border-radius: 5px;
             box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-
         }
 
         .bind-btn {
@@ -61,7 +59,20 @@
         .help_style {
             background-color: #f34627;
             border-radius: 4px;
-            box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+            box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        .clrf34627 {
+            color: #f34627;
+        }
+
+        .top_index {
+            position: relative;
+            z-index: 9999999999;
+        }
+
+        .hide {
+            display:none;
         }
 
     </style>
@@ -75,16 +86,17 @@
     <hr/>
     <p style="font-weight:bold">需要引入插件xvDialog.js/xvDialog.min.js</p>
 
-    <p style="font-weight:bold">须要引入xvDialog.css 样式表，可以自定义自己想要的皮肤</p>
+    <p style="font-weight:bold">须要引入xvDialog.css/ xvDialog.min.css</样式表，可以自定义自己想要的皮肤</p>
 
     <p style="font-weight:bold;color:red;">本弹出层组件基于jquery库开发版本1.8.0以上</p><br/>
 
-    <h3>参数说明如下：</h3>
+    <h3 id="parmas-instr">参数说明如下：</h3>
 
     <div>
     <pre class="js">
             index: 0,//弹出层的索引
-            mask:false//默认开启遮罩
+            mask:false,//默认开启遮罩
+            esc:false,//默认开启esc键关闭弹出层，false表示关闭该功能
             type: 'dialog',//弹出层的类型，tips、iframe下面会介绍这几种类型的具体用法
             drag: false,//是否开启拖拽功能，默认开启
             width:250,//弹出层的宽度
@@ -94,53 +106,211 @@
             closeBtn: false,//false不开启关闭按钮，默认开启
             icon: false,//关闭图标显示，默认开启，tips类型不可使用
             iconType: 'waring', //选择图标类型 分别有，success、waring、error、info,可以自定义类型，下面用法会详细介绍
+            showAlign:{bottom:0,left:0},//弹出层的位置，默认居中弹出
+            animate:['xv_ft_reset_animate','xv_ft_dlt_animate'],//animate动画设置，本组件的动画效果仅通过css3来实现的，所以如果想要定制自己想要的动画，
+        //只需要通过animate:[a,b]来重置，a,表示动画的初始状态class，b,表示动画的最终状态class。
             closeTimes:3000,//是否开启自动关闭，默认不开启
             contentMsg: '我是xv-大前端！欢迎使用xvDialog欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用',//弹出层的内容,tips、dialog类型可使用
             contentId:'#id',//通过页面的id来获取该dom的所有内容，然后显示在弹出层上面
             content:'&lt;div&gt;自定义字符串标签结构&lt;/div&gt;',//通过字符串定义拼接成dom结构，然后显示在弹出层上面
             buttons: false,//是否显示弹层脚步的按钮，默认显示底部默认按钮，也可以自定义，下面用法中会介绍具体使用方法
+            okBtn:function(_this){...},//默认底部按钮确认按钮点击时候的回调,button参数不可false或自定义
+            cancelBtn:function(_this){...},//默认底部按钮取消点击时候的回调,button参数不可false或自定义
     </pre>
     </div>
 
 </div>
 
 <div class="info">
-    <h3>关闭类型</h3>
-
-    <div class="demo-box" style="position: relative;z-index: 99999999999">
-        <div class="form-item">
-            <a class="closeAlert blue-btn" href="javascript:void('');">关闭alert</a>
-            <a class="closeTip blue-btn" href="javascript:void('');">关闭tip</a>
-            <a class="closeIframe blue-btn" href="javascript:void('');">关闭iframe</a>
-            <a class="closeContent blue-btn" href="javascript:void('');">关闭contentPage</a>
-        </div>
-    </div>
-
-    <h3>alert用法</h3>
+    <h3>部分用方法说明<span style="font-size:14px">（一些比较容易参数使用，可以参考<a href="#parmas-instr">参数说明</a>）</span></h3>
 
     <div class="demo-box">
         <div class="form-item">
-            <a class="dialog-btn-1 blue-btn bind-btn" href="javascript:void('');">更换alert的icon</a>
-            <a class="dialog-btn-2 blue-btn bind-btn" href="javascript:void('');">自定义按钮</a>
-            <a class="dialog-btn-3 blue-btn bind-btn" href="javascript:void('');">关闭iframe</a>
-            <a class="dialog-btn-3 blue-btn bind-btn" href="javascript:void('');">关闭contentPage</a>
+            <a class="closeAlert blue-btn top_index" href="javascript:void('');">关闭alert</a>
+            <a class="dialog-btn-1 blue-btn bind-btn" href="#button1-instr">按钮1：更换alert的icon</a>
+            <a class="dialog-btn-2 blue-btn bind-btn" href="#button2-instr">按钮2：默认按钮/自定义按钮介绍</a>
+            <a class="dialog-btn-3 blue-btn bind-btn" href="#button3-instr">按钮3：弹出页面内容层</a>
+            <a class="dialog-btn-4 blue-btn bind-btn" href="#button4-instr">按钮4：弹出框架层</a>
         </div>
     </div>
-
-    <h3>tips用法</h3>
 
     <div class="demo-box">
-        <div class="form-item">
-            <a class="closeAll blue-btn bind-btn" href="javascript:void('');">关闭所有弹出层</a>
-            <a class="closeAlert blue-btn bind-btn" href="javascript:void('');">dialog</a>
-            <a class="closeTip blue-btn bind-btn" href="javascript:void('');">关闭tip</a>
-            <a class="closeIframe blue-btn bind-btn" href="javascript:void('');">关闭iframe</a>
-            <a class="closeContent blue-btn bind-btn" href="javascript:void('');">关闭contentPage</a>
+        <p class="clrf34627"  id="button1-instr">按钮1，更换图标使用说明</p>
+        1、通过iconType参数更换图标，内置图标有success,info,waring,error<br/>
+        2、可以自定义iconType,如：iconType:'icon1',此时须要在样式表中定义class样式为，"<strong class="clrf34627">xv_Mask_Icon_icon1</strong>",也就是加上"<strong
+            class="clrf34627">xv_Mask_Icon_</strong>"此前缀，否则无效<br/>
+        <pre class="js">
+            //内置图标更换 success,info,waring,error
+            dialog1 = $.xvDialog({
+                iconType: 'success',//这块为图标类型设置参数，设置图标时候icon参数不能为false
+                contentMsg: 'hello,点击确定更换图标icon'
+            });
+            //自定义更换
+            &lt;style&gt;
+                .xv_Mask_Icon_icon1 {
+                    background: #f34627;
+                }
+            &lt;/style&gt;
+
+            dialog1 = $.xvDialog({
+                iconType: 'icon1',
+                contentMsg: '自定义图标更换'
+            });
+        </pre>
+    </div>
+    <div class="demo-box">
+        <p class="clrf34627" id="button2-instr">按钮2，默认按钮/自定义按钮说明</p>
+        1、buttons:false，关闭本组件内置按钮，内置按钮为“确认”和“取消”按钮，详细用法如下：
+        <pre class="js">
+           var dialog2 = $.xvDialog({
+                contentMsg:'默认按钮',
+                okBtn:function(_this){//确认按钮的回调
+                    //确认按钮
+                    console.log(_this)//_this->dialog2
+                    return false;//如果return false;阻止对话框关闭
+                },
+                cancelBtn:function(_this){//取消按钮的回调
+                    //取消按钮
+                    return false;//如果return false;阻止对话框关闭
+                }
+            )}
+            //dialog2.on(id,fn) 通过on，来绑定按钮的回调,如下：
+            dialog2.on('button1',function(_this){
+                console.log(_this) //_this->dialog2;
+            })
+
+        </pre>
+
+        2、如果须要自定义按钮，只能通过buttons参数来自定义自己想要的按钮,默认为开启按钮(tips类型的弹出层除外)，false表示不启用按钮<br/>
+        自定义按钮中，buttons参数自定义如下代码：
+        <pre class="js">
+            dialog2 = $.xvDialog({
+                buttons: [{
+                        type: 'add',//该按钮的类型 (type 最好是本实例中唯一，不要重复)
+                        id:'button1',//按钮为后面的on绑定该按钮的回调事件
+                        text: '自定义按钮',//按钮的文本类容
+                        cls: 'help_style',//这个是自定义该按钮的class
+                        callback: function (_this) {//该按钮的点击回调，也可以通过实例后on方法来进行绑定
+                            _this.close();
+                        }
+                }],
+                contentMsg:'自定义按钮'
+            )}
+
+            //dialog2.on(id,fn) 通过on，来绑定按钮的回调,如下：
+            dialog2.on('button1',function(_this){
+                console.log(_this) //_this->dialog2;
+            })
+
+        </pre>
+    </div>
+
+    <div class="demo-box">
+        <p class="clrf34627" id="button3-instr">按钮3，弹出页面内容层</p>
+        1、通过参数contentId来设置弹出当前页面dom结构内容层。<br/>
+        2、通过字符串的形式，将需要弹出的dom结构放在content参数中即可。<br/>
+        <b>注意：</b>此时正常情况下需要设置closeAction参数,该参数用来设置关闭类型，默认为移除销毁，如果closeAction:'hide',及为隐藏，并非移除销毁，在弹出页面层类型中，经常我们设置为隐藏hide,同时还判断此弹出页面层是否被实例化了，如果曾在直接调用该实例的show方法即可。<br/>
+        具体可以参考如下代码：
+        <pre class="js">
+        if(!dialog3){
+            $(".dialog-btn-3").click(function () {
+                dialog3 = $.xvDialog({
+                    title:false,
+                    closeBtn:false,
+                    closeAction:'hide',
+                    contentId:'contentPage'，
+                    /*
+                        通过字符串来传入弹出层dom结构
+                        content:'&lt;div&gt;...&lt;/div&gt;'
+                    */
+                });
+            });
+        }else{
+            dialog3.show();
+        }
+        </pre>
+
+    </div>
+
+    <div class="demo-box">
+        <p class="clrf34627" id="button4-instr">按钮4，弹出框架层</p>
+        1、type:'iframe',如果为框架层，需要设置type类型，默认为dialog类型<br/>
+        2、通过iframe属性来配置框架的一些参数。<br/>
+        3、load参数为款家载入成功的回调<br/>
+        具体可以参考如下代码：
+        <pre class="js">
+            $(".dialog-btn-4").click(function () {
+                dialog4 = $.xvDialog({
+                    type:'iframe',
+                    iframe: {
+                        src: 'iframe.html',
+                        width: 480,
+                        height: 400,
+                        name: 'iframe1',
+                        id: 'iframe1'
+                    },
+                    load: function (_this,frameWindow, frameBody) {//框架载入成功的回调
+                        console.log(_this);
+                        console.log(frameWindow);//框架的window对象
+                        console.log(frameBody);//框架的body对象
+                    }
+                });
+            });
+        </pre>
+
+    </div>
+
+
+    <h3>tips提示层用法</h3>
+    <div class="demo-box">
+        <div class="form-item" style="text-align: center;">
+            <a class="tipTop blue-btn bind-btn" href="javascript:void('');">tips 上</a>
+            <a class="tipRight blue-btn bind-btn" href="javascript:void('');">tips 右</a>
+            <a class="tipBottom blue-btn bind-btn" href="javascript:void('');">tips 下</a>
+            <a class="tipLeft blue-btn bind-btn" href="javascript:void('');">tips 左</a>
         </div>
     </div>
 
+    <div class="demo-box">
+        <p class="clrf34627" id="button4-instr">tips 提示层</p>
+        1、type:'tips',如果为框架层，需要设置type类型，默认为dialog类型<br/>
+        2、通过iframe属性来配置框架的一些参数。<br/>
+        具体可以参考如下代码：
+        <pre class="js">
+            tips = $.xvDialog({
+                type: 'tips',
+                follow:'.tipLeft',//对齐对象，可以填写class,id
+                mask:false,
+                closeTimes:2000,//定时关闭该层
+                position: {left: 0, top: 0},//调整自己想要的位置
+                align: 'left', /*对齐位置，top,right,bottom,left 默认为靠右,right*/
+                contentMsg: 'hello，欢迎使用xvDialog。'
+            });
+        </pre>
+    </div>
+</div>
+<br/>
+<br/>
+<br/><br/>
+<br/>
+<br/><br/>
+<br/>
+<br/>
+
+<div class="hide">
+<div id="contentPage" style="width:300px;height:300px;background: #0a7f6d;">
+    <p style="color:#fff;font-size:18px;text-align: center;padding:10px 0;">页面层</p>
+    <p style="padding:10px;color:#fff;">
+        1、页面弹出层，可以通过contentId参数传入id <br/>
+        2、还可以通过字符串的形式，将须要弹出的dom结构放在content参数中即可。
+    </p>
 </div>
 
+    <br/>
+    <br/>
+    <br/><br/>
+    <br/>
+    <br/>
 <br/>
 <br/>
 <br/>
@@ -150,11 +320,7 @@
 <br/>
 <br/>
 <br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
+
 
 <!--<script src="seajs-2.3.0/sea.js"></script>-->
 
@@ -166,7 +332,6 @@
 //        代码高亮
         $("pre.js").snippet("javascript", {style: "rand01", box: "#ffffff", boxFill: "#ffffff", showNum: true});
 
-
         /*弹出层关闭方法*/
         $(".closeAlert").click(
                 function () {
@@ -174,59 +339,138 @@
                 }
         );
 
-
         /*xvDialog用法*/
 
-        var dialog1, dialog2, dialog3, dialog4, dialogIdx = 0;
+        var dialog1, dialog2, dialog3, dialog4;
 
         var iconType = ['success', 'info', 'waring', 'error'];
 
-        /**/
+        /*更换dialog的图标*/
         $(".dialog-btn-1").click(function () {
-            dialog1 = $.xvDialog({
-                iconType: iconType[dialogIdx],
-                contentMsg: 'hello,点击确定更换图标icon'
-            });
-            if (dialogIdx > 3) {
-                dialogIdx = 0;
-            } else {
-                dialogIdx++;
-            }
-            dialog1.on('ok', function (_this) {
-                _this.close();
-            });
-
+            var dialogIdx = 0;
+            changeIcon(dialogIdx);
         });
 
+        function changeIcon(dialogIdx) {
+            dialog1 = $.xvDialog({
+                iconType: iconType[dialogIdx],
+                contentMsg: 'hello,点击确定更换图标icon',
+                okBtn: function (_this) {
+                    if (dialogIdx > iconType.length - 2) {
+                        _this.close();
+                    } else {
+                        dialogIdx++;
+                        _this.close();
+                        changeIcon(dialogIdx)
+                    }
+                }
+            });
+        }
+
+        /*自定义按钮*/
         $(".dialog-btn-2").click(function () {
             dialog2 = $.xvDialog({
                 contentMsg: 'hello,我是自定义按钮！',
                 buttons: [{
                     type: 'helpself',
                     text: '自定义按钮',
+                    id: 'button1',
                     cls: 'help_style',
-                    callBack: function (_this) {
-                        alert('自定义按钮');
+                    callback: function (_this) {
                         _this.close();
                     }
                 }]
             });
 
-            dialog2.on('ok', function (_this) {
+            dialog2.on('button1', function (_this) {
                 _this.close();
             });
-
-
         });
 
 
-        $(".dialog-btn-3").click(function () {
-            dialog3 = $.xvDialog({contentMsg: 'hello,dialog3'});
-        });
 
+        /*弹出层contentPage,页面层*/
+        if(!dialog3){
+            $(".dialog-btn-3").click(function () {
+                dialog3 = $.xvDialog({
+                    title:false,
+                    closeBtn:false,
+                    closeAction:'hide',
+                    contentId:'contentPage'
+                });
+            });
+        }else{
+            dialog3.show();
+        }
+
+
+        /*弹出框架层*/
         $(".dialog-btn-4").click(function () {
-            dialog4 = $.xvDialog({contentMsg: 'hello,dialog4'});
+            dialog4 = $.xvDialog({
+                type: 'iframe',
+                iframe: {
+                    src: 'iframe.html',
+                    width: 480,
+                    height: 400,
+                    name: 'iframe1',
+                    id: 'iframe1'
+                },
+                load: function (_this,frameWindow, frameBody) {//框架载入成功的回调
+                    console.log(_this);
+                    console.log(frameWindow);//框架的window对象
+                    console.log(frameBody);//框架的body对象
+                }
+            });
         });
+
+
+        /*tips层*/
+        var tip1,tip2,tip3,tip4;
+        $(".tipTop").click(function () {
+                    tip1 = $.xvDialog({
+                        type: 'tips',
+                        follow:'.tipTop',
+                        mask:false,
+                        closeTimes:2000,
+                        align: 'top', /*对齐位置默认为靠右*/
+                        contentMsg: 'hello，欢迎使用xvDialog。'
+                    });
+                });
+
+        $(".tipRight").click(function () {
+            tip2 = $.xvDialog({
+                type: 'tips',
+                follow:'.tipRight',
+                mask:false,
+                closeTimes:2000,
+                align: 'right', /*对齐位置默认为靠右*/
+                contentMsg: 'hello，欢迎使用xvDialog。'
+            });
+        });
+
+        $(".tipBottom").click(function () {
+            tip2 = $.xvDialog({
+                type: 'tips',
+                follow:'.tipBottom',
+                mask:false,
+                closeTimes:2000,
+                align: 'bottom', /*对齐位置默认为靠右*/
+                contentMsg: 'hello，欢迎使用xvDialog。'
+            });
+        });
+
+
+        $(".tipLeft").click(function () {
+            tip2 = $.xvDialog({
+                type: 'tips',
+                follow:'.tipLeft',
+                mask:false,
+                closeTimes:2000,
+                align: 'left', /*对齐位置默认为靠右*/
+                contentMsg: 'hello，欢迎使用xvDialog。'
+            });
+        });
+
     });
 </script>
 </body>
