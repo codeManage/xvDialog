@@ -76,6 +76,7 @@
     /*对外公共方法*/
     win.xvDialog = {
         index: 0,
+        mkSign: 0,
         alert: function (config) {
             var config = config || {};
             var dltConfig = {
@@ -126,6 +127,7 @@
             /*待增加...*/
         }, close: function (object, closeType) {
 
+
             if (!(object || object === 0)) {
                 return false;
             }
@@ -141,20 +143,31 @@
                     ctr = $("[" + type + "=" + object + "]");
                 }
             } else {
-                /*通过实例来进行删除对应的弹出层*/
-                if (!object.index) {
-                    return false;
+                if (Number(object.index) >= 0) {
+                    /*通过实例来进行删除对应的弹出层*/
+                    ctr = object.config.body.find("[" + attr + "=" + object.index + "]");
                 }
-                ctr = $("[" + attr + "=" + object.index + "]");
             }
 
             /*关闭类型：hide|remove*/
-            closeType === 'hide' ? ctr.hide() : ctr.remove();
+           (closeType && closeType === 'hide') ? ctr.hide() : ctr.remove();
         }
     };
 
     /*入口*/
     $.xvDialog = function (opts) {
+        var xv;
+        var uniq = opts.contentId || opts.id;
+        if (opts.closeAction == 'hide' && uniq) {
+            var isExit = $('#' + uniq).parents('.' + G.doms.maskBoxCon);
+            if (isExit.length) {
+                xv = xvDialog['xvmksign' + isExit.attr('xvmksign')];
+                xv.show();
+                return xv;
+            }
+            xv = xvDialog['xvmksign' + xvDialog.mkSign++] = new DialogBox(opts);
+            return xv;
+        }
         return new DialogBox(opts);
     };
 
@@ -165,7 +178,6 @@
 
     /*原型结构*/
     DialogBox.pt = DialogBox.prototype = {
-
         /*传参的过滤*/
         settings: function (opts) {
             var _S = this;
@@ -176,7 +188,9 @@
             tmpOps.mask = (opts.mask === false) ? opts.mask : '';
             tmpOps.closeTimes = opts.closeTimes || '';
             tmpOps.closeAction = opts.closeAction || '';
+            tmpOps.openWindow = opts.openWindow || window;
             tmpOps.esc = opts.esc || '';
+            tmpOps.id = opts.id || '';
             tmpOps.drag = (opts.drag || opts.drag === false) ? opts.drag : '';
             tmpOps.content = opts.content || '';
             tmpOps.contentMsg = opts.contentMsg || '';
@@ -230,9 +244,11 @@
                     type: 'ok',
                     text: '确定',
                     cls: G.doms.maskBoxOkBtn,
-                    callback:function(){
+                    callback: function () {
                         var result = typeof opts.okBtn === 'function' ? opts.okBtn(_S) : '';
-                        if(result !== false) {_S.close();}
+                        if (result !== false) {
+                            _S.close();
+                        }
                     }
                 },
                 {
@@ -241,7 +257,9 @@
                     cls: G.doms.maskBoxCancelBtn,
                     callback: function () {
                         var result = typeof opts.cancelBtn === 'function' ? opts.cancelBtn(_S) : '';
-                        if(result !== false) {_S.close();}
+                        if (result !== false) {
+                            _S.close();
+                        }
                     }
                 }
             ];
@@ -257,44 +275,46 @@
         /*构建弹出层框架结构*/
         building: function (options) {
             var _S = this;
+            var isRepeatObj;
             var opts = _S.config = _S.settings(options);
             var idx = _S.index;
             var doms = G.doms;
             var dType = G.type;
             var type = _S.currentType = dType[opts.type];
-            var body = $('body');
+            var body = _S.config.body = $('body', opts.openWindow.document);
+            _S.config.openWindow = $(opts.openWindow);
+            _S.config.currentWindow = $(window);
+
 
             var rAnimate = opts.animate === false ? '' : (opts.animate[0] || doms.mkrAnimate);
-            var mkBox = "<div id='" + doms.maskBox + '_' + idx + "' class='" + doms.maskBox + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx) + ";'></div>";
-            var mkBoxCon = "<div class='" + doms.maskBoxCon + " " + rAnimate + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "'  style='z-index:" + (opts.zIndex + idx + 1) + ";'><div class='" + doms.maskConBrd + "'><div class='" + doms.maskBoxMain + "'><div class='" + doms.maskTxtBox + "'>" + ((opts.icon === false) ? " " : ("<i class='" + doms.icon + ' ' + doms.icon + '_' + opts.iconType + "'></i>")) + "<div class='" + doms.maskTxt + "'></div></div></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
+            var mkBox = "<div id='" + doms.maskBox + '_' + idx + "' class='" + doms.maskBox + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' xvmksign='" + (xvDialog.mkSign++) + "' style='z-index:" + (opts.zIndex + idx) + ";'></div>";
+            var mkBoxCon = "<div class='" + doms.maskBoxCon + " " + rAnimate + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' xvmksign='" + (xvDialog.mkSign) + "' style='z-index:" + (opts.zIndex + idx + 1) + ";'><div class='" + doms.maskConBrd + "'><div class='" + doms.maskBoxMain + "' id='" + (opts.id || (doms.maskBoxMain + idx)) + "'><div class='" + doms.maskTxtBox + "'>" + ((opts.icon === false) ? " " : ("<i class='" + doms.icon + ' ' + doms.icon + '_' + opts.iconType + "'></i>")) + "<div class='" + doms.maskTxt + "'></div></div></div><div class='" + doms.maskBoxFoot + "'></div></div></div>";
 
             var closeBtn = "<div class='" + doms.maskBoxCloseBtn + "'>x</div>";
 
+            if (opts.closeAction === 'hide') {
+                xvDialog['xvmksign' + xvDialog.mkSign] = _S;
+            }
+            _S.mkObj = {};
             switch (type) {
                 case dType.dialog :
-                    _S.mkObj = {
-                        body: body
-                    };
-                    _S.pubDlgArea(dType['dialog'], closeBtn, mkBoxCon, mkBox);
+                    isRepeatObj = _S.pubDlgArea(dType['dialog'], closeBtn, mkBoxCon, mkBox);
                     break;
                 case dType.tips :
                     var tips = "<div id='" + doms.tip + '_' + idx + "' class='" + doms.tip + " " + doms.tipAlign + opts.align + "' " + doms.type + "='" + type + "' " + doms.times + "='" + idx + "' style='z-index:" + (opts.zIndex + idx + 1) + ";'><i class='" + doms.icon + "'></i><em></em><div class='" + doms.tipTxt + "'>" + opts.contentMsg + "</div></div>";
                     tips = $(tips).appendTo(body);
                     _S.mkObj = {
-                        body: body,
                         ctr: tips
                     };
                     opts.closeBtn !== false ? _S.mkObj.clsBtn = $(closeBtn).appendTo(tips) : '';
                     break;
                 case dType.iframe:
-                    _S.mkObj = {
-                        body: body
-                    };
-                    _S.pubDlgArea(dType['iframe'], closeBtn, mkBoxCon, mkBox);
+                    isRepeatObj = _S.pubDlgArea(dType['iframe'], closeBtn, mkBoxCon, mkBox);
                     break;
             }
+
             /*遮罩box*/
-            (opts.mask === false) ? '' : _S.mkObj.mkBox = $(mkBox).appendTo(_S.mkObj.body);
+            (opts.mask === false) ? '' : _S.mkObj.mkBox = $(mkBox).appendTo(body);
             _S.resetEvent(type);
         },
 
@@ -314,7 +334,7 @@
             var iframeHtml = opts.iframe && opts.iframe.src ? "<iframe id='" + (opts.iframe.id || doms.iframeId + idx) + "' name='" + (opts.iframe.name || doms.iframeName + idx) + "' frameborder='0' src='" + opts.iframe.src + "' width='" + ( opts.iframe.width || 'auto') + "' height='" + ( opts.iframe.height || 'auto') + "'></iframe>" : '';
 
 
-            var mkBoxCon = $(mkBoxCon).appendTo(_S.mkObj.body),
+            var mkBoxCon = $(mkBoxCon).appendTo(opts.body),
                 maskConBrd = mkBoxCon.find("." + doms.maskConBrd),
                 mkBoxMain = mkBoxCon.find("." + doms.maskBoxMain),
                 maskBoxFoot = mkBoxCon.find("." + doms.maskBoxFoot),
@@ -331,7 +351,7 @@
                 mkBoxMain.css(overF);
                 if (contentHtml) {
                     mkBoxMain.html(contentHtml);
-                    opts.load ? opts.load(_S, $(contentHtml)) : '';
+                    opts.load ? opts.load(_S) : '';
                 }
                 if (contentMsg) {
                     $('<div></div>').text(contentMsg).appendTo(mkBoxMain.find("." + doms.maskTxt));
@@ -346,11 +366,7 @@
                     mkBoxMain.html(iframeHtml);
                     var iframe = mkBoxMain.find('iframe');
                     iframe.load(function () {
-                        var that = $(this);
-                        var childWin = self.frames[that.attr('name')];
-                        _S.frameWindow = $(childWin);
-                        _S.frameBody = $(childWin.document.body);
-                        opts.load ? opts.load(_S, _S.frameWindow, _S.frameBody) : '';
+                        opts.load ? opts.load(_S, opts.openWindow ,opts.currentWindow) : '';
                     })
                 }
             }
@@ -384,9 +400,9 @@
             /*按钮初始化*/
             for (var i = 0; i < buttons.length; i++) {
                 var button = opts.buttons[i];
-                var buttonId = button.id ? " id='"+button.id+"' ":"id='"+button.type+'_'+_S.index+'_'+i+"'";
+                var buttonId = button.id ? " id='" + button.id + "' " : "id='" + button.type + '_' + _S.index + '_' + i + "'";
                 if (typeof button === 'object' && button.type) {
-                    var btn = $("<span "+(buttonId || '')+"xv-button-type='" + button.type + "' class='" + G.doms.maskBoxBtn + " " + (button.cls || '') + "'>" + (button.text || '') + "</span>");
+                    var btn = $("<button " + (buttonId || '') + "xv-button-type='" + button.type + "' class='" + G.doms.maskBoxBtn + " " + (button.cls || '') + "'>" + (button.text || '') + "</button>");
                     var fn = button.callback || '';
                     btn.appendTo(ft);
                     if (typeof fn == 'function') {
@@ -457,7 +473,7 @@
                 h,
                 pL,
                 pT,
-                $win = $(window);
+                $win = this.config.openWindow;
             if (obj && obj.length) {
                 w = obj.outerWidth();
                 h = obj.outerHeight();
@@ -475,13 +491,13 @@
             };
         },
 
-
         /*弹出层位置的计算*/
         setPosition: function (opts) {
             var data = opts.data ? opts.data : opts;
             var p, tmpPs = {}, tmpL, tmpT;
             var _S = data.that || this;
             var obj = data.obj ? data.obj : _S.mkObj.ctr;
+            var $win = _S.config.openWindow;
 
             if (opts.data && opts.data.auto) {
                 /*对元素居中处理*/
@@ -492,7 +508,7 @@
 
             /*分别判断拖拽和窗口特殊定位*/
             if (Number(p.right) >= 0) {
-                tmpL = $(window).width() - _S.boxSize.w - p.right;
+                tmpL = $win.width() - _S.boxSize.w - p.right;
                 tmpPs.right = p.right;
             } else if (Number(p.left) >= 0) {
                 tmpL = p.left;
@@ -500,7 +516,7 @@
             }
 
             if (Number(p.bottom) >= 0) {
-                tmpT = $(window).height() - _S.boxSize.h - p.bottom;
+                tmpT = $win.height() - _S.boxSize.h - p.bottom;
                 tmpPs.bottom = p.bottom;
             } else if (Number(p.top) >= 0) {
                 tmpT = p.top;
@@ -517,7 +533,6 @@
             if (p.type) {
                 obj.css(tmpPs);
             }
-
         },
 
         /*初始化事件*/
@@ -525,6 +540,8 @@
             var _S = this;
             var _O = _S.mkObj;
             var opts = _S.config;
+            var openWin = opts.openWindow;
+            var body = opts.body;
             var ctr = _O.ctr;
             var autoP;
             var time = Number(opts.closeTimes);
@@ -545,13 +562,10 @@
                     _S.setPosition(_S.computeCenter());
                     autoP = {auto: true, type: true, that: _S}
                 }
-                $(window).on('resize', autoP, _S.setPosition);
+                openWin.on('resize', autoP, _S.setPosition);
 
                 /*滚动条位置置顶，并组织滚动条默认事件*/
-                $(window).on('scroll', function (e) {
-
-
-
+                openWin.on('scroll', function (e) {
 
                     /*e.returnvalue=false;
                      //$(this).scrollTop(0);
@@ -563,11 +577,9 @@
 
                 /*是否开启动画*/
                 opts.animate !== false ? ctr.addClass(opts.animate[1] || opts.animate) : ctr.css({opacity: 1});
-
-
             } else if (type == 'tips') {
                 var tips = _O.ctr;
-                var target = $(opts.follow);
+                var target = body.find(opts.follow);
                 var trtW = target.outerWidth();
                 var trtH = target.outerHeight();
                 var tipsW = tips.outerWidth();
@@ -617,7 +629,7 @@
             }
 
             opts.closeBtn !== false ? _O.clsBtn.on('click', {that: _S}, _S.close) : '';
-            opts.esc !== false ? $(document).on('keyup', {that: _S}, _S.close) : '';
+            opts.esc !== false ? openWin.on('keyup', {that: _S}, _S.close) : '';
 
         },
 
@@ -632,19 +644,19 @@
                 }
             }
             var _S = e && e.data ? e.data.that : this;
-            /*炭层位置初始化*/
+            /*弹出层位置初始化*/
             var opts = _S.config;
             if (opts.closeAction === 'hide' && opts.animate[1]) {
                 _S.mkObj.ctr.removeClass(opts.animate[1]);
-                xvDialog.close(_S.index, 'hide')
+                xvDialog.close(_S, 'hide')
             } else {
-                xvDialog.close(_S.index);
+                xvDialog.close(_S);
             }
             _S.timer ? clearTimeout(_S.timer) : '';
-            isEsc ? $(document).off('keyup', _S.close) : '';
+            isEsc ? opts.openWindow.off('keyup', _S.close) : '';
         },
 
-        /*单改层关闭类型为hide的时候，可以通过show来恢复层*/
+        /*层关闭类型为hide的时候，可以通过show来恢复显示层*/
         show: function () {
             var _S = this;
             var mkObj = _S.mkObj;
@@ -673,11 +685,9 @@
         /*拖拽*/
         drag: function (obj) {
             var _S = this,
-                ctr = _S.mkObj.ctr;
-            /*_S.mkObj.mkBox.on('mousemove',function(e){
-             return false;
-             e.preventDefault();
-             });*/
+                ctr = _S.mkObj.ctr,
+                opts = _S.config,
+                $win = opts.openWindow;
             if (!obj.length) {
                 return false
             }
@@ -687,7 +697,7 @@
                     disX = e.clientX - p.left,
                     disY = e.clientY - p.top,
                     doc;
-                var dragBox = $("<div class='" + G.doms.maskDrag + " '></div>").appendTo($('body'));
+                var dragBox = $("<div class='" + G.doms.maskDrag + " '></div>").appendTo(opts.body);
                 var objProt = dragBox.get(0);
                 dragBox.outerWidth(_S.boxSize.w);
                 dragBox.outerHeight(_S.boxSize.h);
@@ -696,15 +706,15 @@
                     doc = dragBox;
                     objProt.setCapture();
                 } else {
-                    doc = $(document);
+                    doc = $win;
                 }
 
 
-                $(document).on('mouseup', {that: _S, objProt: objProt, doc: doc, dragBox: dragBox}, _S.clearDrag);
+                $win.on('mouseup', {that: _S, objProt: objProt, doc: doc, dragBox: dragBox}, _S.clearDrag);
                 doc.on('mousemove', {
                     that: _S,
-                    win: $(window),
-                    scrollT: $(document).scrollTop(),
+                    win: opts.openWindow,
+                    scrollT: $win.scrollTop(),
                     dragBox: dragBox,
                     disX: disX,
                     disY: disY
@@ -727,7 +737,7 @@
             that.mkObj.ctr.css({left: p.left, top: p.top});
             dragBox.remove();
             doc.off('mousemove', that.moveFunc);
-            $(document).off('mouseup', that.clearDrag);
+            that.config.openWindow.off('mouseup', that.clearDrag);
         },
 
         moveFunc: function (e) {
@@ -753,7 +763,6 @@
             } else if (boxT >= maxT) {
                 boxT = maxT;
             }
-
 
             that.setPosition({left: boxL, top: boxT, obj: opts.dragBox});
             e.preventDefault();

@@ -112,6 +112,7 @@
             closeTimes:3000,//是否开启自动关闭，默认不开启
             contentMsg: '我是xv-大前端！欢迎使用xvDialog欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用',//弹出层的内容,tips、dialog类型可使用
             contentId:'#id',//通过页面的id来获取该dom的所有内容，然后显示在弹出层上面
+            id:'id',//给弹出层内容dom设置id，此id在参数closeAction:hide的时候必需存在，如果有contentId则可以不设置id参数
             content:'&lt;div&gt;自定义字符串标签结构&lt;/div&gt;',//通过字符串定义拼接成dom结构，然后显示在弹出层上面
             buttons: false,//是否显示弹层脚步的按钮，默认显示底部默认按钮，也可以自定义，下面用法中会介绍具体使用方法
             okBtn:function(_this){...},//默认底部按钮确认按钮点击时候的回调,button参数不可false或自定义
@@ -127,15 +128,15 @@
     <div class="demo-box">
         <div class="form-item">
             <a class="closeAlert blue-btn top_index" href="javascript:void('');">关闭alert</a>
-            <a class="dialog-btn-1 blue-btn bind-btn" href="#button1-instr">按钮1：更换alert的icon</a>
-            <a class="dialog-btn-2 blue-btn bind-btn" href="#button2-instr">按钮2：默认按钮/自定义按钮介绍</a>
-            <a class="dialog-btn-3 blue-btn bind-btn" href="#button3-instr">按钮3：弹出页面内容层</a>
-            <a class="dialog-btn-4 blue-btn bind-btn" href="#button4-instr">按钮4：弹出框架层</a>
+            <a class="dialog-btn-1 blue-btn bind-btn" id="back-button1" href="javascript:void('');" >按钮1：更换alert的icon</a>
+            <a class="dialog-btn-2 blue-btn bind-btn" id="back-button2" href="#button2-instr">按钮2：默认按钮/自定义按钮介绍</a>
+            <a class="dialog-btn-3 blue-btn bind-btn" id="back-button3" href="#button3-instr">按钮3：弹出页面内容层</a>
+            <a class="dialog-btn-4 blue-btn bind-btn" id="back-button4" href="#button4-instr">按钮4：弹出框架层</a>
         </div>
     </div>
 
     <div class="demo-box">
-        <p class="clrf34627"  id="button1-instr">按钮1，更换图标使用说明</p>
+        <p class="clrf34627"  id="button1-instr">按钮1，更换图标使用说明<a href="#back-button1">返回按钮1</a></p>
         1、通过iconType参数更换图标，内置图标有success,info,waring,error<br/>
         2、可以自定义iconType,如：iconType:'icon1',此时须要在样式表中定义class样式为，"<strong class="clrf34627">xv_Mask_Icon_icon1</strong>",也就是加上"<strong
             class="clrf34627">xv_Mask_Icon_</strong>"此前缀，否则无效<br/>
@@ -159,7 +160,7 @@
         </pre>
     </div>
     <div class="demo-box">
-        <p class="clrf34627" id="button2-instr">按钮2，默认按钮/自定义按钮说明</p>
+        <p class="clrf34627" id="button2-instr">按钮2，默认按钮/自定义按钮说明<a href="#back-button2">返回按钮2</a></p>
         1、buttons:false，关闭本组件内置按钮，内置按钮为“确认”和“取消”按钮，详细用法如下：
         <pre class="js">
            var dialog2 = $.xvDialog({
@@ -174,11 +175,6 @@
                     return false;//如果return false;阻止对话框关闭
                 }
             )}
-            //dialog2.on(id,fn) 通过on，来绑定按钮的回调,如下：
-            dialog2.on('button1',function(_this){
-                console.log(_this) //_this->dialog2;
-            })
-
         </pre>
 
         2、如果须要自定义按钮，只能通过buttons参数来自定义自己想要的按钮,默认为开启按钮(tips类型的弹出层除外)，false表示不启用按钮<br/>
@@ -197,27 +193,27 @@
                 contentMsg:'自定义按钮'
             )}
 
-            //dialog2.on(id,fn) 通过on，来绑定按钮的回调,如下：
+            //dialog2.on(id,fn) ;也可以通过on，来绑定按钮的回调,如下：
             dialog2.on('button1',function(_this){
                 console.log(_this) //_this->dialog2;
             })
-
         </pre>
     </div>
 
     <div class="demo-box">
-        <p class="clrf34627" id="button3-instr">按钮3，弹出页面内容层</p>
+        <p class="clrf34627" id="button3-instr">按钮3，弹出页面内容层<a href="#back-button4">返回按钮3</a></p>
         1、通过参数contentId来设置弹出当前页面dom结构内容层。<br/>
         2、通过字符串的形式，将需要弹出的dom结构放在content参数中即可。<br/>
         <b>注意：</b>此时正常情况下需要设置closeAction参数,该参数用来设置关闭类型，默认为移除销毁，如果closeAction:'hide',及为隐藏，并非移除销毁，在弹出页面层类型中，经常我们设置为隐藏hide,同时还判断此弹出页面层是否被实例化了，如果曾在直接调用该实例的show方法即可。<br/>
+        <span style="color: red">closeAction为hide的时候，contentId、id参数至少有个一个存在</span><br/>
+
         具体可以参考如下代码：
         <pre class="js">
-        if(!dialog3){
             $(".dialog-btn-3").click(function () {
                 dialog3 = $.xvDialog({
                     title:false,
                     closeBtn:false,
-                    closeAction:'hide',
+                    closeAction:'hide',//closeAction为hide的时候，contentId、id参数至少有个一个存在；
                     contentId:'contentPage'，
                     /*
                         通过字符串来传入弹出层dom结构
@@ -225,15 +221,12 @@
                     */
                 });
             });
-        }else{
-            dialog3.show();
-        }
         </pre>
 
     </div>
 
     <div class="demo-box">
-        <p class="clrf34627" id="button4-instr">按钮4，弹出框架层</p>
+        <p class="clrf34627" id="button4-instr">按钮4，弹出框架层 <a href="#back-button4">返回按钮4</a></p>
         1、type:'iframe',如果为框架层，需要设置type类型，默认为dialog类型<br/>
         2、通过iframe属性来配置框架的一些参数。<br/>
         3、load参数为款家载入成功的回调<br/>
@@ -296,7 +289,6 @@
 <br/><br/>
 <br/>
 <br/>
-
 <div class="hide">
 <div id="contentPage" style="width:300px;height:300px;background: #0a7f6d;">
     <p style="color:#fff;font-size:18px;text-align: center;padding:10px 0;">页面层</p>
@@ -305,7 +297,7 @@
         2、还可以通过字符串的形式，将须要弹出的dom结构放在content参数中即可。
     </p>
 </div>
-
+</div>
     <br/>
     <br/>
     <br/><br/>
@@ -390,8 +382,8 @@
 
 
         /*弹出层contentPage,页面层*/
-        if(!dialog3){
-            $(".dialog-btn-3").click(function () {
+
+         $(".dialog-btn-3").click(function () {
                 dialog3 = $.xvDialog({
                     title:false,
                     closeBtn:false,
@@ -399,15 +391,13 @@
                     contentId:'contentPage'
                 });
             });
-        }else{
-            dialog3.show();
-        }
 
 
         /*弹出框架层*/
         $(".dialog-btn-4").click(function () {
             dialog4 = $.xvDialog({
                 type: 'iframe',
+                animate:false,
                 iframe: {
                     src: 'iframe.html',
                     width: 480,
@@ -415,10 +405,10 @@
                     name: 'iframe1',
                     id: 'iframe1'
                 },
-                load: function (_this,frameWindow, frameBody) {//框架载入成功的回调
+                load: function (_this,openWindow, frameWindow) {//框架载入成功的回调
                     console.log(_this);
+                    console.log(openWindow);//弹出层所在的window对象
                     console.log(frameWindow);//框架的window对象
-                    console.log(frameBody);//框架的body对象
                 }
             });
         });
@@ -458,7 +448,6 @@
                 contentMsg: 'hello，欢迎使用xvDialog。'
             });
         });
-
 
         $(".tipLeft").click(function () {
             tip2 = $.xvDialog({

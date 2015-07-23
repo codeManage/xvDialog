@@ -563,15 +563,16 @@ dsafdsa
                     index: 0,
                     type: 'dialog',
                     drag: false,
+                    id:'ord1',
                     width:250,
                     closeAction:'hide',
 //
                     /*  ,
-                     title: false,
-                     closeBtn: false,
-                     buttons: false,
-                     icon: false,*/
-//                    closeTimes:3000,
+                    title: false,
+                    closeBtn: false,
+                    buttons: false,
+                    icon: false,*/
+//                  closeTimes:3000,
                     iconType: 'waring', /*waring,error,info*/
                     contentMsg: '我是xv-大前端！欢迎使用xvDialog欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用',
                     okBtn:function(_this){
@@ -679,9 +680,8 @@ dsafdsa
 //                    setTimes:3000,
                     iconType: 'waring', /*waring,error,info*/
                     content: '<iframe name="fr1" src="iframe.html" width="480" height="400"  frameborder="0"></iframe>',
-                    load:function(_this,content){
+                    load:function(_this){
                         console.log("加载完毕");
-                        console.log(content);
                     }
                 });
 
@@ -692,9 +692,9 @@ dsafdsa
     var xv3;
     $(".btn2-1").click(
             function () {
-                if(!xv3) {
+
                     xv3 = $.xvDialog({
-                    index: 3,
+                    index: 4,
                     mask:false,
                     type: 'dialog',
 //                    drag: false,
@@ -713,9 +713,7 @@ dsafdsa
 //                    content: '<div style="width:500px;height:300px; font-size:12px; background:#fbb627;">hello我是页面层</div>',
                     contentId:'testContent'
                 });
-                }else{
-                    xv3.show();
-                }
+
             });
 
 
@@ -724,7 +722,7 @@ dsafdsa
     $(".btn2-2").click(
             function () {
                 xv4 = $.xvDialog({
-                    index: 4,
+                    index: 5,
                     type: 'iframe',
 //                    drag: false,
 //                    scroll:false,
@@ -783,6 +781,8 @@ dsafdsa
 //    var xv5 = xvDialog.alert();
     var xv6 = xvDialog.tips({follow:".btn1-3",contentMsg: 'hello，我是xv-大前端！欢迎使用xvDialog。'});
     var xv7 = xvDialog.iframe({
+        title:'弹出层',
+        openWindow:top,
         iframe:{
             src: 'iframe.html',
             width: 480,

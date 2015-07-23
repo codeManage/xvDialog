@@ -67,6 +67,11 @@
     font-size:12px;
 }
 
+.xv_Mask_Main iframe {
+    border:none;
+    display: block;
+}
+
 .xv_Mask_Msg_Box {
     padding: 15px;
 }
