@@ -575,28 +575,29 @@ dsafdsa
 //                  closeTimes:3000,
                     iconType: 'waring', /*waring,error,info*/
                     contentMsg: '我是xv-大前端！欢迎使用xvDialog欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用欢迎使用',
-                    okBtn:function(_this){
+                    /*okBtn:function(_this){
                         console.log(_this);
                         return false;
                     },
                     cancelBtn:function(_this){
                         return false;
-                    }
+                    },*/
 
-                    /*button: [
+                    buttons: [
                      {
+                         id:"okBtn",
                      type:'ok',
                      text: '确定',
-                     cls: 'ok_style',
-                     callBack: function () {
+                     cls: 'ok_style'/*,
+                     callback: function () {
                      console.log('确定1');
-                     }
+                     }*/
                      },
                      {
                      type:'cancel',
                      text: '取消',
                      cls: 'cancel_style',
-                     callBack: function () {
+                     callback: function () {
                      console.log('取消2');
                      xvDialog.close(0)
                      }
@@ -605,14 +606,14 @@ dsafdsa
                      type:'add',
                      text: '添加',
                      cls: 'cancel_style',
-                     callBack: function () {
+                     callback: function () {
                      console.log('添加');
                      }
                      }
-                     ],*/
+                     ]
                 });
 
-                /*xv1.on('ok',function(e){
+                xv1.on('okBtn',function(e){
                  console.log('谢谢你的肯定！');
                  });
 
@@ -620,9 +621,9 @@ dsafdsa
                  console.log('早知今日，何必当初！');
                  });
 
-                 xv1.on('colseBefore',function(){
+                 xv1.on('add',function(){
                  console.log('close之前，我想告诉你。。。。。。我真的不想close --！');
-                 });*/
+                 });
 
             }
     );

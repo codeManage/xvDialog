@@ -1384,11 +1384,11 @@
 }
 
 .sh_rand01 .sh_sourceCode .sh_comment, .sh_vampire .sh_sourceCode .sh_comment {
-    color: #ababab;
+    color: #ff0000;
     font-weight: 400;
     font-style: normal;
     padding-left:12px;
-    font-size:12px;
+    font-size:14px;
 }
 
 .sh_rand01 .sh_sourceCode .sh_symbol, .sh_rand01 .sh_sourceCode .sh_cbracket {

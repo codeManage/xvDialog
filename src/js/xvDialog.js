@@ -81,9 +81,9 @@
             var config = config || {};
             var dltConfig = {
                 title: '提示信息',
-                iconType: 'info',
+                iconType: 'info'/*,
                 width: 300,
-                height: 200
+                height: 200*/
             };
             if (config.size === 'auto') {
                 delete dltConfig.width;
@@ -242,7 +242,7 @@
             tmpOps.buttons = (typeof(opts.buttons) === 'object' || opts.buttons === false) ? opts.buttons : [
                 {
                     type: 'ok',
-                    text: '确定',
+                    text: opts.okText || '确定',
                     cls: G.doms.maskBoxOkBtn,
                     callback: function () {
                         var result = typeof opts.okBtn === 'function' ? opts.okBtn(_S) : '';
@@ -253,7 +253,7 @@
                 },
                 {
                     type: 'cancel',
-                    text: '取消',
+                    text: opts.cancelText || '取消',
                     cls: G.doms.maskBoxCancelBtn,
                     callback: function () {
                         var result = typeof opts.cancelBtn === 'function' ? opts.cancelBtn(_S) : '';
