@@ -1,8 +1,14 @@
 /**
- * Created by ZhangDawei on 2015/3/18.
+ * Dates
+ * author       : xv
+ * description  : '日期控件'
+ * date         : 2015-3-18
+ * version      : 1.0
+ * email        : zhangdw620@sina.com
  */
 
 (function (win, $) {
+
     //常用dom字符
     var G = {//可以自己配置适合自己的结构名称
         doms: {

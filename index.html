@@ -86,7 +86,7 @@
     <hr/>
     <p style="font-weight:bold">需要引入插件xvDialog.js/xvDialog.min.js</p>
 
-    <p style="font-weight:bold">须要引入xvDialog.css/ xvDialog.min.css</样式表，可以自定义自己想要的皮肤</p>
+    <p style="font-weight:bold">需要引入xvDialog.css/ xvDialog.min.css</样式表，可以自定义自己想要的皮肤</p>
 
     <p style="font-weight:bold;color:red;">本弹出层组件基于jquery库开发版本1.8.0以上</p><br/>
 
@@ -352,6 +352,22 @@
     </div>
 
 
+    <div class="demo-box">
+        <div class="form-item">
+            <a class="dialog-btn-1-4 blue-btn bind-btn" href="javascript:void('');" >按钮：tips</a>
+        </div>
+        <p class="clrf34627">xvDialog.tips</p>
+
+        具体可以参考如下代码：
+        <pre class="js">
+            xvDialog.tips({
+                follow:".dialog-btn-1-4",
+                contentMsg: 'hello，我是xv-大前端！欢迎使用xvDialog。'
+            });
+        </pre>
+    </div>
+
+
 </div>
 <br/>
 <br/>
@@ -550,6 +566,7 @@
             xvDialog.alert({contentMsg:'hello，欢迎使用xvDialog。'});
         });
 
+
         $(".dialog-btn-1-2").click(function(){
             xvDialog.contentPage({
                 contentId:'contentPage1'
@@ -571,8 +588,9 @@
         });
 
 
-
-
+        $(".dialog-btn-1-4").click(function(){
+            xvDialog.tips({follow:".dialog-btn-1-4",contentMsg: 'hello，欢迎使用xvDialog！'})
+        });
 
 
     });
