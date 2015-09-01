@@ -1,6 +1,4 @@
-#xvDialog
-<br>
-## **xvDialog.js一款基于jquery轻量级的弹层插件**##
+#xvDialog.js一款基于jquery轻量级的弹层插件
 <br>
 ***
 <br>
