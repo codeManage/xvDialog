@@ -171,8 +171,8 @@
                 xv.show();
                 return xv;
             }
-            xv = xvDialog['xvmksign' + xvDialog.mkSign++] = new DialogBox(opts);
-            return xv;
+             xvDialog['xvmksign' + xvDialog.mkSign++] = new DialogBox(opts);
+            return xvDialog['xvmksign' + xvDialog.mkSign];
         }
         return new DialogBox(opts);
     };
