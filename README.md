@@ -11,7 +11,3 @@ xvDialog.js一款基于jquery轻量级的弹层插件,需要引入插件 xvDialog.js/xvDialog.min.
 请直接查看本项目中的index.html文件
 
 <br>
-
-### 使用###
-本项目属开源项目，如有需要可以直接clone
-<br>
