@@ -1,19 +1,17 @@
-#xvDialog
-<br>
-## **xvDialog.jsä¸€æ¬¾åŸºäºŽjqueryè½»é‡çº§çš„å¼¹å±‚æ’ä»¶**##
+#xvDialog.jsÒ»¿î»ùÓÚjqueryÇáÁ¿¼¶µÄµ¯²ã²å¼þ
 <br>
 ***
 <br>
-xvDialog.jsä¸€æ¬¾åŸºäºŽjqueryè½»é‡çº§çš„å¼¹å±‚æ’ä»¶,éœ€è¦å¼•å…¥æ’ä»¶xvDialog.js/xvDialog.min.js,éœ€è¦å¼•å…¥xvDialog.css/ xvDialog.min.css</æ ·å¼è¡¨ï¼Œå¯ä»¥è‡ªå®šä¹‰è‡ªå·±æƒ³è¦çš„çš®è‚¤ ( æœ¬å¼¹å‡ºå±‚ç»„ä»¶åŸºäºŽjqueryåº“å¼€å‘ç‰ˆæœ¬1.8.0ä»¥ä¸Š )
+xvDialog.jsÒ»¿î»ùÓÚjqueryÇáÁ¿¼¶µÄµ¯²ã²å¼þ,ÐèÒªÒýÈë²å¼þ xvDialog.js/xvDialog.min.js,ÐèÒªÒýÈë xvDialog.css/ xvDialog.min.css ÑùÊ½±í£¬¿ÉÒÔ×Ô¶¨Òå×Ô¼ºÏëÒªµÄÆ¤·ô ( ±¾µ¯³ö²ã×é¼þ»ùÓÚjquery¿â¿ª·¢°æ±¾1.8.0ÒÔÉÏ )
 <br>
 ***
 
-### å‚æ•°é…ç½®è¯´æ˜Ž###
+### ²ÎÊýÅäÖÃËµÃ÷###
 
-è¯·ç›´æŽ¥æŸ¥çœ‹æœ¬é¡¹ç›®ä¸­çš„index.htmlæ–‡ä»¶
+ÇëÖ±½Ó²é¿´±¾ÏîÄ¿ÖÐµÄindex.htmlÎÄ¼þ
 
 <br>
 
-### ä½¿ç”¨###
-æœ¬é¡¹ç›®å±žå¼€æºé¡¹ç›®ï¼Œå¦‚æœ‰éœ€è¦å¯ä»¥ç›´æŽ¥clone
+### Ê¹ÓÃ###
+±¾ÏîÄ¿Êô¿ªÔ´ÏîÄ¿£¬ÈçÓÐÐèÒª¿ÉÒÔÖ±½Óclone
 <br>
